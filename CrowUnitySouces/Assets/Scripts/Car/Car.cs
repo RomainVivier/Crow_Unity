@@ -7,18 +7,25 @@ public class Car : MonoBehaviour
 	// Inspector visible variables
 	public float maxSpeedKmh=300; // km/h
 	public float fwd; // Front wheels drive [0;1] 0=RWD 1=FWD
+	public float brakeDecceleration=10; // m/s²
+	public float brakesRepartition=0.6f; // 0=rear, 1=front
 	
-	// Private attributes
+	// Components
 	private Engine engine;
 	private CarControl control;
 	private Rigidbody body;
+	private WheelCollider[] wheels;
+	private Transmission transmission;
+	
+	// Private attributes
 	private float dragCoef;
 	private float mass;
 	private float maxSpeed; // unit/s (aka m/s)
 	private float wheelRadius;
-	private WheelCollider[] wheels;
 	private int nbUpdates=0;
-
+	private float acceleration2Torque;
+	private float brakeTorque;
+	
 	// MonoBehaviour methods
 	void Start ()
 	{
@@ -33,19 +40,32 @@ public class Car : MonoBehaviour
 		nbUpdates=(nbUpdates+1)%freq;
 		
 		// Compute forward torque
-		float power=engine.getMaxPower ();
 		Vector3 velocity=body.GetRelativePointVelocity(new Vector3(0,0,0));
 		float forwardVelocity=Vector3.Dot(velocity,new Vector3(0,0,1));
+		float rpm=forwardVelocity*transmission.getSpeed2Rpm();
+		float power=engine.getPower(rpm,inputs.throttle);
 		float acceleration=
 			(Mathf.Sqrt(forwardVelocity*forwardVelocity+dt*power*2/mass)-forwardVelocity)/dt;
-		float force=acceleration*mass;
-		float torque=force*wheelRadius;
+		if(float.IsNaN(acceleration)) acceleration=0;
+		float torque=acceleration*acceleration2Torque;
 		
 		// Apply torque to wheels
 		for(int i=0;i<4;i++)
 		{
-			float mult= i<2 ? fwd : 1-fwd;
-			wheels[i].motorTorque=torque*mult;	
+			float accelMult= i<2 ? fwd : 1-fwd;
+			float brakeMult= i<2 ? brakesRepartition : 1-brakesRepartition;
+			wheels[i].brakeTorque=inputs.brake*brakeTorque*brakeMult;
+			wheels[i].motorTorque=torque*accelMult/2;
+		}
+		
+		// Apply brakes torque to wheel
+		float decceleration=brakeDecceleration*inputs.brake;
+		
+		
+		// Debug print
+		if(nbUpdates%10==0)
+		{
+			Debug.Log((int)forwardVelocity*3.6+" "+(int)rpm);
 		}
 	}
 
@@ -70,9 +90,15 @@ public class Car : MonoBehaviour
 		{
 			Debug.LogError ("Car : no control attached");
 			return;
-		}	
+		}
 		control=controls[0];
-		control.init(0);	
+		control.init(0);
+		transmission=gameObject.GetComponent<Transmission>();
+		if(transmission==null)
+		{
+			Debug.LogError ("Car : no transmission attached");
+		}	
+
 		wheels=new WheelCollider[4];
 		wheels[0]=transform.FindChild("Body").FindChild("WheelFL").GetComponent<WheelCollider>();
 		wheels[1]=transform.FindChild("Body").FindChild("WheelFR").GetComponent<WheelCollider>();
@@ -87,5 +113,7 @@ public class Car : MonoBehaviour
 		wheelRadius=wheels[0].radius;
 		wheelRadius*=transform.FindChild("Body").FindChild("WheelFR").transform.lossyScale.y;
 		engine.updateValues ();
+		acceleration2Torque=mass*wheelRadius;
+		brakeTorque=brakeDecceleration*acceleration2Torque/2;
 	}
 }
