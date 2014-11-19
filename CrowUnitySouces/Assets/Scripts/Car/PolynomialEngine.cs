@@ -22,7 +22,7 @@ public class PolynomialEngine : Engine {
 	public override void updateValues()
 	{
 		// Solve this equation to compute a, b and c
-		// (a/3)p²+(b/2)p+c=0 (1)
+		// 3ap²+2bp+c=0       (1)
 		// ap^3+bp²+cp=m      (2)
 		// al^3+bl²+cl=n      (3)
 		// Where m=maxPower, n=powerMinRpm, p=maxPowerRpm, l=minRpm
@@ -34,8 +34,8 @@ public class PolynomialEngine : Engine {
 		float u=maxPowerRpm*maxPowerRpm-minRpm*minRpm*ratio;
 		
 		// (2)-p(1) = av+bw=m (5)
-		float v=maxPowerRpm*maxPowerRpm*maxPowerRpm*(2/3);
-		float w=maxPowerRpm*maxPowerRpm/2;
+		float v=maxPowerRpm*maxPowerRpm*maxPowerRpm*-2;
+		float w=maxPowerRpm*maxPowerRpm*-1;
 		
 		// (4)-(u/w)5 : as=k, a=k/s
 		float s=t-(u/w)*v;
@@ -43,7 +43,10 @@ public class PolynomialEngine : Engine {
 		curveA=k/s;
 		
 		curveB=(maxPowerKw-(curveA*v))/w;
-		curveC=(-curveA/3)*maxPowerKw*maxPowerKw+(-curveB/2)*maxPowerKw;
+		curveC=(-curveA*3)*maxPowerRpm*maxPowerRpm+(-curveB*2)*maxPowerRpm;
+		
+		Debug.Log((int)getPower (minRpm,1)+" "+(int)getPower (maxRpm,1));
+		Debug.Log(curveA+" "+curveB+" "+curveC);
 	}
 	
 	public override float getPower(float rpm, float throttle)

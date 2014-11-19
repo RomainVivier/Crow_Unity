@@ -56,11 +56,7 @@ public class Car : MonoBehaviour
 			float brakeMult= i<2 ? brakesRepartition : 1-brakesRepartition;
 			wheels[i].brakeTorque=inputs.brake*brakeTorque*brakeMult;
 			wheels[i].motorTorque=torque*accelMult/2;
-		}
-		
-		// Apply brakes torque to wheel
-		float decceleration=brakeDecceleration*inputs.brake;
-		
+		}		
 		
 		// Debug print
 		if(nbUpdates%10==0)
