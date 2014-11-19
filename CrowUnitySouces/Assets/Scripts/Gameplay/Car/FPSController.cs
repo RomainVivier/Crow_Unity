@@ -29,7 +29,7 @@ public class FPSController : MonoBehaviour
 	private int m_forward = 0;
 	private int m_right = 0;
 	private bool m_canJump = false;
-	private float m_weaponRotation = 0;
+    //private float m_weaponRotation = 0;
 	private Timer m_rotateTimer;
 	private float m_yOffset = -0.75f;
 	private float m_feetRadius = 0.4f;
@@ -38,7 +38,7 @@ public class FPSController : MonoBehaviour
 
 
 	//movement audio
-	private float m_deltaTimeWalk = 0.32f;
+    //private float m_deltaTimeWalk = 0.32f;
 	private float m_lastTimeWalk = 0f;
 	private bool m_isWalking = false;
 
@@ -75,8 +75,8 @@ public class FPSController : MonoBehaviour
 		KeyBinder.Instance.DefineActions("StrafeLeft", new KeyActionConfig(KeyType.Movement, 2, StrafeLeft, () => {m_right += 1;}));
 		KeyBinder.Instance.DefineActions("StrafeRight", new KeyActionConfig(KeyType.Movement, 3, StrafeRight, () => {m_right -= 1;}));
 		KeyBinder.Instance.DefineActions("Jump/Dash", new KeyActionConfig(KeyType.Movement, 4, () => {if(m_canJump){Jump();}}, null));
-        KeyBinder.Instance.DefineActions("MouseX", new AxisActionConfig(KeyType.Head, 0, MouseX));
-        KeyBinder.Instance.DefineActions("MouseY", new AxisActionConfig(KeyType.Head, 0, MouseY));
+        //KeyBinder.Instance.DefineActions("MouseX", new AxisActionConfig(KeyType.Head, 0, MouseX));
+        //KeyBinder.Instance.DefineActions("MouseY", new AxisActionConfig(KeyType.Head, 0, MouseY));
 
 		m_doubleKeyTimer = new Timer();
 		m_dashTimer = new Timer();
