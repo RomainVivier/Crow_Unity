@@ -9,6 +9,8 @@ public class Car : MonoBehaviour
 	public float fwd; // Front wheels drive [0;1] 0=RWD 1=FWD
 	public float brakeDecceleration=10; // m/s²
 	public float brakesRepartition=0.6f; // 0=rear, 1=front
+	public float steerAngle0kmhDeg=40;
+	public float steerAngleHighSpeedDeg=20;
 	
 	// Components
 	private Engine engine;
@@ -26,6 +28,7 @@ public class Car : MonoBehaviour
 	private float acceleration2Torque;
 	private float brakeTorque;
 	private CarControl.CarInputs oldInputs;
+	private Vector3 centerOfMass;
 	
 	// MonoBehaviour methods
 	void Start ()
@@ -61,8 +64,19 @@ public class Car : MonoBehaviour
 			float brakeMult= i<2 ? brakesRepartition : 1-brakesRepartition;
 			wheels[i].brakeTorque=inputs.brake*brakeTorque*brakeMult;
 			if(!transmission.isDisengaged()) wheels[i].motorTorque=torque*accelMult/2;
+				else wheels[i].motorTorque=0;
 		}		
 		
+		// Steering
+		float steerAngle=Mathf.Lerp(steerAngle0kmhDeg,steerAngleHighSpeedDeg,forwardVelocity/maxSpeed)*inputs.steering;
+		wheels[0].steerAngle=steerAngle;
+		wheels[1].steerAngle=steerAngle;
+		
+		// Aerodynamic drag
+		float force=forwardVelocity*forwardVelocity*dragCoef;
+		body.AddForce(body.transform.forward*-force);
+
+		// Store old inputs
 		oldInputs=inputs;
 		
 		// Debug print
@@ -107,17 +121,21 @@ public class Car : MonoBehaviour
 		wheels[1]=transform.FindChild("Body").FindChild("WheelFR").GetComponent<WheelCollider>();
 		wheels[2]=transform.FindChild("Body").FindChild("WheelRL").GetComponent<WheelCollider>();
 		wheels[3]=transform.FindChild("Body").FindChild("WheelRR").GetComponent<WheelCollider>();
+		centerOfMass=transform.FindChild("Body").FindChild("CenterOfMass").transform.localPosition;
 		
 		// Compute values
 		float maxPower=engine.getMaxPower();
 		maxSpeed=maxSpeedKmh/3.6f;
 		mass=body.mass;
-		dragCoef=(Mathf.Sqrt(maxSpeed*maxSpeed + maxPower) - maxSpeed) / (maxSpeed*maxSpeed);
+		dragCoef=(Mathf.Sqrt(maxSpeed*maxSpeed+ maxPower*2*0.01f/mass) - maxSpeed)*100 / (maxSpeed*maxSpeed);
 		wheelRadius=wheels[0].radius;
 		wheelRadius*=transform.FindChild("Body").FindChild("WheelFR").transform.lossyScale.y;
 		engine.updateValues ();
 		acceleration2Torque=mass*wheelRadius;
 		brakeTorque=brakeDecceleration*acceleration2Torque/2;
+		
+		// Update center of weight
+		body.centerOfMass=centerOfMass;
 	}
 }
 

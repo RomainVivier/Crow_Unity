@@ -8,7 +8,7 @@ public class PolynomialEngine : Engine {
 	public float minRpm=1500;
 	public float powerMinRpmKw=50;
 	public float maxRpm=7000;
-	public float engineBrake=0.001f;
+	public float engineBrake=0.01f;
 	
 	// Power curve=ax^3+bx^2+cx
 	private float curveA=0,curveB=0,curveC=0;
