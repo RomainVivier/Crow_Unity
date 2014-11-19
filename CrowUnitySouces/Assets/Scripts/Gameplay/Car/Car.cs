@@ -125,7 +125,13 @@ public class Car : MonoBehaviour
 	{
 		updateValues ();
 	}
-
+	
+	public float getForwardVelocity()
+	{
+		Vector3 velocity=body.GetRelativePointVelocity(new Vector3(0,0,0));
+		return Vector3.Dot(velocity,body.transform.forward);
+	}
+	
 	// Private methods
 	void updateValues()
 	{

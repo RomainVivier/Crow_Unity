@@ -84,4 +84,22 @@ public class Gearbox : Transmission
 			if(timeToReengage<=0) disengaged=false;
 		}
 	}
+	
+	public override bool canUpshift()
+	{
+		return currentGear<nbGears-1;
+	}
+	public override bool canDownshift()
+	{
+		return currentGear>0;
+	}
+	public override float getNextSpeed2Rpm() 
+	{
+		return ratios[currentGear+1];
+	}
+	public override float getPreviousSpeed2Rpm()
+	{
+		return ratios[currentGear-1];
+	}
+	
 }

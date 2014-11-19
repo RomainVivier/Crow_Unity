@@ -13,7 +13,7 @@ public abstract class CarControl : MonoBehaviour
 		public bool downshift;
 	}
 	
-	CarControl nextControl;
+	protected CarControl nextControl;
 
 	public abstract CarInputs getInputs();
 		
