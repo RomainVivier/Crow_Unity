@@ -10,7 +10,9 @@ public class Car : MonoBehaviour
 	public float brakeDecceleration=10; // m/s²
 	public float brakesRepartition=0.6f; // 0=rear, 1=front
 	public float steerAngle0kmhDeg=40;
-	public float steerAngleHighSpeedDeg=20;
+	public float steerAngleTopSpeedDeg=20;
+	public float antiRoll=5000;
+	public float downforce=0;
 	
 	// Components
 	private Engine engine;
@@ -27,6 +29,8 @@ public class Car : MonoBehaviour
 	private int nbUpdates=0;
 	private float acceleration2Torque;
 	private float brakeTorque;
+	private float wheelBase;
+	private float wheelTrack;
 	private CarControl.CarInputs oldInputs;
 	private Vector3 centerOfMass;
 	
@@ -49,7 +53,7 @@ public class Car : MonoBehaviour
 				
 		// Compute forward torque
 		Vector3 velocity=body.GetRelativePointVelocity(new Vector3(0,0,0));
-		float forwardVelocity=Vector3.Dot(velocity,new Vector3(0,0,1));
+		float forwardVelocity=Vector3.Dot(velocity,body.transform.forward);
 		float rpm=forwardVelocity*transmission.getSpeed2Rpm();
 		float power=engine.getPower(rpm,inputs.throttle);
 		float acceleration=
@@ -68,14 +72,45 @@ public class Car : MonoBehaviour
 		}		
 		
 		// Steering
-		float steerAngle=Mathf.Lerp(steerAngle0kmhDeg,steerAngleHighSpeedDeg,forwardVelocity/maxSpeed)*inputs.steering;
-		wheels[0].steerAngle=steerAngle;
-		wheels[1].steerAngle=steerAngle;
+		float steerAngleOut=Mathf.Lerp(steerAngle0kmhDeg,steerAngleTopSpeedDeg,forwardVelocity/maxSpeed)*inputs.steering;
+		float steerAngleIn=90-Mathf.Atan (Mathf.Tan ((90-steerAngleOut)*Mathf.Deg2Rad)-wheelTrack/wheelBase)*Mathf.Rad2Deg;
+		//Debug.Log (steerAngleOut+" "+(Mathf.Tan ((90-steerAngleOut)*Mathf.Deg2Rad)-wheelTrack/wheelBase));
+		if(steerAngleOut==0) steerAngleIn=0;
+		if(steerAngleOut>0)
+		{
+			wheels[0].steerAngle=steerAngleOut;
+			wheels[1].steerAngle=steerAngleIn;	
+		}
+		else
+		{
+			wheels[0].steerAngle=steerAngleIn;
+			wheels[1].steerAngle=steerAngleOut;			
+		}
 		
-		// Aerodynamic drag
+		// Aerodynamic drag & downforce
 		float force=forwardVelocity*forwardVelocity*dragCoef;
 		body.AddForce(body.transform.forward*-force);
+		float downForce=downforce*forwardVelocity*forwardVelocity;
+		body.AddForce(body.transform.up*-downForce);		
 
+		// Antiroll bars
+		for(int i=0;i<2;i++)
+		{
+			WheelHit hit;
+			wheels[i*2].GetGroundHit(out hit);
+			bool groundedL=wheels[i*2].isGrounded;
+			float travelL,travelR;
+			if(groundedL) travelL=wheels[i*2].transform.InverseTransformPoint(hit.point).y-wheels[i*2].radius;
+			else travelL=1;
+			wheels[i*2+1].GetGroundHit(out hit);
+			bool groundedR=wheels[i*2+1].isGrounded;
+			if(groundedR) travelR=wheels[i*2+1].transform.InverseTransformPoint(hit.point).y-wheels[i*2+1].radius;
+			else travelR=1;
+			float antiRollForce=(travelL-travelR)*antiRoll;
+			if(groundedL) body.AddForceAtPosition(transform.up*-antiRollForce,wheels[i*2].transform.position);
+			if(groundedR) body.AddForceAtPosition(transform.up*antiRollForce,wheels[i*2+1].transform.position);
+		}
+		
 		// Store old inputs
 		oldInputs=inputs;
 		
@@ -133,6 +168,13 @@ public class Car : MonoBehaviour
 		engine.updateValues ();
 		acceleration2Torque=mass*wheelRadius;
 		brakeTorque=brakeDecceleration*acceleration2Torque/2;
+		/*wheelBase=Vector3.Distance(transform.FindChild("Body").FindChild("WheelFL").transform.position,
+			                       transform.FindChild("Body").FindChild("WheelRL").transform.position);
+		wheelTrack=Vector3.Distance(transform.FindChild("Body").FindChild("WheelFL").transform.position,
+		                            transform.FindChild("Body").FindChild("WheelFR").transform.position);*/
+		wheelBase=body.transform.localScale.z;
+		wheelTrack=body.transform.localScale.x;
+		
 		
 		// Update center of weight
 		body.centerOfMass=centerOfMass;
