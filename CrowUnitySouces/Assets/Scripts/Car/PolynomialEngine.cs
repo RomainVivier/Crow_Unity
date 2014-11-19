@@ -3,10 +3,10 @@ using System.Collections;
 
 public class PolynomialEngine : Engine {
 
-	public float maxPowerKw=75;
+	public float maxPowerKw=100;
 	public float maxPowerRpm=6000;
 	public float minRpm=1500;
-	public float powerMinRpmKw=35;
+	public float powerMinRpmKw=50;
 	public float maxRpm=7000;
 	public float engineBrake=0.001f;
 	
@@ -44,9 +44,6 @@ public class PolynomialEngine : Engine {
 		
 		curveB=(maxPowerKw-(curveA*v))/w;
 		curveC=(-curveA*3)*maxPowerRpm*maxPowerRpm+(-curveB*2)*maxPowerRpm;
-		
-		Debug.Log((int)getPower (minRpm,1)+" "+(int)getPower (maxRpm,1));
-		Debug.Log(curveA+" "+curveB+" "+curveC);
 	}
 	
 	public override float getPower(float rpm, float throttle)

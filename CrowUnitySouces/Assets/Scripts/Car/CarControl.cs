@@ -9,6 +9,8 @@ public abstract class CarControl : MonoBehaviour
 		public float steering;
 		public float throttle;
 		public float brake;
+		public bool upshift;
+		public bool downshift;
 	}
 	
 	CarControl nextControl;

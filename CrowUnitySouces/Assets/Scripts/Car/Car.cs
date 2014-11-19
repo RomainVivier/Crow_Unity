@@ -25,6 +25,7 @@ public class Car : MonoBehaviour
 	private int nbUpdates=0;
 	private float acceleration2Torque;
 	private float brakeTorque;
+	private CarControl.CarInputs oldInputs;
 	
 	// MonoBehaviour methods
 	void Start ()
@@ -39,6 +40,10 @@ public class Car : MonoBehaviour
 		int freq=(int) (1.0f/dt);
 		nbUpdates=(nbUpdates+1)%freq;
 		
+		// Update transmission
+		if(inputs.upshift && !oldInputs.upshift) transmission.upshift();
+		if(inputs.downshift && !oldInputs.downshift) transmission.downshift();
+				
 		// Compute forward torque
 		Vector3 velocity=body.GetRelativePointVelocity(new Vector3(0,0,0));
 		float forwardVelocity=Vector3.Dot(velocity,new Vector3(0,0,1));
@@ -55,8 +60,10 @@ public class Car : MonoBehaviour
 			float accelMult= i<2 ? fwd : 1-fwd;
 			float brakeMult= i<2 ? brakesRepartition : 1-brakesRepartition;
 			wheels[i].brakeTorque=inputs.brake*brakeTorque*brakeMult;
-			wheels[i].motorTorque=torque*accelMult/2;
+			if(!transmission.isDisengaged()) wheels[i].motorTorque=torque*accelMult/2;
 		}		
+		
+		oldInputs=inputs;
 		
 		// Debug print
 		if(nbUpdates%10==0)
@@ -113,3 +120,4 @@ public class Car : MonoBehaviour
 		brakeTorque=brakeDecceleration*acceleration2Torque/2;
 	}
 }
+

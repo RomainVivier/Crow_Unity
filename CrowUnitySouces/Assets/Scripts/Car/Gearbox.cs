@@ -4,10 +4,10 @@ using System.Collections;
 public class Gearbox : Transmission
 {
 	public int nbGears=5;
-	public float topGearRatio=0.8f; // [1;∞[ 1=highest top speed possible
-	public float firstToSecondRatio=0.5f;
-	public float nthToTopGearRatio=0.8f;
-	public float shiftTime=0.3f;
+	public float topGearRatio=0.7f; // [1;∞[ 1=highest top speed possible
+	public float firstToSecondRatio=0.6f;
+	public float nthToTopGearRatio=0.9f;
+	public float shiftTime=0.2f;
 	
 	private int currentGear=0;
 	private float[] ratios;
@@ -45,7 +45,7 @@ public class Gearbox : Transmission
 		ratios[nbGears-1]=engine.getMaxPowerRpm()/(car.maxSpeedKmh/3.6f);
 		for(int i=nbGears-2;i>=0;i--)
 		{
-			float pos=i/(nbGears-2);
+			float pos=i/(nbGears-2.0f);
 			float ratio=Mathf.Lerp(firstToSecondRatio,nthToTopGearRatio,pos);
 			ratios[i]=ratios[i+1]/ratio;
 		}
@@ -66,7 +66,7 @@ public class Gearbox : Transmission
 		}
 	}
 	
-	public virtual void downshift()
+	public override void downshift()
 	{
 		if(currentGear>0)
 		{
