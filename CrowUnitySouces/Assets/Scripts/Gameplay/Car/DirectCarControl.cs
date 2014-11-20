@@ -9,6 +9,8 @@ public class DirectCarControl : CarControl {
 		ret.steering=Input.GetAxis("Steering");
 		ret.throttle=Input.GetAxis("Throttle");
 		ret.brake=Input.GetAxis("Brake");
+		ret.upshift=Input.GetAxis ("Upshift")>0;
+		ret.downshift=Input.GetAxis ("Downshift")>0;		
 		return ret;
 	}
 }
