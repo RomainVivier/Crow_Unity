@@ -4,8 +4,6 @@ using System.Collections;
 public class RoadChunk : MonoBehaviour {
 
     #region Public Members
-
-    public GameObject _roadPrefab;
     public Transform _startPoint;
     public Transform _endPoint;
 
@@ -35,11 +33,6 @@ public class RoadChunk : MonoBehaviour {
 
     #region MonoBehaviours
 
-    void Start ()
-    {
-	    
-	}
-
     void OnTriggerExit(Collider other)
     {
         Debug.Log("No longer in contact with " + other.transform.name);
@@ -55,6 +48,18 @@ public class RoadChunk : MonoBehaviour {
     #region Functions
 
     void Generate()
+    {
+        // instanciate piece of chunk
+
+        // get environments / obstacles
+
+        // generate environments
+
+        // generate obstacles
+
+    }
+
+    void Generate(string pattern)
     {
 
     }
