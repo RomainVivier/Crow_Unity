@@ -20,6 +20,8 @@ public class CameraControl : MonoBehaviour {
 
         _currentRotation = _camera.rotation.eulerAngles.y;
         _initialAngle = _currentRotation;
+
+        KeyBinder.Instance.DefineActions("MouseLeftClick", new KeyActionConfig(KeyType.Action, 0, OnClick, null));
 	}
 	
 	void Update ()
@@ -60,4 +62,18 @@ public class CameraControl : MonoBehaviour {
         _camera.transform.localRotation = Quaternion.Euler(currEuler);
 
     }
+
+    void OnClick()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity))
+        {
+            if (hit.collider.CompareTag("Clickable"))
+            {
+                Debug.Log(hit.collider.name);
+            }
+        }
+    }
+
 }
