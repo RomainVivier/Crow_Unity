@@ -6,7 +6,8 @@ public class AutomaticGearbox : CarControl {
 	public float upshiftLag=0.3f;
 	public float downshiftLag=0.1f;
 	public float sensitivity=0.9f;
-	//public float upshiftRpm=;
+	public float upshiftRpm=20000;
+	public float downshiftRpm=0;
 	
 	private Car car;
 	private Engine engine;
@@ -52,19 +53,22 @@ public class AutomaticGearbox : CarControl {
 		ret.downshift=false;
 		ret.upshift=false;
 		float velocity=car.getForwardVelocity();
-		float curPower=engine.getPower(transmission.getSpeed2Rpm()*velocity,ret.throttle);
+		float curRpm=transmission.getSpeed2Rpm()*velocity;
+		float curPower=engine.getPower(curRpm,1);
 		bool wantUpshift=false,wantDownshift=false;
 		if(transmission.canUpshift())
 		{
 			float nextPower=engine.getPower (transmission.getNextSpeed2Rpm()*velocity,1)*sensitivity;
 			if(nextPower>curPower) wantUpshift=true;
+			if(curRpm>=upshiftRpm) wantUpshift=true;
+			
 		}
 		if(transmission.canDownshift())
 		{
 			float prevPower=engine.getPower (transmission.getPreviousSpeed2Rpm()*velocity,1)*sensitivity;
 			if(prevPower>curPower) wantDownshift=true;
+			if(curRpm<=downshiftRpm) wantDownshift=true;
 		}
-		//Debug.Log (wantUpshift+" "+wantDownshift);
 		
 		if(wantUpshift != wantDownshift)
 		{
