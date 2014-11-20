@@ -1,0 +1,3 @@
+[submodule "CrowUnitySouces/Assets/Scripts/Utils"]
+	path = CrowUnitySouces/Assets/Scripts/Utils
+	url = https://github.com/trfd/Unity-Utils.git
