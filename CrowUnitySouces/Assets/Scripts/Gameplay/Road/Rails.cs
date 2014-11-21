@@ -2,7 +2,8 @@
 using UnityEditor;
 using System.Collections;
 
-class BezierPoint
+[System.Serializable]
+class BezierPoint : ScriptableObject
 {
 	public Vector3 pos=Vector3.zero;
 	public Vector3 delta=Vector3.zero;
@@ -16,14 +17,19 @@ public class Rails : MonoBehaviour
 	public int nbPoints=0;
 	public bool drawShafts=false;
 	
-	BezierPoint[,] points; // [point, rail]
-	Vector3[,] positions;
-	
+	[SerializeField]
+	BezierPoint[] points; // [point, rail]
+	[SerializeField]
+	Vector3[] positions;
+
+	[SerializeField, HideInInspector]	
 	private int nbPositions;
-	
-	BezierPoint test=new BezierPoint();
-	
-	void Start ()
+	[SerializeField, HideInInspector]	
+	private int oldNbPoints=0;
+	[SerializeField, HideInInspector]	
+	private int oldNbRails=0;
+
+		void Start ()
 	{
 	}
 	
@@ -36,29 +42,29 @@ public class Rails : MonoBehaviour
 	{
 		if(points==null)
 		{
-			points=new BezierPoint[0,0];
-			positions=new Vector3[0,0];
+			points=new BezierPoint[0];
+			positions=new Vector3[0];
 			nbPositions=0;
 		}
-		int oldNbPoints=points.GetLength(0);
-		int oldNbRails=points.GetLength (1);
 		if(oldNbPoints!=nbPoints || oldNbRails!=nbRails)
 		{
 			resizeArray(oldNbPoints, oldNbRails);
 			computePositions();
+			oldNbPoints=nbPoints;
+			oldNbRails=nbRails;
 		}	
 	}
 	
 	void resizeArray(int oldNbPoints, int oldNbRails)
 	{
-		BezierPoint[,] newPoints=new BezierPoint[nbPoints,nbRails];
+		BezierPoint[] newPoints=new BezierPoint[nbPoints*nbRails];
 		for(int p=0;p<nbPoints;p++) for(int r=0;r<nbRails;r++)
 		{
-			if(p<oldNbPoints && r<oldNbRails) newPoints[p,r]=points[p,r];
-			else newPoints[p,r]=new BezierPoint();
+			if(p<oldNbPoints && r<oldNbRails) newPoints[p*nbRails+r]=points[p*nbRails+r];
+			else newPoints[p*nbRails+r]=new BezierPoint();
 		}
 		nbPositions=(nbPoints-1)*NB_POSITIONS_PER_SEGMENT+1;
-		positions=new Vector3[nbPositions,nbRails];
+		positions=new Vector3[nbPositions*nbRails];
 		points=newPoints;
 	}
 	
@@ -68,17 +74,17 @@ public class Rails : MonoBehaviour
 		{
 			for(int p=0;p<nbPoints-1;p++)
 			{
-				BezierPoint pt=points[p,r];
-				BezierPoint npt=points[p+1,r];			
+				BezierPoint pt=points[p*nbRails+r];
+				BezierPoint npt=points[(p+1)*nbRails+r];			
 				for(int sub=0;sub<NB_POSITIONS_PER_SEGMENT;sub++)
 				{
-					positions[p*NB_POSITIONS_PER_SEGMENT+sub,r]=
+					positions[(p*NB_POSITIONS_PER_SEGMENT+sub*nbRails)+r]=
 						bezier (new Vector3[4]{pt.pos,pt.pos+pt.delta,npt.pos-npt.delta,npt.pos},
 									sub/(NB_POSITIONS_PER_SEGMENT+1f));
 					
 				}
 			}
-			positions[nbPositions-1,r]=points[nbPoints-1,r].pos;
+			positions[(nbPositions-1)*nbRails+r]=points[(nbPoints-1)*nbRails+r].pos;
 		}
 	}
 	
@@ -102,7 +108,7 @@ public class Rails : MonoBehaviour
 		
 			for(int p=0;p<nbPoints;p++)
 			{
-				BezierPoint pt=points[p,r];
+				BezierPoint pt=points[p*nbRails+r];
 				if(drawShafts)
 				{
 					Gizmos.color=new Color(0,1f,0.5f);
@@ -117,7 +123,7 @@ public class Rails : MonoBehaviour
 			}
 			Gizmos.color=new Color(0,0.5f,1);
 			for(int p=0;p<nbPositions-1;p++)
-				Gizmos.DrawLine(positions[p,r],positions[p+1,r]);
+				Gizmos.DrawLine(positions[p*nbRails+r],positions[(p+1)*nbRails+r]);
 		}
 	}
 	
@@ -127,13 +133,10 @@ public class Rails : MonoBehaviour
 		void OnSceneGUI()
 		{
 			Rails tgt=(Rails) target;
-			/*Handles.color=new Color(1,0.5f,0);
-			tgt.test.pos=Handles.FreeMoveHandle(tgt.test.pos,Quaternion.identity,0.2f,Vector3.zero,
-	                                       Handles.SphereCap);*/
 	        for(int p=0;p<tgt.nbPoints;p++) for(int r=0;r<tgt.nbRails;r++)
 	        {
 				Handles.color=new Color(1,0.5f,0);
-				BezierPoint pt=tgt.points[p,r];
+				BezierPoint pt=tgt.points[p*tgt.nbRails+r];
 				pt.pos=Handles.FreeMoveHandle(pt.pos,Quaternion.identity,0.2f,Vector3.zero,Handles.SphereCap);
 				Handles.color=new Color(0.5f,0.5f,0);
 				pt.delta=Handles.FreeMoveHandle(pt.pos+pt.delta,Quaternion.identity,0.2f,Vector3.zero,Handles.SphereCap)
