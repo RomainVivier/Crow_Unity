@@ -79,7 +79,8 @@ public class CameraControl : MonoBehaviour {
 
                 if(hit.collider.name == "flip_flop")
                 {
-					//spatule
+                    Debug.Log("Spoonbill !");
+                    GadgetManager.Instance.PlayGadget("Spoonbill");
                 }
             }
         }

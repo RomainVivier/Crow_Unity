@@ -55,6 +55,7 @@ public class GadgetManager : MonoBehaviour {
 
 	public void Register(string name, Gadget gadget)
 	{
+        Debug.Log("register = " + name);
 		if(gadget == null || name == null || name == "" )
 		{
 			Debug.LogError("can't register null gadget or name can't be null or empty");
