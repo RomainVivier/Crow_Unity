@@ -17,7 +17,7 @@ public class Rails : MonoBehaviour
 	
 	private int nbComputedPositions;
 	private Vector3[] computedPositions;
-	
+	private bool needToComputePositions=true;
 	
 	[SerializeField, HideInInspector]	
 	private int oldNbPoints=0;
@@ -89,14 +89,14 @@ public class Rails : MonoBehaviour
 				int i1=(p+1)*nbRails+r;
 				for(int sub=0;sub<NB_POSITIONS_PER_SEGMENT;sub++)
 				{
-					computedPositions[(p*NB_POSITIONS_PER_SEGMENT+sub*nbRails)+r]=
+					computedPositions[(p*NB_POSITIONS_PER_SEGMENT+sub)*nbRails+r]=
 						bezier (new Vector3[4]{positions[i0],positions[i0]+deltas[i0],positions[i1]-deltas[i1],positions[i1]},
-									sub/(NB_POSITIONS_PER_SEGMENT+1f));
-					
+									sub/(NB_POSITIONS_PER_SEGMENT+1f));				
 				}
 			}
-			computedPositions[(nbPoints-1)*nbRails+r]=positions[(nbPoints-1)*nbRails+r];
+			computedPositions[(nbComputedPositions-1)*nbRails+r]=positions[(nbPoints-1)*nbRails+r];
 		}
+		needToComputePositions=false;
 	}
 	
 	Vector3 bezier(Vector3[] points, float pos)
@@ -114,6 +114,7 @@ public class Rails : MonoBehaviour
 	
 	void OnDrawGizmos()
 	{
+		if(needToComputePositions) computePositions();
 		for(int r=0;r<nbRails;r++)
 		{
 			for(int p=0;p<nbPoints;p++)
@@ -132,7 +133,7 @@ public class Rails : MonoBehaviour
 				Gizmos.DrawLine(positions[index]-deltas[index],positions[index]+deltas[index]);
 			}
 			Gizmos.color=new Color(0,0.5f,1);
-			for(int p=0;p<nbPoints-1;p++)
+			for(int p=0;p<nbComputedPositions-1;p++)
 				Gizmos.DrawLine(computedPositions[p*nbRails+r],computedPositions[(p+1)*nbRails+r]);
 		}
 	}
@@ -155,7 +156,11 @@ public class Rails : MonoBehaviour
 				tgt.deltas[index]=tgt.positions[index]-
      		             Handles.FreeMoveHandle(tgt.positions[index]-tgt.deltas[index],Quaternion.identity,0.2f,Vector3.zero,Handles.SphereCap);
 	        }
-	        tgt.computePositions();
+	        if(GUI.changed)
+	        {
+		        tgt.computePositions();
+		        EditorUtility.SetDirty(target);
+		    }
 		}
 	}
 }
