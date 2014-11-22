@@ -14,6 +14,8 @@ public class RailsControl : CarControl
 	
 	private Car car;
 	private float throttleBrake=0; // 1=full throttle, -1=full brake
+	private float chunkProgress=0;
+	
 	
 	void Start ()
 	{
@@ -64,10 +66,20 @@ public class RailsControl : CarControl
 		ret.upshift=Input.GetAxis ("Upshift")>0;
 		ret.downshift=Input.GetAxis ("Downshift")>0;		
 		
-		
-		
+		// Steering
+		updateProgress();
 		
 		ret.steering=Input.GetAxis("Steering");
 		return ret;
+	}
+	
+	private void updateProgress()
+	{
+	}
+	
+	// Temporary function to test fixed rails following
+	private Vector3 fakeRails(float rail, float position)
+	{
+		return new Vector3(-5+5*rail,0+500*position);
 	}
 }

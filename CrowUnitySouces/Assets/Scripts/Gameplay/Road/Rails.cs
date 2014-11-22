@@ -112,6 +112,38 @@ public class Rails : MonoBehaviour
 		}
 	}
 	
+	// Return a point in the curve in [0,nbRails-1] and [0,1]
+	public Vector3 getPoint(float rail, float progress)
+	{
+		// Compute the interpolation between the rails
+		int prevRail=Mathf.FloorToInt(rail);
+		if(prevRail<0) prevRail=0;
+		if(prevRail>=nbRails) prevRail=nbRails-1;
+		int nextRail=prevRail+1;
+		if(nextRail>=nbRails) nextRail=nbRails-1;
+		float railPos=rail-prevRail;
+		if(railPos>1) railPos=1;
+		
+		// Compute the interpolation between the points
+		float pointProgress=progress*(nbComputedPositions-1);
+		int prevPP=Mathf.FloorToInt(pointProgress);
+		if(prevPP<0) prevPP=0;
+		if(prevPP>=nbComputedPositions) prevPP=nbComputedPositions;
+		int nextPP=prevPP+1;
+		if(nextPP>=nbComputedPositions) nextPP=nbComputedPositions;
+		float pPos=pointProgress-prevPP;
+		if(pPos>1) pPos=1;
+		
+		// Compute the point
+		Vector3	prPp=computedPositions[prevPP*nbRails+prevRail];
+		Vector3	prNp=computedPositions[nextPP*nbRails+prevRail];
+		Vector3 pr=prPp+(prNp-prPp)*pPos;
+		Vector3 nrPp=computedPositions[prevPP*nbRails+nextRail];
+		Vector3 nrNp=computedPositions[nextPP*nbRails+nextRail];
+		Vector3 nr=nrPp+(nrNp-nrPp)*pPos;
+		return pr+(nr-pr)*railPos;
+	}
+	
 	void OnDrawGizmos()
 	{
 		if(needToComputePositions) computePositions();
