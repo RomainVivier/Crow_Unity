@@ -69,7 +69,8 @@ public class CameraControl : MonoBehaviour {
             {
                 if (hit.collider.name == "button0")
                 {
-					//rocket
+                    Debug.Log("Rocket !");
+                    GadgetManager.Instance.PlayGadget("Rocket");
                 }
 
                 if (hit.collider.name == "button1")

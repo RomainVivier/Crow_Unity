@@ -1,23 +1,39 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Gadget : MonoBehaviour {
+public class Gadget : MonoBehaviour
+{
 
-	private bool m_isReady = true;
+    #region Members
 
-	public bool IsReady
+    private bool m_isReady = true;
+
+    #endregion 
+
+    #region Properties
+
+    public bool IsReady
 	{
 		get{ return m_isReady; }
 		set{ m_isReady = value; }
 	}
 
-	public virtual void Play()
+    #endregion 
+
+    #region Virtual Functions
+
+    public virtual void Play()
 	{
-		IsReady = false;
+        IsReady = false;
+        GadgetManager.Instance.HasOneGadgetPlaying = true;
 	}
 
 	public virtual void Stop()
 	{
 		IsReady = true;
-	}
+        GadgetManager.Instance.HasOneGadgetPlaying = false;
+    }
+
+    #endregion
+
 }

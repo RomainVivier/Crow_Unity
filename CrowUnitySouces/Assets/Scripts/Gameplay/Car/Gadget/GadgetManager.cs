@@ -12,12 +12,25 @@ public class GadgetManager : MonoBehaviour {
 	/// </summary>
 	private  Dictionary<string, Gadget> m_gadgets;
 	private static GadgetManager m_instance;
+    private string m_lastGadget;
+    private bool m_hasOneGadgetPlaying;
+    private Timer m_timer;
 
 	#endregion
 
-	#region Singleton
+    #region Properties
 
-	public static GadgetManager Instance
+    public bool HasOneGadgetPlaying
+    {
+        get { return m_hasOneGadgetPlaying; }
+        set { m_hasOneGadgetPlaying = value; }
+    }
+
+    #endregion 
+
+    #region Singleton
+
+    public static GadgetManager Instance
 	{
 		get
 		{
@@ -47,13 +60,15 @@ public class GadgetManager : MonoBehaviour {
 	private void Init()
 	{
 		m_gadgets = new Dictionary<string, Gadget>();
+        m_hasOneGadgetPlaying = false;
+        m_timer = new Timer();
 	}
 
 	#endregion
 
-	#region Functions
+    #region Functions
 
-	public void Register(string name, Gadget gadget)
+    public void Register(string name, Gadget gadget)
 	{
         Debug.Log("register = " + name);
 		if(gadget == null || name == null || name == "" )
@@ -67,9 +82,17 @@ public class GadgetManager : MonoBehaviour {
 
 	public void PlayGadget(string name)
 	{
-		if(m_gadgets.ContainsKey(name))
+        if(m_timer.IsElapsedLoop && HasOneGadgetPlaying && m_lastGadget != name)
+        {
+            Debug.Log("Can't play button");
+            return;
+        }
+
+		if(m_gadgets.ContainsKey(name) && m_gadgets[name].IsReady)
 		{
 			m_gadgets[name].Play();
+            m_lastGadget = name;
+            m_timer.Reset(0.5f);
 		}else{
 			Debug.Log("no gadget has been registered to this name");
 		}
