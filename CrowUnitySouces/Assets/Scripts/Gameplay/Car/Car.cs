@@ -125,13 +125,7 @@ public class Car : MonoBehaviour
 	{
 		updateValues ();
 	}
-	
-	public float getForwardVelocity()
-	{
-		Vector3 velocity=body.GetRelativePointVelocity(new Vector3(0,0,0));
-		return Vector3.Dot(velocity,body.transform.forward);
-	}
-	
+		
 	// Private methods
 	void updateValues()
 	{
@@ -184,6 +178,23 @@ public class Car : MonoBehaviour
 		
 		// Update center of weight
 		body.centerOfMass=centerOfMass;
+	}
+
+	// Public getters
+	public float getForwardVelocity()
+	{
+		Vector3 velocity=body.GetRelativePointVelocity(new Vector3(0,0,0));
+		return Vector3.Dot(velocity,body.transform.forward);
+	}
+	
+	public Vector3 getPosition()
+	{
+		return body.transform.position;
+	}
+
+	public Vector3 getRightVector()
+	{
+		return body.transform.right;
 	}
 }
 
