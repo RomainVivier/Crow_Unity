@@ -115,10 +115,10 @@ public class Car : MonoBehaviour
 		oldInputs=inputs;
 		
 		// Debug print
-		if(nbUpdates%10==0)
+		/*if(nbUpdates%10==0)
 		{
 			Debug.Log((int)forwardVelocity*3.6+" "+(int)rpm);
-		}
+		}*/
 	}
 
 	void OnValidate()

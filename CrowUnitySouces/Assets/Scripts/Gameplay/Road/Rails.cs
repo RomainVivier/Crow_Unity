@@ -115,6 +115,8 @@ public class Rails : MonoBehaviour
 	// Return a point in the curve in [0,nbRails-1] and [0,1]
 	public Vector3 getPoint(float rail, float progress)
 	{
+		if(needToComputePositions) computePositions();
+		
 		// Compute the interpolation between the rails
 		int prevRail=Mathf.FloorToInt(rail);
 		if(prevRail<0) prevRail=0;
@@ -128,9 +130,9 @@ public class Rails : MonoBehaviour
 		float pointProgress=progress*(nbComputedPositions-1);
 		int prevPP=Mathf.FloorToInt(pointProgress);
 		if(prevPP<0) prevPP=0;
-		if(prevPP>=nbComputedPositions) prevPP=nbComputedPositions;
+		if(prevPP>=nbComputedPositions-1) prevPP=nbComputedPositions-1;
 		int nextPP=prevPP+1;
-		if(nextPP>=nbComputedPositions) nextPP=nbComputedPositions;
+		if(nextPP>=nbComputedPositions-1) nextPP=nbComputedPositions-1;
 		float pPos=pointProgress-prevPP;
 		if(pPos>1) pPos=1;
 		
@@ -169,6 +171,12 @@ public class Rails : MonoBehaviour
 				Gizmos.DrawLine(computedPositions[p*nbRails+r],computedPositions[(p+1)*nbRails+r]);
 		}
 	}
+
+	public int getNbRails()
+	{
+		return nbRails;
+	}
+	
 	
 	[CustomEditor(typeof(Rails))]
 	class RailsEditor : Editor

@@ -17,12 +17,14 @@ public class RailsControl : CarControl
 	public float steeringFullZone=2;
 
 	private Car car;
+	private Rails rails;
 	private float throttleBrake=0; // 1=full throttle, -1=full brake
 	private float steering=0;
 	private float chunkProgress=0;
 	private Vector3 target;
 	private float oldSteeringInput=0;
 	private int targetRail=0;
+	private int nbUpdates=0;
 	
 	void Start ()
 	{
@@ -36,6 +38,8 @@ public class RailsControl : CarControl
 	
 	void FixedUpdate ()
 	{
+		nbUpdates++;
+		
 		// Manage speed
 		float wantThrottleBrake=0;
 		float brakeCommand=Input.GetAxis("Brake");
@@ -64,13 +68,29 @@ public class RailsControl : CarControl
 		float curSteeringInput=Input.GetAxis("Steering");
 		if(stickToRails)
 		{
-			if(curSteeringInput>0 && oldSteeringInput<=0)
+			if(curSteeringInput>0 && oldSteeringInput<=0 && targetRail<rails.getNbRails()-1)
+				targetRail++;
+			if(curSteeringInput<0 && oldSteeringInput>=0 && targetRail>0)
+				targetRail--;
+			if(targetRail!=currentRail)
 			{
-				
+				if(targetRail>currentRail)
+				{
+					currentRail+=changeSpeed*Time.fixedDeltaTime;
+					if(targetRail<currentRail) currentRail=targetRail;
+				}
+				else if(targetRail<currentRail)
+				{
+					currentRail-=changeSpeed*Time.fixedDeltaTime;
+					if(targetRail>currentRail) currentRail=targetRail;				
+				}
 			}
 		}
 		else
 		{
+			currentRail+=curSteeringInput*changeSpeed*Time.fixedDeltaTime;
+			if(currentRail<0) currentRail=0;
+			if(currentRail>rails.getNbRails()-1) currentRail=rails.getNbRails()-1;
 		}
 
 		// Steering
@@ -90,6 +110,12 @@ public class RailsControl : CarControl
 		
 		
 		oldSteeringInput=curSteeringInput;
+		
+		// Debug print
+		if(nbUpdates%10==0)
+		{
+			Debug.Log (chunkProgress +" "+rightDiff);
+		}
 	}
 
 	public override CarInputs getInputs()
@@ -117,36 +143,32 @@ public class RailsControl : CarControl
 		{
 			float minProgress=chunkProgress;
 			float maxProgress=chunkProgress+0.1f;
-			Vector3 maxPos=fakeRails (currentRail,maxProgress);
+			Vector3 maxPos=rails.getPoint(currentRail,maxProgress);
 			float dist=Vector3.Distance(carPos,maxPos);
 			while(dist<wantedTargetDist)
 			{
 				maxProgress+=0.1f;
-				maxPos=fakeRails (currentRail,maxProgress);
+				maxPos=rails.getPoint(currentRail,maxProgress);
 				dist=Vector3.Distance(carPos,maxPos);
 			}
 			for(int i=0;i<4;i++)
 			{
 				float midProgress=(minProgress+maxProgress)/2;
-				Vector3 midPos=fakeRails (currentRail,midProgress);
+				Vector3 midPos=rails.getPoint(currentRail,midProgress);
 				dist=Vector3.Distance(carPos,midPos);
 				if(dist<wantedTargetDist)
 					minProgress=midProgress;
 				else maxProgress=midProgress;
 			}
 			chunkProgress=(minProgress+maxProgress)/2;
-			target=fakeRails (currentRail,chunkProgress);
+			target=rails.getPoint(currentRail,chunkProgress);
 		}
 	}
 		
 	private void OnValidate()
 	{
-		target=fakeRails (currentRail,chunkProgress);
+		rails=chunk.GetComponent<Rails>();
+		target=rails.getPoint(currentRail,chunkProgress);
 	}
 
-	// Temporary function to test fixed rails following
-	private Vector3 fakeRails(float rail, float position)
-	{
-		return new Vector3(-5+5*rail,0,0+500*position);
-	}
 }
