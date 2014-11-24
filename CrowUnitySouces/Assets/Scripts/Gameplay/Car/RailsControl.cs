@@ -13,13 +13,16 @@ public class RailsControl : CarControl
 	public float pedalsInertia=0.1f;
 	public float steeringInertia=0.1f;
 	public float targetDistMultiplier=0.5f; // Unit = seconds
+	public float steeringDeadZone=1;
+	public float steeringFullZone=2;
 
 	private Car car;
 	private float throttleBrake=0; // 1=full throttle, -1=full brake
 	private float steering=0;
 	private float chunkProgress=0;
 	private Vector3 target;
-
+	private float oldSteeringInput=0;
+	private int targetRail=0;
 	
 	void Start ()
 	{
@@ -57,12 +60,36 @@ public class RailsControl : CarControl
 		float percent=Mathf.Pow(pedalsInertia,Time.fixedDeltaTime);
 		throttleBrake=Mathf.Lerp(throttleBrake,wantThrottleBrake,percent);
 
+		// Move from one rail to another
+		float curSteeringInput=Input.GetAxis("Steering");
+		if(stickToRails)
+		{
+			if(curSteeringInput>0 && oldSteeringInput<=0)
+			{
+				
+			}
+		}
+		else
+		{
+		}
+
 		// Steering
 		updateProgress();
 		Vector3 diff=target-car.getPosition();
-		float rightDiff=Vector3.Dot(
-
-			
+		float rightDiff=Vector3.Dot(car.getRightVector(),diff);
+		float rightDiffAbs=Mathf.Abs(rightDiff);
+		float wantSteering=0;
+		if(rightDiffAbs>steeringDeadZone)
+		{
+			wantSteering=rightDiff>0 ? 1 : -1;
+			if(rightDiffAbs<steeringFullZone)
+				wantSteering*=(rightDiffAbs-steeringDeadZone)/(steeringFullZone-steeringDeadZone);
+		}
+		percent=Mathf.Pow(steeringInertia,Time.fixedDeltaTime);
+		steering=Mathf.Lerp(steering,wantSteering,percent);
+		
+		
+		oldSteeringInput=curSteeringInput;
 	}
 
 	public override CarInputs getInputs()
@@ -120,6 +147,6 @@ public class RailsControl : CarControl
 	// Temporary function to test fixed rails following
 	private Vector3 fakeRails(float rail, float position)
 	{
-		return new Vector3(-5+5*rail,0+500*position);
+		return new Vector3(-5+5*rail,0,0+500*position);
 	}
 }
