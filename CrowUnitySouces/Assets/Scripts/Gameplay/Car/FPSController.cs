@@ -157,7 +157,6 @@ public class FPSController : MonoBehaviour
 
 	#endregion
 
-
 	#region Movement
 
 	void Forward()
