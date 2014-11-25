@@ -112,11 +112,11 @@ public class RailsControl : CarControl
 		oldSteeringInput=curSteeringInput;
 		
 		// Debug print
-		if(nbUpdates%10==0)
+		/*if(nbUpdates%10==0)
 		{
 			Debug.Log (chunkProgress +" "+rightDiff+" "+steering);
 			GameObject.Find ("Sphere").transform.position=target;
-		}
+		}*/
 
 	}
 
@@ -166,9 +166,25 @@ public class RailsControl : CarControl
 			}
 			chunkProgress=(minProgress+maxProgress)/2;
 			target=rails.getPoint(currentRail,chunkProgress);
+			if(chunkProgress>=1) gotoNextChunk();
 		}
 	}
 		
+	private void gotoNextChunk()
+	{
+		if(chunk.nextChunk!=null)
+		{
+			int oldNbRails=rails.nbRails;
+			chunk=chunk.nextChunk;
+			rails=chunk._rails;
+			int newNbRails=rails.nbRails;
+			currentRail=(currentRail-oldNbRails/2f)*newNbRails/oldNbRails+newNbRails/2f;
+			targetRail=Mathf.RoundToInt((targetRail-oldNbRails/2)*newNbRails/oldNbRails+newNbRails/2f);
+			chunkProgress=0;
+			updateProgress();
+		}
+	}
+
 	private void OnValidate()
 	{
 		rails=chunk.GetComponent<Rails>();

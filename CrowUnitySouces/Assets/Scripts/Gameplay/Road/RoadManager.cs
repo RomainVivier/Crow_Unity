@@ -70,6 +70,7 @@ public class RoadManager : MonoBehaviour
             if(m_chunks.Count > 0)
             {
                 rc.transform.position = m_chunks[m_chunks.Count -1]._endPoint.position + rc.StartToCenter;
+				m_chunks[m_chunks.Count-1].nextChunk=rc;
             }else{
                 rc.transform.position = _startPoint.position;
             }
@@ -89,6 +90,7 @@ public class RoadManager : MonoBehaviour
         }
 
         RoadChunk rc = m_chunks[order];
+		m_lastChunk.nextChunk=rc;
 
         Debug.Log("position = " + m_lastChunk.transform.position);
         rc.transform.position = m_lastChunk._endPoint.position + rc.StartToCenter;

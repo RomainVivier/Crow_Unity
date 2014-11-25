@@ -143,7 +143,7 @@ public class Rails : MonoBehaviour
 		Vector3 nrPp=computedPositions[prevPP*nbRails+nextRail];
 		Vector3 nrNp=computedPositions[nextPP*nbRails+nextRail];
 		Vector3 nr=nrPp+(nrNp-nrPp)*pPos;
-		return pr+(nr-pr)*railPos;
+		return transform.TransformPoint(pr+(nr-pr)*railPos);
 	}
 	
 	void OnDrawGizmos()
@@ -157,29 +157,29 @@ public class Rails : MonoBehaviour
 				if(drawShafts)
 				{
 					Gizmos.color=new Color(0,1f,0.5f);
-					Vector3 shaftBottom=positions[index];
+					Vector3 shaftBottom=transform.TransformPoint(positions[index]);
 					shaftBottom.y=-100;
 					Vector3 shaftTop=shaftBottom;
 					shaftTop.y=100;
 					Gizmos.DrawLine(shaftBottom,shaftTop);	
 					Gizmos.color=new Color(0.5f,0,1);
-					shaftBottom=positions[index]+deltas[index];
+					shaftBottom=transform.TransformPoint(positions[index]+deltas[index]);
 					shaftBottom.y=-100;
 					shaftTop=shaftBottom;
 					shaftTop.y=100;
 					Gizmos.DrawLine(shaftBottom,shaftTop);
-					shaftBottom=positions[index]-deltas[index];
+					shaftBottom=transform.TransformPoint(positions[index]-deltas[index]);
 					shaftBottom.y=-100;
 					shaftTop=shaftBottom;
 					shaftTop.y=100;
 					Gizmos.DrawLine(shaftBottom,shaftTop);
 				}
 				Gizmos.color=new Color(0,0.5f,0.5f);
-				Gizmos.DrawLine(positions[index]-deltas[index],positions[index]+deltas[index]);
+				Gizmos.DrawLine(transform.TransformPoint(positions[index]-deltas[index]),transform.TransformPoint(positions[index]+deltas[index]));
 			}
 			Gizmos.color=new Color(0,0.5f,1);
 			for(int p=0;p<nbComputedPositions-1;p++)
-				Gizmos.DrawLine(computedPositions[p*nbRails+r],computedPositions[(p+1)*nbRails+r]);
+				Gizmos.DrawLine(transform.TransformPoint(computedPositions[p*nbRails+r]),transform.TransformPoint(computedPositions[(p+1)*nbRails+r]));
 		}
 	}
 
@@ -200,12 +200,14 @@ public class Rails : MonoBehaviour
 	        {
 				Handles.color=new Color(1,0.5f,0);
 				int index=p*tgt.nbRails+r;
-				tgt.positions[index]=Handles.FreeMoveHandle(tgt.positions[index],Quaternion.identity,0.2f,Vector3.zero,Handles.SphereCap);
+				tgt.positions[index]=tgt.transform.InverseTransformPoint(
+					Handles.FreeMoveHandle(tgt.transform.TransformPoint(tgt.positions[index]),Quaternion.identity,0.2f,Vector3.zero,Handles.SphereCap));
 				Handles.color=new Color(0.5f,0.5f,0);
-				tgt.deltas[index]=Handles.FreeMoveHandle(tgt.positions[index]+tgt.deltas[index],Quaternion.identity,0.2f,Vector3.zero,Handles.SphereCap)
+				tgt.deltas[index]=tgt.transform.InverseTransformPoint(
+					Handles.FreeMoveHandle(tgt.transform.TransformPoint(tgt.positions[index]+tgt.deltas[index]),Quaternion.identity,0.2f,Vector3.zero,Handles.SphereCap))
 								-tgt.positions[index];
-				tgt.deltas[index]=tgt.positions[index]-
-     		             Handles.FreeMoveHandle(tgt.positions[index]-tgt.deltas[index],Quaternion.identity,0.2f,Vector3.zero,Handles.SphereCap);
+				tgt.deltas[index]=tgt.positions[index]-tgt.transform.InverseTransformPoint(
+				    Handles.FreeMoveHandle(tgt.transform.TransformPoint(tgt.positions[index]-tgt.deltas[index]),Quaternion.identity,0.2f,Vector3.zero,Handles.SphereCap));
 	        }
 	        if(GUI.changed)
 	        {

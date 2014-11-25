@@ -12,7 +12,7 @@ public class RoadChunk : MonoBehaviour {
     public GameObject[] _environmentPoint;
     public Rails _rails;
     public Obstacle[] _obstacles;
-	public RoadChunk nextChunk;
+	public RoadChunk nextChunk=null;
 
     private bool m_isUnused = false;
     
