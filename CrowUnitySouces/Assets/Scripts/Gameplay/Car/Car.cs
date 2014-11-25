@@ -168,10 +168,6 @@ public class Car : MonoBehaviour
 		engine.updateValues ();
 		acceleration2Torque=mass*wheelRadius;
 		brakeTorque=brakeDecceleration*acceleration2Torque/2;
-		/*wheelBase=Vector3.Distance(transform.FindChild("Body").FindChild("WheelFL").transform.position,
-			                       transform.FindChild("Body").FindChild("WheelRL").transform.position);
-		wheelTrack=Vector3.Distance(transform.FindChild("Body").FindChild("WheelFL").transform.position,
-		                            transform.FindChild("Body").FindChild("WheelFR").transform.position);*/
 		wheelBase=body.transform.localScale.z;
 		wheelTrack=body.transform.localScale.x;
 		
@@ -196,5 +192,11 @@ public class Car : MonoBehaviour
 	{
 		return body.transform.right;
 	}
+
+	public Vector3 getForwardVector()
+	{
+		return body.transform.forward;
+	}
+	
 }
 

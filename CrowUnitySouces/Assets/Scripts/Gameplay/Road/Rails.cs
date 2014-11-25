@@ -162,6 +162,17 @@ public class Rails : MonoBehaviour
 					Vector3 shaftTop=shaftBottom;
 					shaftTop.y=100;
 					Gizmos.DrawLine(shaftBottom,shaftTop);	
+					Gizmos.color=new Color(0.5f,0,1);
+					shaftBottom=positions[index]+deltas[index];
+					shaftBottom.y=-100;
+					shaftTop=shaftBottom;
+					shaftTop.y=100;
+					Gizmos.DrawLine(shaftBottom,shaftTop);
+					shaftBottom=positions[index]-deltas[index];
+					shaftBottom.y=-100;
+					shaftTop=shaftBottom;
+					shaftTop.y=100;
+					Gizmos.DrawLine(shaftBottom,shaftTop);
 				}
 				Gizmos.color=new Color(0,0.5f,0.5f);
 				Gizmos.DrawLine(positions[index]-deltas[index],positions[index]+deltas[index]);

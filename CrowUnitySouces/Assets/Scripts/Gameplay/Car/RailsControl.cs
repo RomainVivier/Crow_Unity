@@ -114,8 +114,10 @@ public class RailsControl : CarControl
 		// Debug print
 		if(nbUpdates%10==0)
 		{
-			Debug.Log (chunkProgress +" "+rightDiff);
+			Debug.Log (chunkProgress +" "+rightDiff+" "+steering);
+			GameObject.Find ("Sphere").transform.position=target;
 		}
+
 	}
 
 	public override CarInputs getInputs()
@@ -137,25 +139,27 @@ public class RailsControl : CarControl
 	private void updateProgress()
 	{
 		Vector3 carPos=car.getPosition();
+		Vector3 forward=car.getForwardVector();
+		Vector3 diff=target-carPos;
 		float wantedTargetDist=car.getForwardVelocity()*targetDistMultiplier;
-		float currentTargetDist=Vector3.Distance(carPos,target);
+		float currentTargetDist=Vector3.Dot (diff,forward);;
 		if(currentTargetDist<wantedTargetDist)
 		{
 			float minProgress=chunkProgress;
 			float maxProgress=chunkProgress+0.1f;
 			Vector3 maxPos=rails.getPoint(currentRail,maxProgress);
-			float dist=Vector3.Distance(carPos,maxPos);
-			while(dist<wantedTargetDist)
+			float dist=Vector3.Dot (maxPos-carPos,forward);
+			while(dist<wantedTargetDist && maxProgress<1)
 			{
 				maxProgress+=0.1f;
 				maxPos=rails.getPoint(currentRail,maxProgress);
-				dist=Vector3.Distance(carPos,maxPos);
+				dist=Vector3.Dot(maxPos-carPos,forward);
 			}
-			for(int i=0;i<4;i++)
+			for(int i=0;i<8;i++)
 			{
 				float midProgress=(minProgress+maxProgress)/2;
 				Vector3 midPos=rails.getPoint(currentRail,midProgress);
-				dist=Vector3.Distance(carPos,midPos);
+				dist=Vector3.Dot(midPos-carPos,forward);
 				if(dist<wantedTargetDist)
 					minProgress=midProgress;
 				else maxProgress=midProgress;
