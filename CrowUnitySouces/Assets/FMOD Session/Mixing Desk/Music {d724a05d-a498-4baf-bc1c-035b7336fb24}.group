@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.01.05.00">
+    <object class="MixerGroup" id="{d724a05d-a498-4baf-bc1c-035b7336fb24}">
+        <property name="volume">
+            <value>-1.80000007</value>
+        </property>
+        <property name="name">
+            <value>Music</value>
+        </property>
+        <relationship name="effectChain">
+            <destination>{b48a1110-ee3e-4ea8-82c7-a291ebbd1a2a}</destination>
+        </relationship>
+        <relationship name="panner">
+            <destination>{08909ec3-0867-46a8-925a-f8251a9c738b}</destination>
+        </relationship>
+        <relationship name="output">
+            <destination>{57bf8525-e79a-45d1-8147-30fa4ceeefcf}</destination>
+        </relationship>
+    </object>
+    <object class="MixerBusEffectChain" id="{b48a1110-ee3e-4ea8-82c7-a291ebbd1a2a}">
+        <relationship name="effects">
+            <destination>{58d9cb8d-3651-415d-a7ef-c1eb12f5c43c}</destination>
+            <destination>{93dbe4af-7f5b-4fe7-84e3-eb9ecb23c477}</destination>
+            <destination>{4dc3a8bf-958a-4784-982d-cb2490e9c190}</destination>
+            <destination>{c7b90fa9-837f-4bc9-8c23-72fd3e7b5ebe}</destination>
+            <destination>{16d90486-75f9-47e4-96b1-cdb07d065ae8}</destination>
+        </relationship>
+    </object>
+    <object class="MixerBusPanner" id="{08909ec3-0867-46a8-925a-f8251a9c738b}"/>
+    <object class="DelayEffect" id="{58d9cb8d-3651-415d-a7ef-c1eb12f5c43c}">
+        <property name="delay">
+            <value>30</value>
+        </property>
+        <property name="feedback">
+            <value>49.5</value>
+        </property>
+        <property name="level">
+            <value>-80</value>
+        </property>
+    </object>
+    <object class="LowpassEffect" id="{93dbe4af-7f5b-4fe7-84e3-eb9ecb23c477}">
+        <property name="cutoff">
+            <value>22000</value>
+        </property>
+    </object>
+    <object class="FlangerEffect" id="{4dc3a8bf-958a-4784-982d-cb2490e9c190}">
+        <property name="rate">
+            <value>4.89999962</value>
+        </property>
+        <property name="delay">
+            <value>0.829999983</value>
+        </property>
+        <property name="mix">
+            <value>0</value>
+        </property>
+    </object>
+    <object class="MixerSend" id="{c7b90fa9-837f-4bc9-8c23-72fd3e7b5ebe}">
+        <relationship name="return">
+            <destination>{d1479955-75bd-4e24-926a-1f56d5b319df}</destination>
+        </relationship>
+    </object>
+    <object class="MixerBusFader" id="{16d90486-75f9-47e4-96b1-cdb07d065ae8}"/>
+</objects>

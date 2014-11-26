@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.01.05.00">
+    <object class="AudioFile" id="{20d35c28-9578-46a9-b7da-8465f75558fa}">
+        <property name="frequencyInKHz">
+            <value>44.0999985</value>
+        </property>
+        <property name="channelCount">
+            <value>2</value>
+        </property>
+        <property name="length">
+            <value>109.41176870748299</value>
+        </property>
+        <property name="lastModifiedDate">
+            <value>0</value>
+        </property>
+        <property name="audioFilePath">
+            <value>$(AUDIO_BIN_DIR)/Love seat {350fb5d9-b0c1-41c3-ab3e-d448519bc2f8}.wav</value>
+        </property>
+        <relationship name="container">
+            <destination>{b6fdd510-7ef7-4f8c-bea3-084a7f2d808b}</destination>
+        </relationship>
+    </object>
+</objects>
