@@ -12,8 +12,7 @@ public class PolynomialEngine : Engine {
 	
 	// Power curve=ax^3+bx^2+cx
 	private float curveA=0,curveB=0,curveC=0;
-	
-	
+
 	public override float getMaxPower()
 	{
 		return maxPowerKw*1000;
@@ -62,4 +61,9 @@ public class PolynomialEngine : Engine {
 	{
 		return maxPowerRpm;
 	}
+
+    public override float getMaxRpm()
+    {
+        return maxRpm;
+    }
 }

@@ -12,13 +12,20 @@ public class Radio : MonoBehaviour {
     private int m_targetFrequency;
     private Timer m_timer;
 
+    private FMOD.Studio.EventInstance m_radio;
+    private FMOD.Studio.ParameterInstance m_fmodRadioFreq;
+    private FMOD.Studio.ParameterInstance m_fmodRadioState;
+    private FMOD.Studio.ParameterInstance m_fmodRadioPickup;
+
+    public FMOD_StudioEventEmitter _emitter;
+
     public int RadioState
     {
         get { return m_radioState; }
         set 
         { 
             m_radioState = value;
-            //FMOD_StudioSystem.instance.PlayOneShot("event");
+            m_fmodRadioState.setValue(m_radioState);
         }
     }
 
@@ -28,7 +35,15 @@ public class Radio : MonoBehaviour {
         m_startFrequency = 6;
         m_targetFrequency = 6;
         m_currentFrequency = 6f;
-        FMOD_StudioSystem.instance.PlayOneShot("event:/Music/Radio/radioStream", transform.position);
+
+        m_radio = FMOD_StudioSystem.instance.GetEvent("event:/Music/Radio/radioStream");
+        m_radio.start();
+
+        m_radio.getParameter("radioFrequency", out m_fmodRadioFreq);
+        m_radio.getParameter("radioPickup", out m_fmodRadioPickup);
+        m_radio.getParameter("radioState", out m_fmodRadioState);
+
+        RadioState = 1;
 	}
 	
 	void Update()
@@ -41,6 +56,14 @@ public class Radio : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.E))
         {
             SwitchFrequencyUp();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Return))
+        {
+            if (RadioState == 1)
+                RadioState = 0;
+            else
+                RadioState = 1;
         }
 
         if(m_timer.IsElapsedOnce)
@@ -73,8 +96,8 @@ public class Radio : MonoBehaviour {
 
         m_currentFrequency = Mathf.Lerp((float)m_startFrequency, (float)m_targetFrequency, 1 - m_timer.CurrentNormalized);
 
-        Debug.Log("start = " + m_startFrequency + " :: target = " + m_targetFrequency + " :: current value = " + m_currentFrequency);
-        //set the value here
+        //Debug.Log("start = " + m_startFrequency + " :: target = " + m_targetFrequency + " :: current value = " + m_currentFrequency);
+        m_fmodRadioFreq.setValue(m_currentFrequency);
 	}
 
     void SwitchFrequencyUp()

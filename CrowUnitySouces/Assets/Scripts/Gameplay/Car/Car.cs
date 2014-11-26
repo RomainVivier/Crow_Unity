@@ -20,7 +20,7 @@ public class Car : MonoBehaviour
 	private Rigidbody body;
 	private WheelCollider[] wheels;
 	private Transmission transmission;
-	
+
 	// Private attributes
 	private float dragCoef;
 	private float mass;
@@ -33,11 +33,19 @@ public class Car : MonoBehaviour
 	private float wheelTrack;
 	private CarControl.CarInputs oldInputs;
 	private Vector3 centerOfMass;
-	
-	// MonoBehaviour methods
+
+	// Sounds
+    private FMOD.Studio.EventInstance engineSound;
+    private FMOD.Studio.ParameterInstance engineRPM;
+    private const int ENGINE_SOUND_MAX_RPM = 6000;
+
+     // MonoBehaviour methods
 	void Start ()
 	{
 		updateValues ();
+        engineSound = FMOD_StudioSystem.instance.GetEvent("event:/SFX/Car Mechanics/carEngine");
+        engineSound.start();
+        engineSound.getParameter("RPM", out engineRPM);
 	}
 
 	void FixedUpdate ()
@@ -114,6 +122,10 @@ public class Car : MonoBehaviour
 		// Store old inputs
 		oldInputs=inputs;
 		
+        // Update sounds
+        float soundRpm=rpm*ENGINE_SOUND_MAX_RPM/engine.getMaxRpm();
+        engineRPM.setValue(soundRpm);
+
 		// Debug print
 		/*if(nbUpdates%10==0)
 		{
