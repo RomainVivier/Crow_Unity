@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.01.05.00">
+    <object class="Folder" id="{d041f375-6b14-402c-bae9-c3626a677854}">
+        <property name="name">
+            <value>ButtonPushSmall</value>
+        </property>
+        <relationship name="folder">
+            <destination>{c376c5ff-5e33-4b90-b61f-06e90d5f9cab}</destination>
+        </relationship>
+    </object>
+</objects>

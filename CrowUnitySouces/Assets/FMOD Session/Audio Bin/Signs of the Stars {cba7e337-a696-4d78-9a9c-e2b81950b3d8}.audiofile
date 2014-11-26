@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.01.05.00">
+    <object class="AudioFile" id="{cba7e337-a696-4d78-9a9c-e2b81950b3d8}">
+        <property name="frequencyInKHz">
+            <value>44.0999985</value>
+        </property>
+        <property name="channelCount">
+            <value>2</value>
+        </property>
+        <property name="length">
+            <value>139.63637188208617</value>
+        </property>
+        <property name="lastModifiedDate">
+            <value>0</value>
+        </property>
+        <property name="audioFilePath">
+            <value>$(AUDIO_BIN_DIR)/Signs of the Stars {ee6bae6e-cf03-46ff-bee5-805abf2081ac}.wav</value>
+        </property>
+        <relationship name="container">
+            <destination>{b6fdd510-7ef7-4f8c-bea3-084a7f2d808b}</destination>
+        </relationship>
+    </object>
+</objects>

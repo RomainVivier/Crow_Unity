@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.01.05.00">
+    <object class="AudioFile" id="{fcfac3d1-3ff8-41fa-a816-ac8a10b9d061}">
+        <property name="frequencyInKHz">
+            <value>44.0999985</value>
+        </property>
+        <property name="channelCount">
+            <value>2</value>
+        </property>
+        <property name="length">
+            <value>4.1633106575963721</value>
+        </property>
+        <property name="lastModifiedDate">
+            <value>0</value>
+        </property>
+        <property name="audioFilePath">
+            <value>$(AUDIO_BIN_DIR)/CROW_Gadget_Rocket_Success {776d2c46-6281-43b3-8b5c-c37162669c4b}.wav</value>
+        </property>
+        <relationship name="container">
+            <destination>{0201925a-ec3a-4e64-aab5-f18d87dd8b6d}</destination>
+        </relationship>
+    </object>
+</objects>

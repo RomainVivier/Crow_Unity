@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.01.05.00">
+    <object class="MixerReturn" id="{d1479955-75bd-4e24-926a-1f56d5b319df}">
+        <property name="volume">
+            <value>-80</value>
+        </property>
+        <property name="name">
+            <value>ReverbLong</value>
+        </property>
+        <relationship name="effectChain">
+            <destination>{06f57539-3d39-47d3-bcc0-aa232d2b38ad}</destination>
+        </relationship>
+        <relationship name="panner">
+            <destination>{8d87ef60-c465-4504-841e-43640e15e652}</destination>
+        </relationship>
+        <relationship name="output">
+            <destination>{9eddb661-d222-4c3a-a2b7-418281daf685}</destination>
+        </relationship>
+    </object>
+    <object class="MixerBusEffectChain" id="{06f57539-3d39-47d3-bcc0-aa232d2b38ad}">
+        <relationship name="effects">
+            <destination>{50098801-9be8-4512-ab54-12c48323c99f}</destination>
+            <destination>{bb093438-237c-4c46-aa22-444554333581}</destination>
+            <destination>{d4908b98-7c3b-49a2-8f81-0c716db59dff}</destination>
+        </relationship>
+    </object>
+    <object class="MixerBusPanner" id="{8d87ef60-c465-4504-841e-43640e15e652}"/>
+    <object class="MixerBusFader" id="{50098801-9be8-4512-ab54-12c48323c99f}"/>
+    <object class="SFXReverbEffect" id="{bb093438-237c-4c46-aa22-444554333581}">
+        <property name="decayTime">
+            <value>4200</value>
+        </property>
+        <property name="earlyDelay">
+            <value>62</value>
+        </property>
+        <property name="lateDelay">
+            <value>39</value>
+        </property>
+        <property name="HFReference">
+            <value>6000</value>
+        </property>
+        <property name="HFDecayRatio">
+            <value>81.5</value>
+        </property>
+        <property name="diffusion">
+            <value>54</value>
+        </property>
+        <property name="lowShelfFrequency">
+            <value>210</value>
+        </property>
+        <property name="lowShelfGain">
+            <value>-22</value>
+        </property>
+        <property name="highCut">
+            <value>660</value>
+        </property>
+        <property name="earlyLateMix">
+            <value>88</value>
+        </property>
+        <property name="wetLevel">
+            <value>10</value>
+        </property>
+        <property name="dryLevel">
+            <value>-80</value>
+        </property>
+    </object>
+    <object class="HighpassEffect" id="{d4908b98-7c3b-49a2-8f81-0c716db59dff}">
+        <property name="cutoff">
+            <value>75</value>
+        </property>
+    </object>
+</objects>

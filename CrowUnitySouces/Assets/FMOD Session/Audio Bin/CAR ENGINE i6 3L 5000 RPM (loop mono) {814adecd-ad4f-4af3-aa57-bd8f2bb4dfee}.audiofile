@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.01.05.00">
+    <object class="AudioFile" id="{814adecd-ad4f-4af3-aa57-bd8f2bb4dfee}">
+        <property name="frequencyInKHz">
+            <value>44.0999985</value>
+        </property>
+        <property name="channelCount">
+            <value>1</value>
+        </property>
+        <property name="length">
+            <value>3.307437641723356</value>
+        </property>
+        <property name="lastModifiedDate">
+            <value>0</value>
+        </property>
+        <property name="audioFilePath">
+            <value>$(AUDIO_BIN_DIR)/CAR ENGINE i6 3L 5000 RPM (loop mono) {de8c378b-6a63-42a4-b0fe-b01100c9c252}.wav</value>
+        </property>
+        <relationship name="container">
+            <destination>{fb92c040-a9bc-4dcb-ad25-ef667b2f2b91}</destination>
+        </relationship>
+    </object>
+</objects>

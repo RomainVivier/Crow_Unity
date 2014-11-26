@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.01.05.00">
+    <object class="Folder" id="{d0b1d85f-fc19-488d-a087-f58dcc5f79cf}">
+        <property name="name">
+            <value>Punch</value>
+        </property>
+        <relationship name="folder">
+            <destination>{8ef9d1bc-895f-48fa-b96d-48cf481ba702}</destination>
+        </relationship>
+    </object>
+</objects>
