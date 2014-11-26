@@ -28,7 +28,7 @@ public class Radio : MonoBehaviour {
         m_startFrequency = 6;
         m_targetFrequency = 6;
         m_currentFrequency = 6f;
-        FMOD_StudioSystem.instance.PlayOneShot("event:/Music/Radio/RadioStream", transform.position);
+        FMOD_StudioSystem.instance.PlayOneShot("event:/Music/Radio/radioStream", transform.position);
 	}
 	
 	void Update()
