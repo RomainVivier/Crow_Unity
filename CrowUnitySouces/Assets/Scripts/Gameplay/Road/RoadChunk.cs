@@ -8,8 +8,9 @@ public class RoadChunk : MonoBehaviour {
     public Transform _endPoint;
 
     public GameObject[] _environmentPoint;
-    public Rails[] _rails;
+    public Rails _rails;
     public Obstacle[] _obstacles;
+	public RoadChunk nextChunk=null;
 
     private bool m_isUnused = false;
     

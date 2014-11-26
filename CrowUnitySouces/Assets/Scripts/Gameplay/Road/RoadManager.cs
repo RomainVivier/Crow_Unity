@@ -5,106 +5,32 @@ using System.Collections.Generic;
 public class RoadManager : MonoBehaviour
 {
 
-    #region Enumeration
-
-    public enum RoadState
-    {
-        Intro,
-        Test,
-        Game
-    }
-
-    #endregion
-
     #region Members
 
     public Transform _startPoint;
     public int _numberOfChunk;
-    public bool _usePattern;
-    public string _pattern;
 
-    private RoadState m_state;
-    private string m_introChunk;
-    private string m_testChunk;
+    /// <summary>
+    /// key (int) orders of the chunk,
+    /// Value (RoadChunk) RoadChunk component.
+    /// </summary>
     private List<RoadChunk> m_chunks = new List<RoadChunk>();
-    private RoadChunk m_lastChunk;
-
-    private RoadManager m_instance;
-
-    #endregion
-
-    #region Singleton
-
-    public RoadManager Instance
-    {
-        get
-        {
-            if (m_instance == null)
-            {
-                m_instance = GameObject.FindObjectOfType<RoadManager>();
-            }
-
-            return m_instance;
-        }
-    }
-
-    void Awake()
-    {
-        if (m_instance == null)
-        {
-            m_instance = this;
-            m_instance.Init();
-        }
-        else
-        {
-            if (this != m_instance)
-                Destroy(this.gameObject);
-        }
-    }
-
-    private void Init()
-    {
-        if (_numberOfChunk <= 1)
-        {
-            Debug.LogError("You need to have more than one chunk to generate an infinite road.");
-            return;
-        }
-
-        for (int i = 0; i < _numberOfChunk; i++)
-        {
-            m_chunks.Add(new RoadChunk());
-        }
-
-        m_lastChunk = m_chunks[_numberOfChunk - 1];
-
-        Generate();
-    }
-
-    #endregion
-
-
-    #region Properties
-
-    public RoadState State
-    {
-        get { return m_state; }
-        set { m_state = value; }
-    }
+    private RoadChunk m_lastChunk; 
 
     #endregion
 
     #region MonoBehaviour
 
-    //void Start()
-    //{
-    //    if(_numberOfChunk <= 1)
-    //    {
-    //        Debug.LogError("You need to have more than one chunk to generate an infinite road.");
-    //        return;
-    //    }
+    void Start()
+    {
+        if(_numberOfChunk <= 1)
+        {
+            Debug.LogError("You need to have more than one chunk to generate an infinite road.");
+            return;
+        }
 
-    //    Generate();
-    //}
+        Generate();
+	}
 	
 	void Update()
     {
@@ -130,27 +56,30 @@ public class RoadManager : MonoBehaviour
         {
             Debug.LogError("Start point can't be null.");
         }
-        
-        for (int i = 0; i < _numberOfChunk; i++)
+
+        for (int i =0; i < _numberOfChunk; i++)
         {
-
-            if (i == 0)
+            GameObject chunk = GameObject.Instantiate(Resources.Load("RoadChunk")) as GameObject;
+            RoadChunk rc = chunk.GetComponent<RoadChunk>();
+            if(rc == null)
             {
-                
-            }
-            else
-            {
-                
+                Debug.LogError("Fail during the road generation one chunk does not possess \"RoadChunk\" script.");
+                return;
             }
 
-            
+            if(m_chunks.Count > 0)
+            {
+                rc.transform.position = m_chunks[m_chunks.Count -1]._endPoint.position + rc.StartToCenter;
+				m_chunks[m_chunks.Count-1].nextChunk=rc;
+            }else{
+                rc.transform.position = _startPoint.position;
+            }
+
+            m_chunks.Add(rc);
         }
 
         m_lastChunk = m_chunks[_numberOfChunk - 1];
-
-
     }
-
 
     void PlaceChunk( int order )
     {
@@ -161,6 +90,7 @@ public class RoadManager : MonoBehaviour
         }
 
         RoadChunk rc = m_chunks[order];
+		m_lastChunk.nextChunk=rc;
 
         Debug.Log("position = " + m_lastChunk.transform.position);
         rc.transform.position = m_lastChunk._endPoint.position + rc.StartToCenter;

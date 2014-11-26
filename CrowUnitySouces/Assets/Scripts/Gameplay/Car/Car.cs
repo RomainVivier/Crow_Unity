@@ -115,23 +115,17 @@ public class Car : MonoBehaviour
 		oldInputs=inputs;
 		
 		// Debug print
-		if(nbUpdates%10==0)
+		/*if(nbUpdates%10==0)
 		{
 			Debug.Log((int)forwardVelocity*3.6+" "+(int)rpm);
-		}
+		}*/
 	}
 
 	void OnValidate()
 	{
 		updateValues ();
 	}
-	
-	public float getForwardVelocity()
-	{
-		Vector3 velocity=body.GetRelativePointVelocity(new Vector3(0,0,0));
-		return Vector3.Dot(velocity,body.transform.forward);
-	}
-	
+		
 	// Private methods
 	void updateValues()
 	{
@@ -174,10 +168,6 @@ public class Car : MonoBehaviour
 		engine.updateValues ();
 		acceleration2Torque=mass*wheelRadius;
 		brakeTorque=brakeDecceleration*acceleration2Torque/2;
-		/*wheelBase=Vector3.Distance(transform.FindChild("Body").FindChild("WheelFL").transform.position,
-			                       transform.FindChild("Body").FindChild("WheelRL").transform.position);
-		wheelTrack=Vector3.Distance(transform.FindChild("Body").FindChild("WheelFL").transform.position,
-		                            transform.FindChild("Body").FindChild("WheelFR").transform.position);*/
 		wheelBase=body.transform.localScale.z;
 		wheelTrack=body.transform.localScale.x;
 		
@@ -185,5 +175,28 @@ public class Car : MonoBehaviour
 		// Update center of weight
 		body.centerOfMass=centerOfMass;
 	}
+
+	// Public getters
+	public float getForwardVelocity()
+	{
+		Vector3 velocity=body.GetRelativePointVelocity(new Vector3(0,0,0));
+		return Vector3.Dot(velocity,body.transform.forward);
+	}
+	
+	public Vector3 getPosition()
+	{
+		return body.transform.position;
+	}
+
+	public Vector3 getRightVector()
+	{
+		return body.transform.right;
+	}
+
+	public Vector3 getForwardVector()
+	{
+		return body.transform.forward;
+	}
+	
 }
 
