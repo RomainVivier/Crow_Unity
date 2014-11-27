@@ -24,13 +24,11 @@ public class Gadget : MonoBehaviour
 
     public virtual void Play()
 	{
-        IsReady = false;
         GadgetManager.Instance.HasOneGadgetPlaying = true;
 	}
 
 	public virtual void Stop()
 	{
-		IsReady = true;
         GadgetManager.Instance.HasOneGadgetPlaying = false;
     }
 
