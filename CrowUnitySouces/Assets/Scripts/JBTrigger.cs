@@ -17,11 +17,13 @@ public class JBTrigger : MonoBehaviour {
 
     void OnTriggerEnter(Collider other)
     {
+        Debug.Log("trigger");
         GameObject oth = other.transform.root.gameObject;
-        if(oth.name=="Car")
+        if (oth.name == "Car")
         {
             GameObject.Find("JB").GetComponent<JB>().activate();
-            oth.GetComponentInChildren<RailsControl>().setSpeedKmh *= 0.8f;
+            oth.GetComponentInChildren<RailsControl>().setSpeedKmh *= 0.7f;
         }
+        else Debug.Log(oth.name);
     }
 }
