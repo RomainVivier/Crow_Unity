@@ -45,6 +45,7 @@ public class Spoonbill : Gadget
     {
         if(m_target != null && m_state == State.Attacking && m_attackTimer.CurrentNormalized < 0.5)
         {
+            m_target.rigidbody.isKinematic = false;
             m_target.transform.parent = null;
             m_target = null;
         }
@@ -71,6 +72,7 @@ public class Spoonbill : Gadget
         {
             other.transform.parent = _spoonbill.transform;
             m_target = other.gameObject;
+            other.rigidbody.isKinematic = true;
             _spoonbillAnimator.SetTrigger("Attack");
             m_attackTimer.Reset(1.5f);
             m_state = State.Attacking;
