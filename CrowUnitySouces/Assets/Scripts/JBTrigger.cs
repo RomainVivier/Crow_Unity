@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class JBTrigger : MonoBehaviour {
+public class JBTrigger : MonoBehaviour
+{
 
 	// Use this for initialization
 	void Start ()
@@ -15,10 +16,9 @@ public class JBTrigger : MonoBehaviour {
 	
 	}
 
-    void OnTriggerEnter(Collider other)
+    void OnCollisionEnter(Collision collision)
     {
-        Debug.Log("trigger");
-        GameObject oth = other.transform.root.gameObject;
+        GameObject oth = collision.collider.transform.root.gameObject;
         if (oth.name == "Car")
         {
             GameObject.Find("JB").GetComponent<JB>().activate();

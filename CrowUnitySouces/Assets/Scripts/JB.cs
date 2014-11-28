@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class JB : MonoBehaviour {
-
-    public float maxFlareBrightness=100;
+public class JB : MonoBehaviour
+{
+    public float maxFlareBrightness=25;
     public float flareCurvePower = 2;
     public float startFlareTime = 3;
     public float endFlareTime = 10;
@@ -42,11 +42,15 @@ public class JB : MonoBehaviour {
         }
 	}
 
-    public void activate()
+    public bool activate()
     {
-        active = true;
-        runningTime = 0;
-        Debug.Log("JB is comming");
+        bool ret = active;
+        if(ret==false)
+        {
+            active = true;
+            runningTime = 0;
+        }
+        return ret;
     }
 
     public void OnValidate()
@@ -55,5 +59,21 @@ public class JB : MonoBehaviour {
                                        .transform.FindChild("FlareL").GetComponent<LensFlare>();
         flareR = GameObject.Find("Car").transform.FindChild("Body")
                                        .transform.FindChild("FlareR").GetComponent<LensFlare>();
+    }
+
+    public void OnGUI()
+    {
+        if(runningTime>endFadeoutTime)
+        {
+            GUIStyle style = new GUIStyle();
+            style.fontSize = 36;
+            style.richText = true;
+            style.alignment = TextAnchor.MiddleCenter;
+
+            GUI.Label(
+                        new Rect(Screen.width*0.4f, Screen.height*0.4f,
+                                 Screen.width*0.2f, Screen.height*0.2f),
+                      "<color=#ffffffff>To be continued.\nSee you in March.</color>",style);
+        }
     }
 }
