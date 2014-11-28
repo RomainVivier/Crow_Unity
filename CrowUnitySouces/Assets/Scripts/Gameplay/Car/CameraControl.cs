@@ -64,12 +64,13 @@ public class CameraControl : MonoBehaviour {
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit, Mathf.Infinity, ~(1 << LayerMask.NameToLayer("Player"))))
         {
+            //Debug.Log(hit.collider.name);
 
             if (hit.collider.CompareTag("Clickable"))
             {
                 if (hit.collider.name == "button0")
                 {
-                    Debug.Log("Rocket !");
+                    //Debug.Log("Rocket !");
                     GadgetManager.Instance.PlayGadget("Rocket");
                 }
 
@@ -80,7 +81,7 @@ public class CameraControl : MonoBehaviour {
 
                 if(hit.collider.name == "flip_flop")
                 {
-                    Debug.Log("Spoonbill !");
+                    //Debug.Log("Spoonbill !");
                     GadgetManager.Instance.PlayGadget("Spoonbill");
                 }
             }
