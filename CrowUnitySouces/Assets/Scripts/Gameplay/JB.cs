@@ -49,6 +49,7 @@ public class JB : MonoBehaviour
         {
             active = true;
             runningTime = 0;
+            GameObject.Find("AI")
         }
         return ret;
     }
