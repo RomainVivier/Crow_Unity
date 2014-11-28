@@ -79,6 +79,11 @@ public class CameraControl : MonoBehaviour {
 					//penis
                 }
 
+                if (hit.collider.name == "button2")
+                {
+                    GadgetManager.Instance.PlayGadget("SlapMachine");
+                }
+
                 if(hit.collider.name == "flip_flop")
                 {
                     //Debug.Log("Spoonbill !");

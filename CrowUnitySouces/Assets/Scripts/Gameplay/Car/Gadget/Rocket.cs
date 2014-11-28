@@ -10,6 +10,7 @@ public class Rocket : Gadget {
     public float _blastRadius;
     public float _rocketSpeed;
     public float _targetMaxDistance;
+    public float _rocketUIMax;
 
     private Timer m_rocketLaunchtimer;
     private Timer m_timer;
@@ -55,7 +56,7 @@ public class Rocket : Gadget {
         if(!m_timer.IsElapsedLoop)
         {
             transform.position = Vector3.Lerp(m_startPosition, m_target, 1 - m_timer.CurrentNormalized);
-            m_rocketDist.setValue(m_timer.CurrentNormalized);
+            m_rocketDist.setValue( 1 - Mathf.Clamp((Vector3.Distance(transform.position, m_target) / _rocketUIMax), 0f, 1f));
         }
     }
 
