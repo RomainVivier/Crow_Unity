@@ -43,7 +43,6 @@ public class Spoonbill : Gadget
 
     void Update()
     {
-        Debug.Log(m_attackTimer.CurrentNormalized);
         if(m_target != null && m_state == State.Attacking && m_attackTimer.CurrentNormalized < 0.5)
         {
             m_target.transform.parent = null;
