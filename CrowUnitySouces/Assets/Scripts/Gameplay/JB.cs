@@ -49,7 +49,7 @@ public class JB : MonoBehaviour
         {
             active = true;
             runningTime = 0;
-            GameObject.Find("AI")
+            GameObject.Find("Car/AI").GetComponent<AI>().playDialog("test");
         }
         return ret;
     }

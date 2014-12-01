@@ -32,7 +32,7 @@ public class AI : MonoBehaviour
         }
 	}
 
-    void PlayDialog(string name)
+    public void playDialog(string name)
     {
         if(currentSound!=null)
         {
