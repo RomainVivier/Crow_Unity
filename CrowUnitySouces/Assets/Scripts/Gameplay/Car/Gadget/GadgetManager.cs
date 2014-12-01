@@ -94,7 +94,7 @@ public class GadgetManager : MonoBehaviour {
             m_lastGadget = name;
             m_timer.Reset(0.5f);
 		}else{
-			Debug.Log("no gadget has been registered to this name");
+			Debug.Log("no gadget has been registered to this name or gadget is not ready !");
 		}
 	}
 
