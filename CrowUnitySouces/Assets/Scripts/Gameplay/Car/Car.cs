@@ -125,6 +125,8 @@ public class Car : MonoBehaviour
         // Update sounds
         float soundRpm=rpm*ENGINE_SOUND_MAX_RPM/engine.getMaxRpm();
         engineRPM.setValue(soundRpm);
+        float frictionSound = inputs.brake;
+
 
 		// Debug print
 		/*if(nbUpdates%10==0)

@@ -7,6 +7,7 @@ public class AI : MonoBehaviour
     public float blinkPeriod=0.2f;
     
     private FMOD.Studio.EventInstance currentSound=null;
+    private bool playingSound = false;
     private List<GameObject> buttons;
     private float timeTillNextBlink = 0;
 
@@ -17,7 +18,10 @@ public class AI : MonoBehaviour
 	
 	void FixedUpdate ()
     {
-        if (currentSound == null) timeTillNextBlink = blinkPeriod;
+        if (currentSound == null) return;
+        FMOD.Studio.PLAYBACK_STATE state;
+        currentSound.getPlaybackState(out state);
+        if (state==FMOD.Studio.PLAYBACK_STATE.STOPPED) timeTillNextBlink = blinkPeriod;
         else
         {
             timeTillNextBlink -= Time.fixedDeltaTime;
@@ -34,22 +38,21 @@ public class AI : MonoBehaviour
 
     public void playDialog(string name)
     {
-        if(currentSound!=null)
+        if(playingSound)
         {
             currentSound.stop(FMOD.Studio.STOP_MODE.IMMEDIATE); 
         }
         currentSound=FMOD_StudioSystem.instance.GetEvent("event:/Dialog/IA/"+name);
         currentSound.start();
-        currentSound.setCallback(delegate(FMOD.Studio.EVENT_CALLBACK_TYPE type,
+        /*currentSound.setCallback(delegate(FMOD.Studio.EVENT_CALLBACK_TYPE type,
                                                        System.IntPtr eventInstance,
                                                        System.IntPtr parameters)
         {
             if(type==FMOD.Studio.EVENT_CALLBACK_TYPE.STOPPED)
-            {
-                currentSound=null;
-            }
+                playingSound = false;
             return FMOD.RESULT.OK;
-        });
+        });*/
+        playingSound = true;
     }
 
    
