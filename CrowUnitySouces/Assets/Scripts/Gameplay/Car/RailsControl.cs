@@ -172,10 +172,10 @@ public class RailsControl : CarControl
 		
 	private void gotoNextChunk()
 	{
-		if(chunk.nextChunk!=null)
+		if(chunk.NextChunk!=null)
 		{
 			int oldNbRails=rails.nbRails;
-			chunk=chunk.nextChunk;
+			chunk=chunk.NextChunk;
 			rails=chunk._rails;
 			int newNbRails=rails.nbRails;
 			currentRail=(currentRail-oldNbRails/2f)*newNbRails/oldNbRails+newNbRails/2f;

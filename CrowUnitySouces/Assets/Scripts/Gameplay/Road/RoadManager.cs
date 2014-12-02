@@ -10,12 +10,12 @@ public class RoadManager : MonoBehaviour
     public Transform _startPoint;
     public int _numberOfChunk;
 
-    /// <summary>
-    /// key (int) orders of the chunk,
-    /// Value (RoadChunk) RoadChunk component.
-    /// </summary>
+    public List<string> _introChunks = new List<string>();
+    public List<string> _testChunks = new List<string>();
+    public List<string> _gameChunks = new List<string>();
+
     private List<RoadChunk> m_chunks = new List<RoadChunk>();
-    private RoadChunk m_lastChunk; 
+    private RoadChunk m_lastChunk;
 
     #endregion
 
@@ -70,7 +70,7 @@ public class RoadManager : MonoBehaviour
             if(m_chunks.Count > 0)
             {
                 rc.transform.position = m_chunks[m_chunks.Count -1]._endPoint.position + rc.StartToCenter;
-				m_chunks[m_chunks.Count-1].nextChunk=rc;
+				m_chunks[m_chunks.Count-1].NextChunk=rc;
             }else{
                 rc.transform.position = _startPoint.position;
             }
@@ -90,7 +90,7 @@ public class RoadManager : MonoBehaviour
         }
 
         RoadChunk rc = m_chunks[order];
-		m_lastChunk.nextChunk=rc;
+		m_lastChunk.NextChunk=rc;
 
         Debug.Log("position = " + m_lastChunk.transform.position);
         rc.transform.position = m_lastChunk._endPoint.position + rc.StartToCenter;
@@ -98,5 +98,6 @@ public class RoadManager : MonoBehaviour
         m_lastChunk = rc;
     }
 
-    #endregion 
+    #endregion
+
 }
