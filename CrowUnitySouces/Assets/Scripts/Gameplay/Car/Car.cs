@@ -52,6 +52,7 @@ public class Car : MonoBehaviour
         tiresSound = FMOD_StudioSystem.instance.GetEvent("event:/SFX/Car Mechanics/carTyres");
         engineSound.getParameter("Friction", out tiresFriction);
         engineSound.getParameter("Speed", out tiresSpeed);
+        tiresSound.start();
 	}
 
 	void FixedUpdate ()
