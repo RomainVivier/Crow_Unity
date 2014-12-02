@@ -21,8 +21,8 @@ public class JBTrigger : MonoBehaviour
         GameObject oth = collision.collider.transform.root.gameObject;
         if (oth.name == "Car")
         {
-            GameObject.Find("JB").GetComponent<JB>().activate();
-            //oth.GetComponentInChildren<RailsControl>().setSpeedKmh *= 0.7f;
+            if(GameObject.Find("JB").GetComponent<JB>().activate()==false)
+                oth.GetComponentInChildren<RailsControl>().setSpeedKmh *= 0.7f;
         }
         else Debug.Log(oth.name);
     }

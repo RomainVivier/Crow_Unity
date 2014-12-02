@@ -38,6 +38,9 @@ public class Car : MonoBehaviour
     private FMOD.Studio.EventInstance engineSound;
     private FMOD.Studio.ParameterInstance engineRPM;
     private const int ENGINE_SOUND_MAX_RPM = 6000;
+    private FMOD.Studio.EventInstance tiresSound;
+    private FMOD.Studio.ParameterInstance tiresFriction;
+    private FMOD.Studio.ParameterInstance tiresSpeed;
 
      // MonoBehaviour methods
 	void Start ()
@@ -46,6 +49,9 @@ public class Car : MonoBehaviour
         engineSound = FMOD_StudioSystem.instance.GetEvent("event:/SFX/Car Mechanics/carEngine");
         engineSound.start();
         engineSound.getParameter("RPM", out engineRPM);
+        tiresSound = FMOD_StudioSystem.instance.GetEvent("event:/SFX/Car Mechanics/carTyres");
+        engineSound.getParameter("Friction", out tiresFriction);
+        engineSound.getParameter("Speed", out tiresSpeed);
 	}
 
 	void FixedUpdate ()
@@ -126,7 +132,8 @@ public class Car : MonoBehaviour
         float soundRpm=rpm*ENGINE_SOUND_MAX_RPM/engine.getMaxRpm();
         engineRPM.setValue(soundRpm);
         float frictionSound = inputs.brake;
-
+        tiresFriction.setValue(frictionSound);
+        tiresSpeed.setValue(forwardVelocity / maxSpeed);       
 
 		// Debug print
 		/*if(nbUpdates%10==0)
@@ -184,7 +191,6 @@ public class Car : MonoBehaviour
 		brakeTorque=brakeDecceleration*acceleration2Torque/2;
 		wheelBase=body.transform.localScale.z;
 		wheelTrack=body.transform.localScale.x;
-		
 		
 		// Update center of weight
 		body.centerOfMass=centerOfMass;
