@@ -22,7 +22,7 @@ public class JBTrigger : MonoBehaviour
         if (oth.name == "Car")
         {
             GameObject.Find("JB").GetComponent<JB>().activate();
-            oth.GetComponentInChildren<RailsControl>().setSpeedKmh *= 0.7f;
+            //oth.GetComponentInChildren<RailsControl>().setSpeedKmh *= 0.7f;
         }
         else Debug.Log(oth.name);
     }
