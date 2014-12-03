@@ -72,7 +72,6 @@ public class AI : MonoBehaviour
             GameObject g = carBody.GetChild(i).gameObject;
             if (g.name.Contains("button") || g.name.Contains("Button")) buttons.Add(g);
         }
-        Debug.Log(nbChildren);
     }
 
     void setButtonState(GameObject button, bool state)
