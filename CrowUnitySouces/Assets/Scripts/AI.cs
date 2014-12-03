@@ -4,12 +4,14 @@ using System.Collections.Generic;
 
 public class AI : MonoBehaviour
 {
-    public float blinkPeriod=0.2f;
+    public float blinkPeriod=0.02f;
     
     private FMOD.Studio.EventInstance currentSound=null;
     private bool playingSound = false;
     private List<GameObject> buttons;
     private float timeTillNextBlink = 0;
+    private List<int> history;
+    private const int HISTORY_NB_TRIES=6;
 
 	void Start ()
     {
@@ -21,17 +23,30 @@ public class AI : MonoBehaviour
         if (currentSound == null) return;
         FMOD.Studio.PLAYBACK_STATE state;
         currentSound.getPlaybackState(out state);
-        if (state==FMOD.Studio.PLAYBACK_STATE.STOPPED) timeTillNextBlink = blinkPeriod;
+        if (state == FMOD.Studio.PLAYBACK_STATE.STOPPED)
+        {
+            timeTillNextBlink = blinkPeriod;
+            foreach (GameObject b in buttons)
+            {
+                setButtonState(b, false);
+            }
+        }
         else
         {
             timeTillNextBlink -= Time.fixedDeltaTime;
-            if(timeTillNextBlink<=0)
+            if (timeTillNextBlink <= 0)
             {
                 timeTillNextBlink = blinkPeriod;
-                foreach(GameObject b in buttons)
+                int btnIndex = Random.Range(0, buttons.Count);
+                int tries = HISTORY_NB_TRIES - 1;
+                while(tries>0 && history.Contains(btnIndex))
                 {
-                    setButtonState(b,Random.Range(0,1)==1);
+                    btnIndex = Random.Range(0, buttons.Count);
+                    tries--;
                 }
+                history.RemoveAt(0);
+                history.Add(btnIndex);
+                setButtonState(buttons[btnIndex], Random.Range(0, 2) == 1);
             }
         }
 	}
@@ -44,14 +59,6 @@ public class AI : MonoBehaviour
         }
         currentSound=FMOD_StudioSystem.instance.GetEvent("event:/Dialog/IA/"+name);
         currentSound.start();
-        /*currentSound.setCallback(delegate(FMOD.Studio.EVENT_CALLBACK_TYPE type,
-                                                       System.IntPtr eventInstance,
-                                                       System.IntPtr parameters)
-        {
-            if(type==FMOD.Studio.EVENT_CALLBACK_TYPE.STOPPED)
-                playingSound = false;
-            return FMOD.RESULT.OK;
-        });*/
         playingSound = true;
     }
 
@@ -60,11 +67,12 @@ public class AI : MonoBehaviour
     void OnValidate()
     {
         updateButtonsArray();
+        updateHistory();
     }
 
     void updateButtonsArray()
     {
-        Transform carBody=GameObject.Find("Car").transform.Find("Body");
+        Transform carBody=GameObject.Find("Car").transform.Find("Body/CarModel");
         int nbChildren=carBody.childCount;
         buttons = new List<GameObject>();
         for(int i=0;i<nbChildren;i++)
@@ -74,9 +82,17 @@ public class AI : MonoBehaviour
         }
     }
 
+    void updateHistory()
+    {
+        history = new List<int>();
+        for (int i = 0; i < buttons.Count / 2; i++) history.Add(i);
+    }
+
     void setButtonState(GameObject button, bool state)
     {
-        button.GetComponent<MeshRenderer>().material
-           .SetColor("_Color", state ? new Color(1, 1, 0, 1) : new Color(1, 1, 1, 1));
+        // Placeholder effect
+        button.transform.localScale = state ? new Vector3(150, 150, 150) : new Vector3(100, 100, 100);
+        //button.GetComponent<MeshRenderer>().material
+        //   .SetColor("_Color", state ? new Color(1, 1, 0, 1) : new Color(1, 1, 1, 1));
     }
 }
