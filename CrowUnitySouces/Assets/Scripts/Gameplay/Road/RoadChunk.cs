@@ -67,7 +67,7 @@ public class RoadChunk : MonoBehaviour {
 
     }
 
-    void Generate(string pattern)
+    void Generate(Theme theme)
     {
 
     }

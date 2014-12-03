@@ -16,6 +16,36 @@ public class RoadManager : MonoBehaviour
 
     private List<RoadChunk> m_chunks = new List<RoadChunk>();
     private RoadChunk m_lastChunk;
+    
+    private State m_currentState;
+    private Theme m_currentTheme;
+
+    #endregion
+
+    #region Enum
+
+    public enum State
+    {
+        Intro,
+        Test,
+        Game
+    }
+
+    #endregion
+
+    #region Properties
+
+    public State CurrentState
+    {
+        get { return m_currentState; }
+        set { m_currentState = value; }
+    }
+
+    public Theme CurrentTheme
+    {
+        get { return m_currentTheme; }
+        set { m_currentTheme = value; }
+    }
 
     #endregion
 
@@ -59,7 +89,12 @@ public class RoadManager : MonoBehaviour
 
         for (int i =0; i < _numberOfChunk; i++)
         {
-            GameObject chunk = GameObject.Instantiate(Resources.Load("RoadChunk")) as GameObject;
+           
+            GameObject chunk = PullChunk();
+ 
+            
+            
+            
             RoadChunk rc = chunk.GetComponent<RoadChunk>();
             if(rc == null)
             {
@@ -98,6 +133,27 @@ public class RoadManager : MonoBehaviour
         m_lastChunk = rc;
     }
 
+    GameObject PullChunk()
+    {
+        GameObject chunk;
+
+        if (CurrentState == State.Intro)
+        {
+
+        }
+
+        chunk = GameObject.Instantiate(Resources.Load("RoadChunk")) as GameObject;
+
+        return chunk;
+    }
+
     #endregion
 
+}
+
+public enum Theme
+{
+    Country,
+    City,
+    Tunnel
 }
