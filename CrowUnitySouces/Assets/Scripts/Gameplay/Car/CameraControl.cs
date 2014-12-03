@@ -76,7 +76,8 @@ public class CameraControl : MonoBehaviour {
 
                 if (hit.collider.name == "button1")
                 {
-					//penis
+					//Less coarse than penis
+                    GadgetManager.Instance.PlayGadget("Duck");
                 }
 
                 if (hit.collider.name == "button2")
