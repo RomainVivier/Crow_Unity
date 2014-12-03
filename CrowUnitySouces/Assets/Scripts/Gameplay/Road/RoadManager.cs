@@ -9,10 +9,16 @@ public class RoadManager : MonoBehaviour
 
     public Transform _startPoint;
     public int _numberOfChunk;
+    public bool _useChunkPool = false;
+    public ChunkPool _pool;
 
     public List<string> _introChunks = new List<string>();
     public List<string> _testChunks = new List<string>();
     public List<string> _gameChunks = new List<string>();
+
+    private Queue<string> m_introChunks;
+    private Queue<string> m_testChunks;
+    private Queue<string> m_gameChunks;
 
     private List<RoadChunk> m_chunks = new List<RoadChunk>();
     private RoadChunk m_lastChunk;
@@ -59,6 +65,10 @@ public class RoadManager : MonoBehaviour
             return;
         }
 
+        m_introChunks = new Queue<string>(_introChunks);
+        m_testChunks = new Queue<string>(_testChunks);
+        m_gameChunks = new Queue<string>(_gameChunks);
+
         Generate();
 	}
 	
@@ -91,9 +101,11 @@ public class RoadManager : MonoBehaviour
         {
            
             GameObject chunk = PullChunk();
- 
-            
-            
+            if(chunk == null)
+            {
+                Debug.LogError("Fail during the road generation the chunk generated is null.");
+                return;
+            }
             
             RoadChunk rc = chunk.GetComponent<RoadChunk>();
             if(rc == null)
@@ -136,13 +148,53 @@ public class RoadManager : MonoBehaviour
     GameObject PullChunk()
     {
         GameObject chunk;
+        string path = "";
 
         if (CurrentState == State.Intro)
         {
-
+            Debug.Log("intro, count = " + m_introChunks.Count);
+            if (m_introChunks.Count > 0)
+            {
+                path = m_introChunks.Dequeue();
+            }
+            else
+            {
+                CurrentState = State.Test;
+            }    
+        }
+        
+        if(CurrentState == State.Test)
+        {
+            Debug.Log("Test, count = " + m_testChunks.Count);
+            if (m_testChunks.Count > 0)
+            {
+                path = m_testChunks.Dequeue();
+            }
+            else
+            {
+                CurrentState = State.Game;
+            }
+        }
+        
+        if (CurrentState == State.Game)
+        {
+            Debug.Log("Game, count = " + m_gameChunks.Count);
+            if(!_useChunkPool)
+            {
+                if (m_gameChunks.Count > 0)
+                {
+                    path = m_gameChunks.Dequeue();
+                }
+            }
+            else
+            {
+                return _pool.GetUnusedChunk();
+            }
         }
 
-        chunk = GameObject.Instantiate(Resources.Load("RoadChunk")) as GameObject;
+        Debug.Log("Chunks/" + path);
+        chunk = GameObject.Instantiate(Resources.Load("Chunks/"+path)) as GameObject;
+        chunk.name = path;
 
         return chunk;
     }
