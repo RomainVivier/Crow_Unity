@@ -3,12 +3,15 @@ using System.Collections;
 
 public class JB : MonoBehaviour
 {
-    public float maxFlareBrightness=10;
-    public float flareCurvePower = 2;
+    public float firstFlareCurvePower = 2;
+    public float secondFlareCurvePower = 2;
     public float startFlareTime = 3;
+    public float midFlareTime = 5;
+    public float midFlareBrightness = 5;
     public float endFlareTime = 10;
-    public float startFadeoutTime = 7;
-    public float endFadeoutTime = 10;
+    public float endFlareBrightness=10;
+    public float startFadeoutTime = 10;
+    public float endFadeoutTime = 13;
 
     private bool active;
     private float runningTime;
@@ -28,10 +31,19 @@ public class JB : MonoBehaviour
         if(active)
         {
             runningTime += Time.fixedDeltaTime;
-            float flareTime = (runningTime - startFlareTime) / (endFlareTime - startFlareTime);
-            if (flareTime > 1) flareTime = 1;
-            if (flareTime < 0) flareTime = 0;
-            float brightness = Mathf.Pow(flareTime, flareCurvePower)*maxFlareBrightness;
+            float firstFlareTime = (runningTime - startFlareTime) / (midFlareTime - startFlareTime);
+            float brightness = 0;
+            if (firstFlareTime > 1)
+            {
+                float secondFlareTime=(runningTime - midFlareTime) / (endFlareTime - startFlareTime);
+                if (secondFlareTime > 1) secondFlareTime = 1;
+                brightness = Mathf.Lerp(midFlareBrightness, endFlareBrightness, Mathf.Pow(secondFlareTime, secondFlareCurvePower));
+            }
+            else
+            {
+                if (firstFlareTime < 0) firstFlareTime = 0;
+                brightness = Mathf.Pow(firstFlareTime, firstFlareCurvePower)*midFlareBrightness;
+            }
             flareL.brightness = brightness;
             flareR.brightness = brightness;
             float alpha=(runningTime-startFadeoutTime)/(endFadeoutTime-startFadeoutTime);
