@@ -3,12 +3,12 @@ using System.Collections;
 
 public class JB : MonoBehaviour
 {
-    public float maxFlareBrightness=25;
+    public float maxFlareBrightness=10;
     public float flareCurvePower = 2;
     public float startFlareTime = 3;
     public float endFlareTime = 10;
-    public float startFadeoutTime = 10;
-    public float endFadeoutTime = 13;
+    public float startFadeoutTime = 7;
+    public float endFadeoutTime = 10;
 
     private bool active;
     private float runningTime;

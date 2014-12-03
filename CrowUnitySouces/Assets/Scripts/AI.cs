@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class AI : MonoBehaviour
 {
-    public float blinkPeriod=0.02f;
+    public float blinkPeriod=0.05f;
     
     private FMOD.Studio.EventInstance currentSound=null;
     private bool playingSound = false;
