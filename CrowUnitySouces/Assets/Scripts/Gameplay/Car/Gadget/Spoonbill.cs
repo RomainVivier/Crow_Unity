@@ -73,6 +73,7 @@ public class Spoonbill : Gadget
             other.transform.parent = _spoonbill.transform;
             m_target = other.gameObject;
             other.rigidbody.isKinematic = true;
+            FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Gadgets/Spatula/gadgetSpatulaExecute", transform.position);
             _spoonbillAnimator.SetTrigger("Attack");
             m_attackTimer.Reset(1.5f);
             m_state = State.Attacking;
@@ -90,6 +91,7 @@ public class Spoonbill : Gadget
         switch (m_state)
         {
             case State.Disengaged :
+                FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Gadgets/Spatula/gadgetSpatulaEngage", transform.position);
                 gameObject.SetActive(true);
                 m_state = State.Engaging;
                 m_engageTimer.Reset(1f);
@@ -106,6 +108,7 @@ public class Spoonbill : Gadget
 
     void Disengage()
     {
+        FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Gadgets/Spatula/gadgetSpatulaDisengage", transform.position);
         m_state = State.Disengaging;
         m_engageTimer.Reset(1f);
         _spoonbillAnimator.SetTrigger("Disengage");

@@ -20,7 +20,8 @@ public class Rocket : Gadget {
 
     private FMOD.Studio.EventInstance m_rocketUI;
     private FMOD.Studio.ParameterInstance m_rocketDist;
-    public FMOD_StudioEventEmitter m_rocketExecute;
+    private FMOD.Studio.EventInstance m_rocketExecute3D;
+    public FMOD_StudioEventEmitter _rocketExecute;
 
     #endregion
 
@@ -31,6 +32,8 @@ public class Rocket : Gadget {
         m_offsetWithParent = transform.localPosition;
         m_rocketUI= FMOD_StudioSystem.instance.GetEvent("event:/SFX/Gadgets/Rocket/gadgetRocketUI");
         m_rocketUI.getParameter("distToTarget", out m_rocketDist);
+
+        m_rocketExecute3D = FMOD_StudioSystem.instance.GetEvent("event:/SFX/Gadgets/Rocket/gadgetRocketExecute3D");
 
         GadgetManager.Instance.Register("Rocket", this);
         m_rocketLaunchtimer = new Timer();
@@ -46,6 +49,13 @@ public class Rocket : Gadget {
             Launch();
         }
 
+        if(!m_rocketLaunchtimer.IsElapsedLoop && m_rocketLaunchtimer.Current > 0.5f)
+        {
+            _rocketExecute.Play();
+            m_rocketExecute3D.start();
+        }
+
+
         if (m_timer.IsElapsedOnce)
         {
             transform.localPosition = m_offsetWithParent;
@@ -56,7 +66,7 @@ public class Rocket : Gadget {
         if(!m_timer.IsElapsedLoop)
         {
             transform.position = Vector3.Lerp(m_startPosition, m_target, 1 - m_timer.CurrentNormalized);
-            m_rocketDist.setValue( 1 - Mathf.Clamp((Vector3.Distance(transform.position, m_target) / _rocketUIMax), 0f, 1f));
+            m_rocketDist.setValue(Mathf.Clamp((Vector3.Distance(transform.position, m_target) / _rocketUIMax), 0f, 1f));
         }
     }
 
@@ -101,8 +111,7 @@ public class Rocket : Gadget {
 
     void Launch()
     {
-        m_rocketExecute.Play();
-        //FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Gadgets/Rocket/gadgetRocketExecute", transform.position);
+        //_rocketExecute.Play();
         m_rocketUI.start();
         m_startPosition = transform.position;
         m_target.y = m_startPosition.y;
@@ -122,6 +131,7 @@ public class Rocket : Gadget {
     {
         //play visual effect
         m_rocketUI.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+        m_rocketExecute3D.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
         FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Gadgets/Rocket/gadgetRocketSuccess", transform.position);
         var colliders = Physics.OverlapSphere(transform.position, _blastRadius);
         m_target = Vector3.zero;
