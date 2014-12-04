@@ -14,6 +14,7 @@ public class RoadChunk : MonoBehaviour {
 
 	private RoadChunk m_nextChunk = null;
     private bool m_isUnused = false;
+    private bool m_isDestroyable = false;
     
     #endregion
 
@@ -27,9 +28,19 @@ public class RoadChunk : MonoBehaviour {
 
     public bool IsUnused
     { 
-        get{ return m_isUnused; }
+        get { return m_isUnused; }
 
-        set { m_isUnused = value; }
+        set 
+        { 
+            m_isUnused = value;
+        }
+    }
+
+    public bool IsDestroyable
+    {
+        get { return m_isDestroyable; }
+
+        set { m_isDestroyable = value; }
     }
 
     public Vector3 StartToCenter
@@ -70,6 +81,18 @@ public class RoadChunk : MonoBehaviour {
     void Generate(Theme theme)
     {
 
+    }
+
+    public void HideChunk()
+    {
+        if (IsDestroyable)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            gameObject.SetActive(false);
+        }
     }
 
     #endregion

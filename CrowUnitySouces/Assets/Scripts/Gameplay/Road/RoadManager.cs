@@ -133,26 +133,30 @@ public class RoadManager : MonoBehaviour
 
     void PlaceChunk( int order )
     {
-
-        /*
-         * TODO
-         * 
-         * Mise en place de bon chunk
-         * via la méthode PullChunk
-         * 
-        */
-
         if(order >= _numberOfChunk)
         {
             Debug.LogError("The order of the moved chunk can't be greater or equal to the number of chunks.");
             return;
         }
 
+        // hide or remove chunk
         RoadChunk rc = m_chunks[order];
-		
-        // has to be suppressed ?
-        
+        rc.HideChunk();
+        m_chunks.RemoveAt(order);
 
+        // get next chunk and verify if it is null
+        GameObject chunk = PullChunk();
+        if (chunk == null)
+        {
+            Debug.LogError("Fail during the road generation the chunk generated is null.");
+            return;
+        }
+
+        //add new chunk
+        rc = chunk.GetComponent<RoadChunk>();
+        m_chunks.Add(rc);
+
+        // position it and assign it as last chunk
         m_lastChunk.NextChunk=rc;
         rc.transform.position = m_lastChunk._endPoint.position + rc.StartToCenter;
 
