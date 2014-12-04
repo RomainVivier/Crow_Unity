@@ -75,7 +75,7 @@ public class RoadManager : MonoBehaviour
 	
 	void Update()
     {
-        for(int i = 0; i < _numberOfChunk; i++)
+        for (int i = (m_chunks.Count - 1); i >= 0; i--)
         {
             if(m_chunks[i].IsUnused)
             {
@@ -203,14 +203,23 @@ public class RoadManager : MonoBehaviour
             }
             else
             {
-                return _pool.GetUnusedChunk();
+                var tempgo = _pool.GetUnusedChunk();
+                tempgo.SetActive(true);
+                return tempgo;
             }
         }
 
-        chunk = GameObject.Instantiate(Resources.Load("Chunks/"+path)) as GameObject;
-        chunk.name = path;
+        if (path != "")
+        {
+            chunk = GameObject.Instantiate(Resources.Load("Chunks/" + path)) as GameObject;
+            chunk.name = path;
 
-        return chunk;
+            return chunk;
+        }
+        else
+        {
+            return null;
+        }
     }
 
     #endregion

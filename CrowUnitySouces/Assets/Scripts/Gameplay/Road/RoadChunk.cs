@@ -54,7 +54,7 @@ public class RoadChunk : MonoBehaviour {
 
     void OnTriggerExit(Collider other)
     {
-        Debug.Log("No longer in contact with " + other.transform.name);
+        //Debug.Log("No longer in contact with " + other.transform.name);
 
         if (other.collider.CompareTag("ChunkDelimiter"))
         {
