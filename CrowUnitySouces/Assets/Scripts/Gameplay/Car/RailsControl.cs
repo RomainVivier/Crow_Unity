@@ -132,7 +132,7 @@ public class RailsControl : CarControl
 		// Apply inputs
 		ret.throttle=throttleBrake>0 ? throttleBrake : 0;
 		ret.brake=throttleBrake<0 ? -throttleBrake : 0;
-		ret.steering=steering;
+        ret.steering = steering;
 
 		// Gear shift, in case of there isn't an automatic gearbox 
 		ret.upshift=Input.GetAxis ("Upshift")>0;

@@ -118,7 +118,7 @@ public class Rails : MonoBehaviour
 	}
 
 	// Compute the variables necessary to interpolate between the points and the rails
-    void computeInterpolations(float rail, float progress,
+    void computeInterpolations(float rail, float progress, int nbPoints,
                               out int prevPP, out int nextPP,
                               out int prevRail, out int nextRail,
                               out float pPos, out float railPos)
@@ -133,12 +133,12 @@ public class Rails : MonoBehaviour
 		if(railPos>1) railPos=1;
 		
 		// Compute the interpolation between the points
-		float pointProgress=progress*(nbComputedPositions-1);
+		float pointProgress=progress*(nbPoints-1);
 		prevPP=Mathf.FloorToInt(pointProgress);
 		if(prevPP<0) prevPP=0;
-		if(prevPP>=nbComputedPositions-1) prevPP=nbComputedPositions-1;
+		if(prevPP>=nbPoints-1) prevPP=nbPoints-1;
 		nextPP=prevPP+1;
-		if(nextPP>=nbComputedPositions-1) nextPP=nbComputedPositions-1;
+		if(nextPP>=nbPoints-1) nextPP=nbPoints-1;
 		pPos=pointProgress-prevPP;
 		if(pPos>1) pPos=1;
 	
@@ -151,7 +151,7 @@ public class Rails : MonoBehaviour
 		
         int prevPP, nextPP, prevRail, nextRail;
         float pPos, railPos;
-        computeInterpolations(rail, progress,
+        computeInterpolations(rail, progress, nbComputedPositions,
                               out prevPP, out nextPP,
                               out prevRail, out nextRail,
                               out pPos, out railPos);
@@ -173,7 +173,7 @@ public class Rails : MonoBehaviour
 
         int prevPP, nextPP, prevRail, nextRail;
         float pPos, railPos;
-        computeInterpolations(rail, progress,
+        computeInterpolations(rail, progress, nbPoints,
                               out prevPP, out nextPP,
                               out prevRail, out nextRail,
                               out pPos, out railPos);
