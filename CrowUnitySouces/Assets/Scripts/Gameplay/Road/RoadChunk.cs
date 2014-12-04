@@ -4,19 +4,26 @@ using System.Collections;
 public class RoadChunk : MonoBehaviour {
 
     #region Public Members
+
     public Transform _startPoint;
     public Transform _endPoint;
 
     public GameObject[] _environmentPoint;
     public Rails _rails;
     public Obstacle[] _obstacles;
-	public RoadChunk nextChunk=null;
 
+	private RoadChunk m_nextChunk = null;
     private bool m_isUnused = false;
     
     #endregion
 
     #region Properties
+
+    public RoadChunk NextChunk
+    {
+        get { return m_nextChunk; }
+        set { m_nextChunk = value; }
+    }
 
     public bool IsUnused
     { 
@@ -60,7 +67,7 @@ public class RoadChunk : MonoBehaviour {
 
     }
 
-    void Generate(string pattern)
+    void Generate(Theme theme)
     {
 
     }
