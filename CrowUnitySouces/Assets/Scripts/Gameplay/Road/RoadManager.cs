@@ -149,9 +149,11 @@ public class RoadManager : MonoBehaviour
         }
 
         RoadChunk rc = m_chunks[order];
-		m_lastChunk.NextChunk=rc;
+		
+        // has to be suppressed ?
+        
 
-        Debug.Log("position = " + m_lastChunk.transform.position);
+        m_lastChunk.NextChunk=rc;
         rc.transform.position = m_lastChunk._endPoint.position + rc.StartToCenter;
 
         m_lastChunk = rc;
@@ -164,7 +166,6 @@ public class RoadManager : MonoBehaviour
 
         if (CurrentState == State.Intro)
         {
-            Debug.Log("intro, count = " + m_introChunks.Count);
             if (m_introChunks.Count > 0)
             {
                 path = m_introChunks.Dequeue();
@@ -177,7 +178,6 @@ public class RoadManager : MonoBehaviour
         
         if(CurrentState == State.Test)
         {
-            Debug.Log("Test, count = " + m_testChunks.Count);
             if (m_testChunks.Count > 0)
             {
                 path = m_testChunks.Dequeue();
@@ -190,7 +190,6 @@ public class RoadManager : MonoBehaviour
         
         if (CurrentState == State.Game)
         {
-            Debug.Log("Game, count = " + m_gameChunks.Count);
             if(!_useChunkPool)
             {
                 if (m_gameChunks.Count > 0)
@@ -204,7 +203,6 @@ public class RoadManager : MonoBehaviour
             }
         }
 
-        Debug.Log("Chunks/" + path);
         chunk = GameObject.Instantiate(Resources.Load("Chunks/"+path)) as GameObject;
         chunk.name = path;
 
