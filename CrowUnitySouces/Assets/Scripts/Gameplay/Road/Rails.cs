@@ -11,7 +11,8 @@ public class Rails : MonoBehaviour
 	public int nbRails=0;
 	public int nbPoints=0;
 	public bool drawShafts=false;
-	
+    public bool sortRails = false;
+
 	public Vector3[] positions;
 	public Vector3[] deltas;
     public float[] speedOverrides;
@@ -52,9 +53,92 @@ public class Rails : MonoBehaviour
 			computePositions();
 			oldNbPoints=nbPoints;
 			oldNbRails=nbRails;
-		}	
+		}
+        if(sortRails)
+        {
+            int[] railsIndex=new int[nbRails];
+            float[] railsPos=new float[nbRails];
+            for(int i=0;i<nbRails;i++)
+            {
+                railsIndex[i] = i;
+                Vector3 forward=deltas[i].normalized;
+                Vector3 right = Vector3.Cross(forward, Vector3.up);
+                railsPos[i] = -Vector3.Dot(right, positions[i] - positions[0]);
+            }
+            mergeSortRails(0, nbRails - 1, ref railsIndex, ref railsPos);
+            swapArrays(railsIndex);
+            sortRails = false;
+        }
 	}
-	
+
+    void mergeSortRails(int first, int last,ref int[] railsIndex, ref float[] railsPos)
+    {
+        if (first == last) return;
+        else if(first+1==last)
+        {
+            if (railsPos[first] > railsPos[last]) swapMergeSorteRails(first, last, ref railsIndex, ref railsPos); 
+        }
+        else
+        {
+            int mid = (first + last) / 2;
+            mergeSortRails(first, mid, ref railsIndex, ref railsPos);
+            mergeSortRails(mid + 1, last, ref railsIndex, ref railsPos);
+            int lPos = first, rPos = mid + 1, fPos=0;
+            int[] newIndex = new int[last - first + 1];
+            float[] newPos = new float[last - first + 1];
+            Debug.Log(railsIndex[0]+","+railsIndex[1]+","+railsIndex[2]);
+            while(lPos<=mid || rPos<=last)
+            {
+                if(rPos>last || (lPos<=mid && railsPos[lPos]<railsPos[rPos]))
+                {
+                    newIndex[fPos] = railsIndex[lPos];
+                    newPos[fPos++] = railsIndex[lPos++];
+                }
+                else
+                {
+                    newIndex[fPos] = railsIndex[rPos];
+                    newPos[fPos++] = railsIndex[rPos++];
+                }
+                Debug.Log(newIndex[fPos - 1]);
+            }
+            for(int i=first;i<=last;i++)
+            {
+                railsIndex[i] = newIndex[i - first];
+                railsPos[i] = newPos[i - first];
+            }
+        }
+    }
+
+    void swapMergeSorteRails(int a, int b,ref int[] railsIndex, ref float[] railsPos)
+    {
+            int indexA = railsIndex[a];
+            float posA = railsPos[a];
+            railsIndex[a] = railsIndex[b];
+            railsPos[a] = railsPos[b];
+            railsIndex[b] = indexA;
+            railsPos[b] = posA;
+    }
+
+    void swapArrays(int[] railsIndex)
+    {
+        Vector3[] newPositions=new Vector3[nbPoints*nbRails];
+		Vector3[] newDeltas=new Vector3[nbPoints*nbRails];
+        float[] newOverrides = new float[nbPoints * nbRails];
+        for (int r = 0; r < nbRails; r++)
+        {
+            int index = railsIndex[r];
+            for (int p = 0; p < nbPoints; p++)
+            {
+                newPositions[p * nbRails + r] = positions[p * nbRails + index];
+                newDeltas[p * nbRails + r] = deltas[p * nbRails + index];
+                newOverrides[p * nbRails + r] += speedOverrides[p * nbRails + index];
+            }
+        }
+		positions=newPositions;
+		deltas=newDeltas;
+        speedOverrides = newOverrides;
+    }
+
 	void resizeArray(int oldNbPoints, int oldNbRails)
 	{
 		Vector3[] newPositions=new Vector3[nbPoints*nbRails];
