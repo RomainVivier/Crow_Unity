@@ -22,7 +22,7 @@ public class RailsControl : CarControl
 	private float steering=0;
 	private float chunkProgress=0;
 	private Vector3 target;
-    private Vector3 targetSpeed;
+    private float targetSpeed;
 	private float oldSteeringInput=0;
 	private int targetRail=0;
 	private int nbUpdates=0;

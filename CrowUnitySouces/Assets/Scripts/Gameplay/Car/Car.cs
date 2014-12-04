@@ -11,8 +11,8 @@ public class Car : MonoBehaviour
 	public float brakesRepartition=0.6f; // 0=rear, 1=front
 	public float steerAngle0kmhDeg=40;
 	public float steerAngleTopSpeedDeg=20;
-	public float antiRoll=5000;
-	public float downforce=0;
+	public float antiRoll=8000;
+	public float downforce=10;
 	
 	// Components
 	private Engine engine;
