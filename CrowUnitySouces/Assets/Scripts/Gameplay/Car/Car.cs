@@ -143,10 +143,10 @@ public class Car : MonoBehaviour
 		}*/
 	}
 
-    //void OnValidate()
-    //{
-    //    updateValues ();
-    //}
+    void OnValidate()
+    {
+        if(Application.isPlaying) updateValues ();
+    }
 		
 	// Private methods
 	void updateValues()
