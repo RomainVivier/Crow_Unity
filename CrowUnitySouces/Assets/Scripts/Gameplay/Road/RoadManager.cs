@@ -22,6 +22,7 @@ public class RoadManager : MonoBehaviour
 
     private List<RoadChunk> m_chunks = new List<RoadChunk>();
     private RoadChunk m_lastChunk;
+    private GameObject m_car;
     
     private State m_currentState;
     private Theme m_currentTheme;
@@ -120,6 +121,8 @@ public class RoadManager : MonoBehaviour
 				m_chunks[m_chunks.Count-1].NextChunk=rc;
             }else{
                 rc.transform.position = _startPoint.position;
+                m_car = GameObject.Instantiate(Resources.Load("Car"), (rc._startPoint.position + Vector3.up + Vector3.right), Quaternion.Euler(new Vector3(0,90,0))) as GameObject;
+                m_car.GetComponent<RailsControl>().chunk = rc;
             }
 
             m_chunks.Add(rc);
@@ -130,6 +133,15 @@ public class RoadManager : MonoBehaviour
 
     void PlaceChunk( int order )
     {
+
+        /*
+         * TODO
+         * 
+         * Mise en place de bon chunk
+         * via la méthode PullChunk
+         * 
+        */
+
         if(order >= _numberOfChunk)
         {
             Debug.LogError("The order of the moved chunk can't be greater or equal to the number of chunks.");

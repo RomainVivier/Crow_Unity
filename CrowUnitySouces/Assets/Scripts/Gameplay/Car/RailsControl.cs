@@ -34,6 +34,10 @@ public class RailsControl : CarControl
 			Debug.LogError ("AutomaticGearbox : no car attached");
 			return;
 		}
+
+        //ajout lors de la mise en place des rails et de la generation de chunk
+        rails = chunk.GetComponent<Rails>();
+        target = rails.getPoint(currentRail, chunkProgress);
 	}
 	
 	void FixedUpdate ()
@@ -185,10 +189,10 @@ public class RailsControl : CarControl
 		}
 	}
 
-	private void OnValidate()
-	{
-		rails=chunk.GetComponent<Rails>();
-		target=rails.getPoint(currentRail,chunkProgress);
-	}
+    //private void OnValidate()
+    //{
+    //    rails = chunk.GetComponent<Rails>();
+    //    target = rails.getPoint(currentRail, chunkProgress);
+    //}
 
 }
