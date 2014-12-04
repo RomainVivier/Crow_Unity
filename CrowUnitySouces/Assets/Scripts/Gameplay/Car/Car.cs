@@ -11,8 +11,8 @@ public class Car : MonoBehaviour
 	public float brakesRepartition=0.6f; // 0=rear, 1=front
 	public float steerAngle0kmhDeg=40;
 	public float steerAngleTopSpeedDeg=20;
-	public float antiRoll=5000;
-	public float downforce=0;
+	public float antiRoll=8000;
+	public float downforce=10;
 	
 	// Components
 	private Engine engine;
@@ -20,7 +20,7 @@ public class Car : MonoBehaviour
 	private Rigidbody body;
 	private WheelCollider[] wheels;
 	private Transmission transmission;
-	
+
 	// Private attributes
 	private float dragCoef;
 	private float mass;
@@ -33,11 +33,26 @@ public class Car : MonoBehaviour
 	private float wheelTrack;
 	private CarControl.CarInputs oldInputs;
 	private Vector3 centerOfMass;
-	
-	// MonoBehaviour methods
+
+	// Sounds
+    private FMOD.Studio.EventInstance engineSound;
+    private FMOD.Studio.ParameterInstance engineRPM;
+    private const int ENGINE_SOUND_MAX_RPM = 6000;
+    private FMOD.Studio.EventInstance tiresSound;
+    private FMOD.Studio.ParameterInstance tiresFriction;
+    private FMOD.Studio.ParameterInstance tiresSpeed;
+
+     // MonoBehaviour methods
 	void Start ()
 	{
 		updateValues ();
+        engineSound = FMOD_StudioSystem.instance.GetEvent("event:/SFX/Car Mechanics/carEngine");
+        engineSound.start();
+        engineSound.getParameter("RPM", out engineRPM);
+        tiresSound = FMOD_StudioSystem.instance.GetEvent("event:/SFX/Car Mechanics/carTyres");
+        tiresSound.getParameter("Friction", out tiresFriction);
+        tiresSound.getParameter("Speed", out tiresSpeed);
+        tiresSound.start();
 	}
 
 	void FixedUpdate ()
@@ -114,6 +129,13 @@ public class Car : MonoBehaviour
 		// Store old inputs
 		oldInputs=inputs;
 		
+        // Update sounds
+        float soundRpm=rpm*ENGINE_SOUND_MAX_RPM/engine.getMaxRpm();
+        engineRPM.setValue(soundRpm);
+        float frictionSound = inputs.brake;
+        tiresFriction.setValue(frictionSound);
+        tiresSpeed.setValue(forwardVelocity / maxSpeed);       
+
 		// Debug print
 		/*if(nbUpdates%10==0)
 		{
@@ -121,10 +143,10 @@ public class Car : MonoBehaviour
 		}*/
 	}
 
-	void OnValidate()
-	{
-		updateValues ();
-	}
+    //void OnValidate()
+    //{
+    //    updateValues ();
+    //}
 		
 	// Private methods
 	void updateValues()
@@ -170,7 +192,6 @@ public class Car : MonoBehaviour
 		brakeTorque=brakeDecceleration*acceleration2Torque/2;
 		wheelBase=body.transform.localScale.z;
 		wheelTrack=body.transform.localScale.x;
-		
 		
 		// Update center of weight
 		body.centerOfMass=centerOfMass;

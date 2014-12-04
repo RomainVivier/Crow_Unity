@@ -5,20 +5,25 @@ public class RoadChunk : MonoBehaviour {
 
     #region Public Members
 
-    public GameObject _roadPrefab;
     public Transform _startPoint;
     public Transform _endPoint;
 
     public GameObject[] _environmentPoint;
     public Rails _rails;
     public Obstacle[] _obstacles;
-	public RoadChunk nextChunk=null;
 
+	private RoadChunk m_nextChunk = null;
     private bool m_isUnused = false;
     
     #endregion
 
     #region Properties
+
+    public RoadChunk NextChunk
+    {
+        get { return m_nextChunk; }
+        set { m_nextChunk = value; }
+    }
 
     public bool IsUnused
     { 
@@ -36,11 +41,6 @@ public class RoadChunk : MonoBehaviour {
 
     #region MonoBehaviours
 
-    void Start ()
-    {
-	    
-	}
-
     void OnTriggerExit(Collider other)
     {
         Debug.Log("No longer in contact with " + other.transform.name);
@@ -56,6 +56,18 @@ public class RoadChunk : MonoBehaviour {
     #region Functions
 
     void Generate()
+    {
+        // instanciate piece of chunk
+
+        // get environments / obstacles
+
+        // generate environments
+
+        // generate obstacles
+
+    }
+
+    void Generate(Theme theme)
     {
 
     }
