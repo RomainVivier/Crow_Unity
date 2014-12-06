@@ -16,6 +16,9 @@ public class Vignette : MonoBehaviour
     {
         remainingTime -= Time.deltaTime;
         if (remainingTime <= 0) camera.enabled = false;
+        GameObject child = transform.GetChild(0).gameObject;
+        child.transform.position = new Vector3(0.5f, 0.5f, 1.5f);
+        child.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
     }
 
     public void pop(float time=-1)
@@ -31,5 +34,10 @@ public class Vignette : MonoBehaviour
         camera.rect=rect;
         float mainVfov = GameObject.Find("Car/Body/Camera").camera.fieldOfView;
         camera.fieldOfView=Mathf.Atan(Mathf.Tan(Mathf.Deg2Rad*mainVfov)*rect.height)*Mathf.Rad2Deg;
+    }
+
+    public void stop()
+    {
+        remainingTime = 0;
     }
 }
