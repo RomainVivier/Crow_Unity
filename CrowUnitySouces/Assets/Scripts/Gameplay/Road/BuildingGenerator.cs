@@ -3,9 +3,11 @@ using System.Collections;
 
 public class BuildingGenerator : MonoBehaviour {
 
-    public int _minHeight = 1;
-    public int _maxHeight = 1;
+    public int _minHeight;
+    public int _maxHeight;
     public string _theme;
+    
+    public BuildingPool _buidPool;
 
 	void Start()
     {
@@ -15,17 +17,19 @@ public class BuildingGenerator : MonoBehaviour {
             return;
         }
 
-        float randColor = Random.Range(0f, 1f);
-        ProceduralMaterial mat;
+
+        int randColor = Random.Range(0, 4);
         int height = Random.Range(_minHeight, _maxHeight);
         GameObject building;
 
         if (height != 1)
         {
-            building = GameObject.Instantiate(Resources.Load("Buildings/" + _theme + "_Base"), transform.position, Quaternion.Euler(new Vector3(-90, 90 + transform.rotation.eulerAngles.y, 0))) as GameObject;
-            mat = building.renderer.materials[1] as ProceduralMaterial;
-            mat.SetProceduralFloat("Wall_Color", randColor);
-            building.renderer.materials[1] = mat;
+            building = _buidPool.GetUnusedBuilding(_theme + "_Base_" + randColor);
+            building.SetActive(true);
+            building.transform.position = transform.position;
+            building.transform.rotation = Quaternion.Euler(new Vector3(-90, 90 + transform.rotation.eulerAngles.y, 0));
+            //building = GameObject.Instantiate(Resources.Load("Buildings/" + _theme + "_Base"), transform.position, Quaternion.Euler(new Vector3(-90, 90 + transform.rotation.eulerAngles.y, 0))) as GameObject;
+            //building.renderer.materials[1] = _matPool.GetRandomMaterial(building.renderer.materials[1].name, randColor);
             building.transform.localScale = Vector3.Scale(building.transform.localScale, transform.localScale);
 
             building.transform.parent = transform;
@@ -33,20 +37,24 @@ public class BuildingGenerator : MonoBehaviour {
 
         for (int i = 1; i < (height - 1); i++)
         {
-            building = GameObject.Instantiate(Resources.Load("Buildings/" + _theme + "_Middle"), transform.position + Vector3.up * 30 * i * transform.localScale.y, Quaternion.Euler(new Vector3(-90, 90 + transform.rotation.eulerAngles.y, 0))) as GameObject;
-            mat = building.renderer.materials[1] as ProceduralMaterial;
-            mat.SetProceduralFloat("Wall_Color", randColor);
-            building.renderer.materials[1] = mat;
+            building = _buidPool.GetUnusedBuilding(_theme + "_Middle_" + randColor);
+            building.SetActive(true);
+            building.transform.position = transform.position + Vector3.up * 30 * i * transform.localScale.y;
+            building.transform.rotation = Quaternion.Euler(new Vector3(-90, 90 + transform.rotation.eulerAngles.y, 0));
+            //building = GameObject.Instantiate(Resources.Load("Buildings/" + _theme + "_Middle"), transform.position + Vector3.up * 30 * i * transform.localScale.y, Quaternion.Euler(new Vector3(-90, 90 + transform.rotation.eulerAngles.y, 0))) as GameObject;
+            //building.renderer.materials[1] = _matPool.GetRandomMaterial(building.renderer.materials[1].name, randColor);
             building.transform.localScale = Vector3.Scale(building.transform.localScale, transform.localScale);
             building.transform.parent = transform;
         }
 
         if (height >= 1)
         {
-            building = GameObject.Instantiate(Resources.Load("Buildings/" + _theme + "_Top"), transform.position + Vector3.up * 30 * (height - 1) * transform.localScale.y, Quaternion.Euler(new Vector3(-90, 90 + transform.rotation.eulerAngles.y, 0))) as GameObject;
-            mat = building.renderer.materials[1] as ProceduralMaterial;
-            mat.SetProceduralFloat("Wall_Color", randColor);
-            building.renderer.materials[1] = mat;
+            building = _buidPool.GetUnusedBuilding(_theme + "_Top_" + randColor);
+            building.SetActive(true);
+            building.transform.position = transform.position + Vector3.up * 30 * (height - 1) * transform.localScale.y;
+            building.transform.rotation = Quaternion.Euler(new Vector3(-90, 90 + transform.rotation.eulerAngles.y, 0));
+            //building = GameObject.Instantiate(Resources.Load("Buildings/" + _theme + "_Top"), transform.position + Vector3.up * 30 * (height - 1) * transform.localScale.y, Quaternion.Euler(new Vector3(-90, 90 + transform.rotation.eulerAngles.y, 0))) as GameObject;
+            //building.renderer.materials[1] = _matPool.GetRandomMaterial(building.renderer.materials[1].name, randColor);
             building.transform.localScale = Vector3.Scale(building.transform.localScale, transform.localScale);
             building.transform.parent = transform;
         }
