@@ -16,6 +16,7 @@ public class SlapMachine : ButtonGadget {
 
     void Start()
     {
+        base.Start();
         GadgetManager.Instance.Register("SlapMachine", this);
         m_timer = new Timer();
     }

@@ -12,11 +12,11 @@ public class Duck : ButtonGadget
     {
         duckSound=FMOD_StudioSystem.instance.GetEvent("event:/SFX/Gadgets/Duck/gadgetDuckExecute");
         GadgetManager.Instance.Register("Duck", this);
+        base.Start();
 	}
 	
 	void Update ()
     {
-        base.Update();
         if(currentCooldown==float.PositiveInfinity)
         {
             FMOD.Studio.PLAYBACK_STATE state;
@@ -28,6 +28,7 @@ public class Duck : ButtonGadget
             }
         }
         currentCooldown -= Time.deltaTime;
+        base.Update();
 	}
 
     public override void Play()

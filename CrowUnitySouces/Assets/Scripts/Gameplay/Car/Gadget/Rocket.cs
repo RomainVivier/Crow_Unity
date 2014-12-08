@@ -41,6 +41,7 @@ public class Rocket : ButtonGadget {
         m_timer = new Timer();
         gameObject.SetActive(false);
         m_target = Vector3.zero;
+        base.Start();
     }
 
     void Update()
@@ -69,6 +70,7 @@ public class Rocket : ButtonGadget {
             transform.position = Vector3.Lerp(m_startPosition, m_target, 1 - m_timer.CurrentNormalized);
             m_rocketDist.setValue(Mathf.Clamp((Vector3.Distance(transform.position, m_target) / _rocketUIMax), 0f, 1f));
         }
+        base.Update();
     }
 
     #endregion

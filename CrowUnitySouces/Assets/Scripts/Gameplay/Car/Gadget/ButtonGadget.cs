@@ -7,12 +7,15 @@ public class ButtonGadget : Gadget {
     public float _animSpeed = 4;
     public float _relScale = 0.5f;
     private float m_animTime = 1;
+    private Material unlitMat;
+    private Material litMat;
     //private Vector3 baseScale;
 
-	void Start ()
+	public void Start ()
     {
-        //baseScale = new Vector3(100f, 100f, 100f);//m_button.transform.localScale;	
-	}
+        unlitMat=Resources.Load("ButtonUnlit", typeof(Material)) as Material;
+        litMat=Resources.Load("ButtonLit", typeof(Material)) as Material;
+    }
 	
 	public void Update ()
     {
@@ -20,7 +23,8 @@ public class ButtonGadget : Gadget {
         if (m_animTime > 1) m_animTime = 1;
         float animPos = m_animTime > 0.5f ? 2f * (1f - m_animTime) : m_animTime * 2f;
         m_button.transform.localScale = new Vector3(100f, 100f*Mathf.Lerp(1, _relScale, animPos),100f);
-	}
+        m_button.GetComponent<MeshRenderer>().material = IsReady ? litMat : unlitMat; 
+    }
 
     public override void Play()
     {
