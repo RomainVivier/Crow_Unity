@@ -11,11 +11,39 @@ public class BuildingPool : MonoBehaviour {
     public List<GameObject> m_buidings = new List<GameObject>();
 
     private Dictionary<string, List<PoolableObject>> m_pool = new Dictionary<string, List<PoolableObject>>();
+    private static BuildingPool m_instance;
     #endregion
 
-    #region MonoBehaviour
+    #region Singleton
+
+    public static BuildingPool Instance
+    {
+        get
+        {
+            if (m_instance == null)
+            {
+                m_instance = GameObject.FindObjectOfType<BuildingPool>();
+            }
+
+            return m_instance;
+        }
+    }
 
     void Awake()
+    {
+        if (m_instance == null)
+        {
+            m_instance = this;
+            m_instance.Init();
+        }
+        else
+        {
+            if (this != m_instance)
+                Destroy(this.gameObject);
+        }
+    }
+
+    private void Init()
     {
         AllocateObjects();
     }
@@ -32,7 +60,6 @@ public class BuildingPool : MonoBehaviour {
             return;
         }
 
-        Debug.Log(m_buidings.Count);
         foreach (GameObject po in m_buidings)
         {
             List<PoolableObject> tempList = new List<PoolableObject>();
