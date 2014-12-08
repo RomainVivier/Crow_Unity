@@ -11,7 +11,7 @@ public class Rocket : ButtonGadget {
     public float _rocketSpeed;
     public float _targetMaxDistance;
     public float _rocketUIMax;
-    public ParticleSystem _explosionParticles;
+    public GameObject _explosionParticles;
 
     private Timer m_rocketLaunchtimer;
     private Timer m_timer;
@@ -41,7 +41,7 @@ public class Rocket : ButtonGadget {
         m_timer = new Timer();
         gameObject.SetActive(false);
         m_target = Vector3.zero;
-        base.Start();
+        _explosionParticles = GameObject.Find("RocketExplosion");
     }
 
     void Update()
@@ -70,7 +70,6 @@ public class Rocket : ButtonGadget {
             transform.position = Vector3.Lerp(m_startPosition, m_target, 1 - m_timer.CurrentNormalized);
             m_rocketDist.setValue(Mathf.Clamp((Vector3.Distance(transform.position, m_target) / _rocketUIMax), 0f, 1f));
         }
-        base.Update();
     }
 
     #endregion
@@ -84,9 +83,9 @@ public class Rocket : ButtonGadget {
         IsReady = false;
 
         var obstacles = GameObject.FindGameObjectsWithTag("Obstacle");
-        if(obstacles.Length > 0)
+        if (obstacles.Length > 0)
         {
-            foreach(GameObject go in obstacles)
+            foreach (GameObject go in obstacles)
             {
                 if (m_target == Vector3.zero || Vector3.Distance(transform.position, m_target) > Vector3.Distance(transform.position, go.transform.position))
                 {
@@ -96,6 +95,10 @@ public class Rocket : ButtonGadget {
                 }
             }
         }
+        else
+        {
+            Stop();
+        }
 
         
 
@@ -103,6 +106,7 @@ public class Rocket : ButtonGadget {
 
     public override void Stop()
     {
+        Debug.Log("rocket did stop");
         base.Stop();
         gameObject.SetActive(false);
         IsReady = true;
@@ -137,7 +141,7 @@ public class Rocket : ButtonGadget {
         m_rocketExecute3D.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
         FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Gadgets/Rocket/gadgetRocketSuccess", transform.position);
         _explosionParticles.transform.position = transform.position;
-        _explosionParticles.Play();
+        _explosionParticles.GetComponent<ParticleSystem>().Play();
         var colliders = Physics.OverlapSphere(transform.position, _blastRadius);
         m_target = Vector3.zero;
         foreach(Collider collider in colliders)

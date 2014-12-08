@@ -12,24 +12,27 @@ public class Duck : ButtonGadget
     {
         duckSound=FMOD_StudioSystem.instance.GetEvent("event:/SFX/Gadgets/Duck/gadgetDuckExecute");
         GadgetManager.Instance.Register("Duck", this);
-        base.Start();
 	}
 	
 	void Update ()
     {
-        if(currentCooldown==float.PositiveInfinity)
+        /*if(currentCooldown==float.PositiveInfinity)
         {
             FMOD.Studio.PLAYBACK_STATE state;
             duckSound.getPlaybackState(out state);
             if (state == FMOD.Studio.PLAYBACK_STATE.STOPPED)
             {
                 currentCooldown = COOLDOWN;
-                IsReady = true;
+                Stop();
             }
-        }
+        }*/
         currentCooldown -= Time.deltaTime;
+        if(currentCooldown<=0 && !IsReady)
+        {
+            IsReady = true;
+        }
         base.Update();
-	}
+    }
 
     public override void Play()
     {
@@ -37,8 +40,9 @@ public class Duck : ButtonGadget
         if (currentCooldown <= 0)
         {
             duckSound.start();
-            currentCooldown = float.PositiveInfinity;
+            currentCooldown = COOLDOWN;//float.PositiveInfinity;
             IsReady = false;
+            Stop();
         }
     }
 }
