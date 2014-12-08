@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Duck : Gadget
+public class Duck : ButtonGadget
 {
 
     private FMOD.Studio.EventInstance duckSound;
@@ -16,6 +16,7 @@ public class Duck : Gadget
 	
 	void Update ()
     {
+        base.Update();
         if(currentCooldown==float.PositiveInfinity)
         {
             FMOD.Studio.PLAYBACK_STATE state;
@@ -31,6 +32,7 @@ public class Duck : Gadget
 
     public override void Play()
     {
+        base.Play();
         if (currentCooldown <= 0)
         {
             duckSound.start();

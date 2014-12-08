@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class SlapMachine : Gadget {
+public class SlapMachine : ButtonGadget {
 
 
 
@@ -22,6 +22,7 @@ public class SlapMachine : Gadget {
 
     void Update()
     {
+        base.Update();
         if (m_timer.IsElapsedOnce)
         {
             Stop();
