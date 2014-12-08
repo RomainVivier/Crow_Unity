@@ -11,6 +11,7 @@ public class Rocket : Gadget {
     public float _rocketSpeed;
     public float _targetMaxDistance;
     public float _rocketUIMax;
+    public ParticleSystem _explosionParticles;
 
     private Timer m_rocketLaunchtimer;
     private Timer m_timer;
@@ -58,8 +59,8 @@ public class Rocket : Gadget {
 
         if (m_timer.IsElapsedOnce)
         {
-            transform.localPosition = m_offsetWithParent;
             Blow();
+            transform.localPosition = m_offsetWithParent;
             Stop();
         }
 
@@ -133,6 +134,8 @@ public class Rocket : Gadget {
         m_rocketUI.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
         m_rocketExecute3D.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
         FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Gadgets/Rocket/gadgetRocketSuccess", transform.position);
+        _explosionParticles.transform.position = transform.position;
+        _explosionParticles.Play();
         var colliders = Physics.OverlapSphere(transform.position, _blastRadius);
         m_target = Vector3.zero;
         foreach(Collider collider in colliders)
