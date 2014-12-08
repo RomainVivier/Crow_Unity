@@ -12,7 +12,8 @@ public class Duck : ButtonGadget
     {
         duckSound=FMOD_StudioSystem.instance.GetEvent("event:/SFX/Gadgets/Duck/gadgetDuckExecute");
         GadgetManager.Instance.Register("Duck", this);
-	}
+        base.Start();
+    }
 	
 	void Update ()
     {

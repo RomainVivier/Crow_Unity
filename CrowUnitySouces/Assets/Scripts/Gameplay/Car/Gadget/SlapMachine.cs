@@ -19,6 +19,7 @@ public class SlapMachine : ButtonGadget {
         base.Start();
         GadgetManager.Instance.Register("SlapMachine", this);
         m_timer = new Timer();
+        base.Start();
     }
 
     void Update()
@@ -28,6 +29,7 @@ public class SlapMachine : ButtonGadget {
         {
             Stop();
         }
+        base.Update();
     }
 
     #endregion
