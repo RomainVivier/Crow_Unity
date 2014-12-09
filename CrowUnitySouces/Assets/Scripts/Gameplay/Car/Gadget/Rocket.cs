@@ -109,7 +109,6 @@ public class Rocket : ButtonGadget {
 
     public override void Stop()
     {
-        Debug.Log("rocket did stop");
         base.Stop();
         gameObject.SetActive(false);
         IsReady = true;
