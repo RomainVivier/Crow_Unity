@@ -98,7 +98,7 @@ public class Rocket : ButtonGadget {
             }
         }
 
-        if (obstacles.Length > 0 || m_target == null)
+        if (obstacles.Length == 0 || m_target == Vector3.zero)
         {
             Stop();
         }
