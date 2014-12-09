@@ -88,10 +88,11 @@ public class Car : MonoBehaviour
 		
 		// Steering
 		float steerAngleOut=Mathf.Lerp(steerAngle0kmhDeg,steerAngleTopSpeedDeg,forwardVelocity/maxSpeed)*inputs.steering;
-		float steerAngleIn=90-Mathf.Atan (Mathf.Tan ((90-steerAngleOut)*Mathf.Deg2Rad)-wheelTrack/wheelBase)*Mathf.Rad2Deg;
-		//Debug.Log (steerAngleOut+" "+(Mathf.Tan ((90-steerAngleOut)*Mathf.Deg2Rad)-wheelTrack/wheelBase));
-		if(steerAngleOut==0) steerAngleIn=0;
-		if(steerAngleOut>0)
+        float steerAngleIn;
+        if(steerAngleOut>0) steerAngleIn=90-Mathf.Atan (Mathf.Tan ((90-steerAngleOut)*Mathf.Deg2Rad)-wheelTrack/wheelBase)*Mathf.Rad2Deg;
+        else if(steerAngleOut<0) steerAngleIn=Mathf.Atan (Mathf.Tan ((90+steerAngleOut)*Mathf.Deg2Rad)-wheelTrack/wheelBase)*Mathf.Rad2Deg-90;
+        else steerAngleIn=0;
+        if(steerAngleOut>0)
 		{
 			wheels[0].steerAngle=steerAngleOut;
 			wheels[1].steerAngle=steerAngleIn;	
