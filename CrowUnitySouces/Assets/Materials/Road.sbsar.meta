@@ -78,7 +78,7 @@ SubstanceImporter:
     - name: Road_diffuse
       alphaSource: 5
       filterMode: 1
-      aniso: 1
+      aniso: 9
       wrapMode: 0
     - name: Road_normal
       alphaSource: 0

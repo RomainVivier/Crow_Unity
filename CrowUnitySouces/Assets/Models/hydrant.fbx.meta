@@ -1,64 +1,17 @@
 fileFormatVersion: 2
-guid: 31e8823deb824d449b755f373a13a96e
+guid: d7e8b645df0d4e54cbf6a830e84c63bb
 ModelImporter:
   serializedVersion: 16
   fileIDToRecycleName:
-    100000: Base Volant
-    100002: Base Volant.001
-    100004: //RootNode
-    100006: Fenetre
-    100008: habitacle
-    100010: ParaBrise
-    100012: Porte
-    100014: Tableau
-    100016: toit
-    100018: habitacle.001
-    100020: Tableau.002
-    400000: Base Volant
-    400002: Base Volant.001
-    400004: //RootNode
-    400006: Fenetre
-    400008: habitacle
-    400010: ParaBrise
-    400012: Porte
-    400014: Tableau
-    400016: toit
-    400018: habitacle.001
-    400020: Tableau.002
-    2300000: Base Volant
-    2300002: Base Volant.001
-    2300004: Fenetre
-    2300006: habitacle
-    2300008: ParaBrise
-    2300010: Porte
-    2300012: Tableau
-    2300014: toit
-    2300016: habitacle.001
-    2300018: Tableau.002
-    3300000: Base Volant
-    3300002: Base Volant.001
-    3300004: Fenetre
-    3300006: habitacle
-    3300008: ParaBrise
-    3300010: Porte
-    3300012: Tableau
-    3300014: toit
-    3300016: habitacle.001
-    3300018: Tableau.002
-    4300000: Fenetre
-    4300002: Porte
-    4300004: ParaBrise
-    4300006: habitacle
-    4300008: Base Volant.001
-    4300010: Base Volant
-    4300012: Tableau
-    4300014: toit
-    4300016: habitacle.001
-    4300018: Tableau.002
+    100000: //RootNode
+    400000: //RootNode
+    2300000: //RootNode
+    3300000: //RootNode
+    4300000: Cylinder.002
     9500000: //RootNode
   materials:
     importMaterials: 1
-    materialName: 1
+    materialName: 0
     materialSearch: 1
   animations:
     legacyGenerateAnimations: 4
