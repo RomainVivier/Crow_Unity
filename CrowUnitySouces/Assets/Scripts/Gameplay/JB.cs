@@ -68,9 +68,12 @@ public class JB : MonoBehaviour
 
     public void OnValidate()
     {
-        flareL = GameObject.Find("Car").transform.FindChild("Body")
+		GameObject car = GameObject.Find("Car");
+		if(car == null)
+			return;
+		flareL = car.transform.FindChild("Body")
                                        .transform.FindChild("FlareL").GetComponent<LensFlare>();
-        flareR = GameObject.Find("Car").transform.FindChild("Body")
+		flareR = car.transform.FindChild("Body")
                                        .transform.FindChild("FlareR").GetComponent<LensFlare>();
     }
 
