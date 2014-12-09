@@ -13,7 +13,8 @@ public class Car : MonoBehaviour
 	public float steerAngleTopSpeedDeg=20;
 	public float antiRoll=8000;
 	public float downforce=10;
-	
+    public float wheelRotation = 180;
+
 	// Components
 	private Engine engine;
 	private CarControl control;
@@ -33,6 +34,8 @@ public class Car : MonoBehaviour
 	private float wheelTrack;
 	private CarControl.CarInputs oldInputs;
 	private Vector3 centerOfMass;
+    private Quaternion wheelQuaternion;
+    private GameObject wheelObject;
 
 	// Sounds
     private FMOD.Studio.EventInstance engineSound;
@@ -53,6 +56,8 @@ public class Car : MonoBehaviour
         tiresSound.getParameter("Friction", out tiresFriction);
         tiresSound.getParameter("Speed", out tiresSpeed);
         tiresSound.start();
+        wheelObject = transform.FindChild("Body/CarModel/volant").gameObject;
+        wheelQuaternion = wheelObject.transform.localRotation;
 	}
 
 	void FixedUpdate ()
@@ -102,6 +107,9 @@ public class Car : MonoBehaviour
 			wheels[0].steerAngle=steerAngleIn;
 			wheels[1].steerAngle=steerAngleOut;			
 		}
+        Quaternion newRotation = wheelQuaternion;
+        newRotation *= Quaternion.Euler(new Vector3(0, -wheelRotation*inputs.steering, 0));
+        wheelObject.transform.localRotation = newRotation;
 		
 		// Aerodynamic drag & downforce
 		float force=forwardVelocity*forwardVelocity*dragCoef;
