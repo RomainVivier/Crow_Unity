@@ -11,10 +11,12 @@ public class Rails : MonoBehaviour
 	public int nbRails=0;
 	public int nbPoints=0;
 	public bool drawShafts=false;
-	
+    public bool sortRails = false;
+
 	public Vector3[] positions;
 	public Vector3[] deltas;
-	
+    public float[] speedOverrides;
+
 	private int nbComputedPositions;
 	private Vector3[] computedPositions;
 	private bool needToComputePositions=true;
@@ -51,20 +53,106 @@ public class Rails : MonoBehaviour
 			computePositions();
 			oldNbPoints=nbPoints;
 			oldNbRails=nbRails;
-		}	
+		}
+        if(sortRails)
+        {
+            int[] railsIndex=new int[nbRails];
+            float[] railsPos=new float[nbRails];
+            for(int i=0;i<nbRails;i++)
+            {
+                railsIndex[i] = i;
+                Vector3 forward=deltas[i].normalized;
+                Vector3 right = Vector3.Cross(forward, Vector3.up);
+                railsPos[i] = -Vector3.Dot(right, positions[i] - positions[0]);
+            }
+            mergeSortRails(0, nbRails - 1, ref railsIndex, ref railsPos);
+            swapArrays(railsIndex);
+            sortRails = false;
+        }
 	}
-	
+
+    void mergeSortRails(int first, int last,ref int[] railsIndex, ref float[] railsPos)
+    {
+        if (first == last) return;
+        else if(first+1==last)
+        {
+            if (railsPos[first] > railsPos[last]) swapMergeSorteRails(first, last, ref railsIndex, ref railsPos); 
+        }
+        else
+        {
+            int mid = (first + last) / 2;
+            mergeSortRails(first, mid, ref railsIndex, ref railsPos);
+            mergeSortRails(mid + 1, last, ref railsIndex, ref railsPos);
+            int lPos = first, rPos = mid + 1, fPos=0;
+            int[] newIndex = new int[last - first + 1];
+            float[] newPos = new float[last - first + 1];
+            Debug.Log(railsIndex[0]+","+railsIndex[1]+","+railsIndex[2]);
+            while(lPos<=mid || rPos<=last)
+            {
+                if(rPos>last || (lPos<=mid && railsPos[lPos]<railsPos[rPos]))
+                {
+                    newIndex[fPos] = railsIndex[lPos];
+                    newPos[fPos++] = railsIndex[lPos++];
+                }
+                else
+                {
+                    newIndex[fPos] = railsIndex[rPos];
+                    newPos[fPos++] = railsIndex[rPos++];
+                }
+                Debug.Log(newIndex[fPos - 1]);
+            }
+            for(int i=first;i<=last;i++)
+            {
+                railsIndex[i] = newIndex[i - first];
+                railsPos[i] = newPos[i - first];
+            }
+        }
+    }
+
+    void swapMergeSorteRails(int a, int b,ref int[] railsIndex, ref float[] railsPos)
+    {
+            int indexA = railsIndex[a];
+            float posA = railsPos[a];
+            railsIndex[a] = railsIndex[b];
+            railsPos[a] = railsPos[b];
+            railsIndex[b] = indexA;
+            railsPos[b] = posA;
+    }
+
+    void swapArrays(int[] railsIndex)
+    {
+        Vector3[] newPositions=new Vector3[nbPoints*nbRails];
+		Vector3[] newDeltas=new Vector3[nbPoints*nbRails];
+        float[] newOverrides = new float[nbPoints * nbRails];
+        for (int r = 0; r < nbRails; r++)
+        {
+            int index = railsIndex[r];
+            for (int p = 0; p < nbPoints; p++)
+            {
+                newPositions[p * nbRails + r] = positions[p * nbRails + index];
+                newDeltas[p * nbRails + r] = deltas[p * nbRails + index];
+                newOverrides[p * nbRails + r] += speedOverrides[p * nbRails + index];
+            }
+        }
+		positions=newPositions;
+		deltas=newDeltas;
+        speedOverrides = newOverrides;
+    }
+
 	void resizeArray(int oldNbPoints, int oldNbRails)
 	{
 		Vector3[] newPositions=new Vector3[nbPoints*nbRails];
 		Vector3[] newDeltas=new Vector3[nbPoints*nbRails];
+        float[] newOverrides = new float[nbPoints * nbRails];
+
 		for(int p=0;p<nbPoints;p++) for(int r=0;r<nbRails;r++)
 		{
 			if(p<oldNbPoints && r<oldNbRails)
 			{
 				newPositions[p*nbRails+r]=positions[p*oldNbRails+r];
-				newDeltas[p*nbRails+r]=deltas[p*oldNbRails+r];				
-			}
+				newDeltas[p*nbRails+r]=deltas[p*oldNbRails+r];
+                newOverrides[p * nbRails + r] = speedOverrides[p * oldNbRails + r];
+            }
 			else
 			{
 				newPositions[p*nbRails+r]=Vector3.zero;
@@ -75,6 +163,7 @@ public class Rails : MonoBehaviour
 		computedPositions=new Vector3[nbComputedPositions*nbRails];
 		positions=newPositions;
 		deltas=newDeltas;
+        speedOverrides = newOverrides;
 	}
 	
 	void computePositions()
@@ -111,30 +200,45 @@ public class Rails : MonoBehaviour
 			return bezier (newPoints,pos);
 		}
 	}
+
+	// Compute the variables necessary to interpolate between the points and the rails
+    void computeInterpolations(float rail, float progress, int nbPoints,
+                              out int prevPP, out int nextPP,
+                              out int prevRail, out int nextRail,
+                              out float pPos, out float railPos)
+    {
+		// Compute the interpolation between the rails
+		prevRail=Mathf.FloorToInt(rail);
+		if(prevRail<0) prevRail=0;
+		if(prevRail>=nbRails) prevRail=nbRails-1;
+		nextRail=prevRail+1;
+		if(nextRail>=nbRails) nextRail=nbRails-1;
+		railPos=rail-prevRail;
+		if(railPos>1) railPos=1;
+		
+		// Compute the interpolation between the points
+		float pointProgress=progress*(nbPoints-1);
+		prevPP=Mathf.FloorToInt(pointProgress);
+		if(prevPP<0) prevPP=0;
+		if(prevPP>=nbPoints-1) prevPP=nbPoints-1;
+		nextPP=prevPP+1;
+		if(nextPP>=nbPoints-1) nextPP=nbPoints-1;
+		pPos=pointProgress-prevPP;
+		if(pPos>1) pPos=1;
 	
+    }
+
 	// Return a point in the curve in [0,nbRails-1] and [0,1]
 	public Vector3 getPoint(float rail, float progress)
 	{
 		if(needToComputePositions) computePositions();
 		
-		// Compute the interpolation between the rails
-		int prevRail=Mathf.FloorToInt(rail);
-		if(prevRail<0) prevRail=0;
-		if(prevRail>=nbRails) prevRail=nbRails-1;
-		int nextRail=prevRail+1;
-		if(nextRail>=nbRails) nextRail=nbRails-1;
-		float railPos=rail-prevRail;
-		if(railPos>1) railPos=1;
-		
-		// Compute the interpolation between the points
-		float pointProgress=progress*(nbComputedPositions-1);
-		int prevPP=Mathf.FloorToInt(pointProgress);
-		if(prevPP<0) prevPP=0;
-		if(prevPP>=nbComputedPositions-1) prevPP=nbComputedPositions-1;
-		int nextPP=prevPP+1;
-		if(nextPP>=nbComputedPositions-1) nextPP=nbComputedPositions-1;
-		float pPos=pointProgress-prevPP;
-		if(pPos>1) pPos=1;
+        int prevPP, nextPP, prevRail, nextRail;
+        float pPos, railPos;
+        computeInterpolations(rail, progress, nbComputedPositions,
+                              out prevPP, out nextPP,
+                              out prevRail, out nextRail,
+                              out pPos, out railPos);
 		
 		// Compute the point
 		Vector3	prPp=computedPositions[prevPP*nbRails+prevRail];
@@ -146,6 +250,33 @@ public class Rails : MonoBehaviour
 		return transform.TransformPoint(pr+(nr-pr)*railPos);
 	}
 	
+    // Return the set speed according to the car's own set speed and the rails speed override
+    public float getSpeed(float rail, float progress, float speed)
+    {
+		if(needToComputePositions) computePositions();
+
+        int prevPP, nextPP, prevRail, nextRail;
+        float pPos, railPos;
+        computeInterpolations(rail, progress, nbPoints,
+                              out prevPP, out nextPP,
+                              out prevRail, out nextRail,
+                              out pPos, out railPos);
+
+        // Compute the point
+        float prPp=speedOverrides[prevPP*nbRails+prevRail];
+        if (prPp == 0) prPp = speed;
+        float prNp=speedOverrides[nextPP*nbRails+prevRail];
+        if (prNp == 0) prNp = speed;
+        float pr=prPp+(prNp-prPp)*pPos;
+        float nrPp=speedOverrides[prevPP*nbRails+nextRail];
+        if (nrPp == 0) nrPp = speed;
+        float nrNp=speedOverrides[nextPP*nbRails+nextRail];
+        if (nrNp == 0) nrNp = speed;
+        float nr=nrPp+(nrNp-nrPp)*pPos;
+
+        return pr + (nr - pr) * railPos; 
+    }
+
 	void OnDrawGizmos()
 	{
 		if(needToComputePositions) computePositions();

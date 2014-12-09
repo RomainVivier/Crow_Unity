@@ -15,7 +15,7 @@ public class Radio : MonoBehaviour {
     private FMOD.Studio.EventInstance m_radio;
     private FMOD.Studio.ParameterInstance m_fmodRadioFreq;
     private FMOD.Studio.ParameterInstance m_fmodRadioState;
-    private FMOD.Studio.ParameterInstance m_fmodRadioPickup;
+    //private FMOD.Studio.ParameterInstance m_fmodRadioPickup;
 
     public FMOD_StudioEventEmitter _emitter;
 
@@ -40,7 +40,7 @@ public class Radio : MonoBehaviour {
         m_radio.start();
 
         m_radio.getParameter("radioFrequency", out m_fmodRadioFreq);
-        m_radio.getParameter("radioPickup", out m_fmodRadioPickup);
+        //m_radio.getParameter("radioPickup", out m_fmodRadioPickup);
         m_radio.getParameter("radioState", out m_fmodRadioState);
 
         RadioState = 1;

@@ -22,6 +22,7 @@ public class RailsControl : CarControl
 	private float steering=0;
 	private float chunkProgress=0;
 	private Vector3 target;
+    private float targetSpeed;
 	private float oldSteeringInput=0;
 	private int targetRail=0;
 	private int nbUpdates=0;
@@ -34,6 +35,10 @@ public class RailsControl : CarControl
 			Debug.LogError ("AutomaticGearbox : no car attached");
 			return;
 		}
+
+        //ajout lors de la mise en place des rails et de la generation de chunk
+        rails = chunk.GetComponent<Rails>();
+        target = rails.getPoint(currentRail, chunkProgress);
 	}
 	
 	void FixedUpdate ()
@@ -127,7 +132,7 @@ public class RailsControl : CarControl
 		// Apply inputs
 		ret.throttle=throttleBrake>0 ? throttleBrake : 0;
 		ret.brake=throttleBrake<0 ? -throttleBrake : 0;
-		ret.steering=steering;
+        ret.steering = steering;
 
 		// Gear shift, in case of there isn't an automatic gearbox 
 		ret.upshift=Input.GetAxis ("Upshift")>0;
@@ -166,29 +171,30 @@ public class RailsControl : CarControl
 			}
 			chunkProgress=(minProgress+maxProgress)/2;
 			target=rails.getPoint(currentRail,chunkProgress);
+            targetSpeed = rails.getSpeed(currentRail, chunkProgress,setSpeedKmh/3.6f);
 			if(chunkProgress>=1) gotoNextChunk();
 		}
 	}
 		
 	private void gotoNextChunk()
 	{
-		if(chunk.nextChunk!=null)
+		if(chunk.NextChunk!=null)
 		{
 			int oldNbRails=rails.nbRails;
-			chunk=chunk.nextChunk;
+			chunk=chunk.NextChunk;
 			rails=chunk._rails;
 			int newNbRails=rails.nbRails;
-			currentRail=(currentRail-oldNbRails/2f)*newNbRails/oldNbRails+newNbRails/2f;
-			targetRail=Mathf.RoundToInt((targetRail-oldNbRails/2)*newNbRails/oldNbRails+newNbRails/2f);
+			currentRail=(currentRail-(oldNbRails-1)/2f)*(newNbRails-1)/(oldNbRails-1)+(newNbRails-1)/2f;
+			targetRail=Mathf.RoundToInt((targetRail-(oldNbRails-1)/2)*(newNbRails-1)/(oldNbRails-1)+(newNbRails-1)/2f);
 			chunkProgress=0;
 			updateProgress();
 		}
 	}
 
-	private void OnValidate()
-	{
-		rails=chunk.GetComponent<Rails>();
-		target=rails.getPoint(currentRail,chunkProgress);
-	}
+    //private void OnValidate()
+    //{
+    //    rails = chunk.GetComponent<Rails>();
+    //    target = rails.getPoint(currentRail, chunkProgress);
+    //}
 
 }
