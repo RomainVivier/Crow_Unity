@@ -89,7 +89,7 @@ public class Rocket : ButtonGadget {
         {
             foreach (GameObject go in obstacles)
             {
-                if (m_target == Vector3.zero || Vector3.Distance(transform.position, m_target) > Vector3.Distance(transform.position, go.transform.position))
+                if (go.transform.position.x > transform.position.x && (m_target == Vector3.zero || Vector3.Distance(transform.position, m_target) > Vector3.Distance(transform.position, go.transform.position)))
                 {
                     m_target = go.transform.position;
                     FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Gadgets/Rocket/gadgetRocketEngage", transform.position);
@@ -97,7 +97,8 @@ public class Rocket : ButtonGadget {
                 }
             }
         }
-        else
+
+        if (obstacles.Length > 0 || m_target == null)
         {
             Stop();
         }
