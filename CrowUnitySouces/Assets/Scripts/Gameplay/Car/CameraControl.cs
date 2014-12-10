@@ -71,24 +71,11 @@ public class CameraControl : MonoBehaviour {
 
             if (hit.collider.CompareTag("Clickable"))
             {
-                if (hit.collider.name == "Button_Rocket")
+                GadgetTrigger gt = hit.collider.GetComponent<GadgetTrigger>(); 
+
+                if(gt)
                 {
-                    //Debug.Log("Rocket !");
-                    GadgetManager.Instance.PlayGadget("Rocket");
-                }
-                else if (hit.collider.name == "Button_Quack")
-                {
-					//Less coarse than penis
-                    GadgetManager.Instance.PlayGadget("Duck");
-                }
-				else if (hit.collider.name == "Button_Slap")
-                {
-                    GadgetManager.Instance.PlayGadget("SlapMachine");
-                }
-                else if(hit.collider.name == "flip_flop")
-                {
-                    //Debug.Log("Spoonbill !");
-                    GadgetManager.Instance.PlayGadget("Spoonbill");
+                    gt.PlayGadget();
                 }
 				else
 				{
