@@ -6,7 +6,7 @@ public class Duck : ButtonGadget
 
     private FMOD.Studio.EventInstance duckSound;
     private float currentCooldown = 0;
-    private const int COOLDOWN = 5;
+    private const int COOLDOWN = 2;
 
 	void Start ()
     {
@@ -31,6 +31,7 @@ public class Duck : ButtonGadget
         if(currentCooldown<=0 && !IsReady)
         {
             IsReady = true;
+			Stop();
         }
         base.Update();
     }
@@ -43,7 +44,7 @@ public class Duck : ButtonGadget
             duckSound.start();
             currentCooldown = COOLDOWN;//float.PositiveInfinity;
             IsReady = false;
-            Stop();
+            
         }
     }
 }

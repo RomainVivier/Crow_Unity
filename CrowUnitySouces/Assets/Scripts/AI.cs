@@ -75,12 +75,7 @@ public class AI : MonoBehaviour
 
     void updateButtonsArray()
     {
-		// EDIT - Rajouté pour que ça builde, il y a un bug qui fait que la "Car" n'est pas trouvée au démarrage, causant un fail du Find.
-		//
-		GameObject car = GameObject.Find("Car");
-		if(car == null)
-			return;
-        Transform carBody=GameObject.Find("Car").transform.Find("Body/CarModel");
+		Transform carBody=GameObject.Find("Car(Clone)").transform.Find("Body/CarModel");
         int nbChildren=carBody.childCount;
         buttons = new List<GameObject>();
         for(int i=0;i<nbChildren;i++)

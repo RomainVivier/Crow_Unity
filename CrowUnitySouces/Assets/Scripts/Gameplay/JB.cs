@@ -59,16 +59,24 @@ public class JB : MonoBehaviour
         bool ret = active;
         if(ret==false)
         {
+			GameObject car = GameObject.Find("Car(Clone)");
+			if(car == null)
+				return ret;
+			flareL = car.transform.FindChild("Body")
+				.transform.FindChild("FlareL").GetComponent<LensFlare>();
+			flareR = car.transform.FindChild("Body")
+				.transform.FindChild("FlareR").GetComponent<LensFlare>();
+
             active = true;
             runningTime = 0;
-            GameObject.Find("Car/AI").GetComponent<AI>().playDialog("test");
+            GameObject.Find("Car(Clone)/AI").GetComponent<AI>().playDialog("test");
         }
         return ret;
     }
 
     public void OnValidate()
     {
-		GameObject car = GameObject.Find("Car");
+		GameObject car = GameObject.Find("Car(Clone)");
 		if(car == null)
 			return;
 		flareL = car.transform.FindChild("Body")

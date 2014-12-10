@@ -56,6 +56,9 @@ public class CameraControl : MonoBehaviour {
             
         _camera.transform.localRotation = Quaternion.Euler(currEuler);
 
+
+		if(Input.GetKeyDown(KeyCode.S))
+			GadgetManager.Instance.PlayGadget("Spoonbill");
     }
 
     void OnClick()
@@ -68,30 +71,40 @@ public class CameraControl : MonoBehaviour {
 
             if (hit.collider.CompareTag("Clickable"))
             {
-                if (hit.collider.name == "button0")
+                if (hit.collider.name == "Button_Rocket")
                 {
                     //Debug.Log("Rocket !");
                     GadgetManager.Instance.PlayGadget("Rocket");
                 }
-
-                if (hit.collider.name == "button1")
+                else if (hit.collider.name == "Button_Quack")
                 {
 					//Less coarse than penis
                     GadgetManager.Instance.PlayGadget("Duck");
                 }
-
-                if (hit.collider.name == "button2")
+				else if (hit.collider.name == "Button_Slap")
                 {
                     GadgetManager.Instance.PlayGadget("SlapMachine");
                 }
-
-                if(hit.collider.name == "flip_flop")
+                else if(hit.collider.name == "flip_flop")
                 {
                     //Debug.Log("Spoonbill !");
                     GadgetManager.Instance.PlayGadget("Spoonbill");
                 }
+				else
+				{
+					Animator anim = hit.collider.GetComponent<Animator>();
+					if(anim != null)
+						StartCoroutine("AutoPress", anim);
+				}
             }
         }
     }
+
+	IEnumerator AutoPress(Animator anim)
+	{
+		anim.SetTrigger("Press");
+		yield return new WaitForSeconds(1);
+		anim.SetTrigger("Unpress");
+	}
 
 }

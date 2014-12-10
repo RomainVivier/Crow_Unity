@@ -142,7 +142,8 @@ public class Rocket : ButtonGadget {
         m_rocketUI.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
         m_rocketExecute3D.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
         FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Gadgets/Rocket/gadgetRocketSuccess", transform.position);
-        _explosionParticles.transform.position = transform.position;
+		m_target.y = -0.2f; //Offset for explosion height. DELETE ME!
+		_explosionParticles.transform.position = m_target;
         _explosionParticles.GetComponent<ParticleSystem>().Play();
         var colliders = Physics.OverlapSphere(transform.position, _blastRadius);
         m_target = Vector3.zero;
