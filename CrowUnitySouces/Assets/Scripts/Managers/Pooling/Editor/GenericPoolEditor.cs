@@ -22,7 +22,7 @@ public class GenericPoolEditor : Editor
         foreach(PoolKey pk in instance._pool.Dictionary.Keys)
         {
             EditorGUILayout.BeginHorizontal();
-            pk.Object = EditorGUILayout.ObjectField(pk.Object, typeof(Object));
+            pk.Object = EditorGUILayout.ObjectField(pk.Object, typeof(Object), false); 
             pk.Number = EditorGUILayout.IntField(pk.Number);
             if (GUILayout.Button("Delete"))
             {
