@@ -22,7 +22,7 @@ public class BuildingGenerator : MonoBehaviour {
 
         if (height != 1)
         {
-            building = BuildingPool.Instance.GetUnusedBuilding(_theme + "_Base_" + randColor);
+            building = GenericPool.Instance.GetUnusedObject(_theme + "_Base_" + randColor);
             building.SetActive(true);
             building.transform.position = transform.position;
             building.transform.rotation = Quaternion.Euler(new Vector3(-90, 90 + transform.rotation.eulerAngles.y, 0));
@@ -35,7 +35,7 @@ public class BuildingGenerator : MonoBehaviour {
 
         for (int i = 1; i < (height - 1); i++)
         {
-            building = BuildingPool.Instance.GetUnusedBuilding(_theme + "_Middle_" + randColor);
+            building = GenericPool.Instance.GetUnusedObject(_theme + "_Middle_" + randColor);
             building.SetActive(true);
             building.transform.position = transform.position + Vector3.up * 30 * i * transform.localScale.y;
             building.transform.rotation = Quaternion.Euler(new Vector3(-90, 90 + transform.rotation.eulerAngles.y, 0));
@@ -47,7 +47,7 @@ public class BuildingGenerator : MonoBehaviour {
 
         if (height >= 1)
         {
-            building = BuildingPool.Instance.GetUnusedBuilding(_theme + "_Top_" + randColor);
+            building = GenericPool.Instance.GetUnusedObject(_theme + "_Top_" + randColor);
             building.SetActive(true);
             building.transform.position = transform.position + Vector3.up * 30 * (height - 1) * transform.localScale.y;
             building.transform.rotation = Quaternion.Euler(new Vector3(-90, 90 + transform.rotation.eulerAngles.y, 0));

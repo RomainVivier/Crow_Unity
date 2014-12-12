@@ -18,12 +18,47 @@ public class GenericPool : MonoBehaviour {
 
     public PoolKeyMap _pool = new PoolKeyMap();
 
+    private static GenericPool m_instance;
+
     #endregion
 
 
-    #region MonoBehaviour
+    #region Singleton
+
+    public static GenericPool Instance
+    {
+        get
+        {
+            if (m_instance == null)
+            {
+                m_instance = GameObject.FindObjectOfType<GenericPool>();
+                if(m_instance == null)
+                {
+                    GameObject singleton = new GameObject();
+                    singleton.name = "GenericPool";
+                    m_instance = singleton.AddComponent<GenericPool>();
+                }
+            }
+
+            return m_instance;
+        }
+    }
 
     void Awake()
+    {
+        if (m_instance == null)
+        {
+            m_instance = this;
+            m_instance.Init();
+        }
+        else
+        {
+            if (this != m_instance)
+                Destroy(this.gameObject);
+        }
+    }
+
+    private void Init()
     {
         AllocateObjects();
     }
@@ -87,7 +122,7 @@ public class GenericPool : MonoBehaviour {
         }
     }
 
-    public GameObject GetUnusedChunk(string id)
+    public GameObject GetUnusedObject(string id)
     {
         var poolType = _pool.Dictionary.Where(pt => pt.Key.Id == id).FirstOrDefault();
 
