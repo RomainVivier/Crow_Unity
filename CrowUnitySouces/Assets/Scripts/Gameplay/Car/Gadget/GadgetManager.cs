@@ -83,7 +83,7 @@ public class GadgetManager : MonoBehaviour {
 	{
         if(m_timer.IsElapsedLoop && HasOneGadgetPlaying && m_lastGadget != name)
         {
-            Debug.Log("Can't play button");
+            Debug.Log("Can't play button, timer elapsed = " + m_timer.IsElapsedLoop + ", gadget playing = " + HasOneGadgetPlaying + ", last gagdet : " + m_lastGadget);
             return;
         }
 

@@ -12,6 +12,7 @@ public class RailsControl : CarControl
 	public float minSpeedKmh=50;
 	public float pedalsInertia=0.1f;
 	public float steeringInertia=0.1f;
+    public float steeringBaseSpeed = 10f;
 	public float targetDistMultiplier=0.5f; // Unit = seconds
 	public float steeringDeadZone=1;
 	public float steeringFullZone=2;
@@ -26,6 +27,10 @@ public class RailsControl : CarControl
 	private float oldSteeringInput=0;
 	private int targetRail=0;
 	private int nbUpdates=0;
+
+    //Keybinding
+    private float m_steering;
+    private float m_brake;
 	
 	void Start ()
 	{
@@ -39,6 +44,9 @@ public class RailsControl : CarControl
         //ajout lors de la mise en place des rails et de la generation de chunk
         rails = chunk.GetComponent<Rails>();
         target = rails.getPoint(currentRail, chunkProgress);
+
+        KeyBinder.Instance.DefineActions("Steering", new AxisActionConfig(KeyType.Movement, 0, (value) => { m_steering = value; }));
+        KeyBinder.Instance.DefineActions("Brake", new AxisActionConfig(KeyType.Movement, 0, (value) => { m_brake = value; }));
 	}
 	
 	void FixedUpdate ()
@@ -47,7 +55,8 @@ public class RailsControl : CarControl
 		
 		// Manage speed
 		float wantThrottleBrake=0;
-		float brakeCommand=Input.GetAxis("Brake");
+        //float brakeCommand = Input.GetAxis("Brake");
+        float brakeCommand = m_brake;
 		float speedKmh=car.getForwardVelocity()*3.6f;
 		
 		// Determine the target pedals position
@@ -67,15 +76,16 @@ public class RailsControl : CarControl
 		
 		// Move smoothly the pedals
 		float percent=Mathf.Pow(pedalsInertia,Time.fixedDeltaTime);
-		throttleBrake=Mathf.Lerp(throttleBrake,wantThrottleBrake,percent);
+		throttleBrake=Mathf.Lerp(wantThrottleBrake,throttleBrake,percent);
 
 		// Move from one rail to another
-		float curSteeringInput=Input.GetAxis("Steering");
+        //float curSteeringInput=Input.GetAxis("Steering");
+        float curSteeringInput = m_steering;
 		if(stickToRails)
 		{
-			if(curSteeringInput>0 && oldSteeringInput<=0 && targetRail<rails.getNbRails()-1)
+			if(curSteeringInput>0.1f && oldSteeringInput<=0.1f && targetRail<rails.getNbRails()-1)
 				targetRail++;
-			if(curSteeringInput<0 && oldSteeringInput>=0 && targetRail>0)
+            if (curSteeringInput<-0.1f && oldSteeringInput >= -0.1f && targetRail > 0)
 				targetRail--;
 			if(targetRail!=currentRail)
 			{
@@ -110,8 +120,18 @@ public class RailsControl : CarControl
 			if(rightDiffAbs<steeringFullZone)
 				wantSteering*=(rightDiffAbs-steeringDeadZone)/(steeringFullZone-steeringDeadZone);
 		}
+        if(steering<wantSteering)
+        {
+            steering += Time.fixedDeltaTime * steeringBaseSpeed;
+            if (steering > wantSteering) steering = wantSteering;
+        }
+        if(steering>wantSteering)
+        {
+            steering -= Time.fixedDeltaTime * steeringBaseSpeed;
+            if (steering < wantSteering) steering = wantSteering;
+        }
 		percent=Mathf.Pow(steeringInertia,Time.fixedDeltaTime);
-		steering=Mathf.Lerp(steering,wantSteering,percent);
+		steering=Mathf.Lerp(wantSteering,steering,percent);
 		
 		
 		oldSteeringInput=curSteeringInput;

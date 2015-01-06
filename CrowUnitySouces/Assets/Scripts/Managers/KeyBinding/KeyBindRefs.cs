@@ -12,18 +12,9 @@ public static class KeyBindRefs
         {
             var temp = new Dictionary<KeyConfig, List<string>>();
             temp.Add(new KeyConfig(KeyCode.Mouse0), new List<string> { "MouseLeftClick" });
-            temp.Add(new KeyConfig(KeyCode.Z), new List<string> { "Forward" });
-            temp.Add(new KeyConfig(KeyCode.S), new List<string> { "Backward" });
-            temp.Add(new KeyConfig(KeyCode.Q), new List<string> { "StrafeLeft" });
-            temp.Add(new KeyConfig(KeyCode.D), new List<string> { "StrafeRight" });
-            temp.Add(new KeyConfig(KeyCode.Space), new List<string> { "Jump/Dash" });
-            temp.Add(new KeyConfig("MouseX"), new List<string> { "MouseX" });
-            temp.Add(new KeyConfig("MouseY"), new List<string> { "MouseY" });
             temp.Add(new KeyConfig(KeyCode.Tab), new List<string> { "KeyBindGUI" });
-            temp.Add(new KeyConfig(KeyCode.UpArrow), new List<string> { "SwitchUpMenu" });
-            temp.Add(new KeyConfig(KeyCode.DownArrow), new List<string> { "SwitchDownMenu" });
-            temp.Add(new KeyConfig(KeyCode.Return), new List<string> { "EnterMenu" });
-            temp.Add(new KeyConfig(KeyCode.Escape), new List<string> { "Quit" });
+            temp.Add(new KeyConfig("Steering"), new List<string> { "Steering" });
+            temp.Add(new KeyConfig("Brake"), new List<string> { "Brake" });
 
             return temp;
         }
@@ -35,18 +26,9 @@ public static class KeyBindRefs
         {
             var temp = new Dictionary<string, ActionConfig>();
             temp.Add("MouseLeftClick", new KeyActionConfig(KeyType.Action, 0, null, null));
-            temp.Add("Forward", new KeyActionConfig(KeyType.Movement, 0, null, null));
-            temp.Add("Backward", new KeyActionConfig(KeyType.Movement, 1, null, null));
-            temp.Add("StrafeLeft", new KeyActionConfig(KeyType.Movement, 2, null, null));
-            temp.Add("StrafeRight", new KeyActionConfig(KeyType.Movement, 3, null, null));
-            temp.Add("Jump/Dash", new KeyActionConfig(KeyType.Movement, 4, null, null));
-            temp.Add("MouseX", new AxisActionConfig(KeyType.Head, 0, null));
-            temp.Add("MouseY", new AxisActionConfig(KeyType.Head, 0, null));
             temp.Add("KeyBindGUI", new KeyActionConfig(KeyType.Menu, 0, null, null));
-            temp.Add("SwitchUpMenu", new KeyActionConfig(KeyType.Menu, 0, null, null));
-            temp.Add("SwitchDownMenu", new KeyActionConfig(KeyType.Menu, 0, null, null));
-            temp.Add("EnterMenu", new KeyActionConfig(KeyType.Menu, 0, null, null));
-            temp.Add("Quit", new KeyActionConfig(KeyType.Menu, 0, null, null));
+            temp.Add("Steering", new AxisActionConfig(KeyType.Movement, 0, null));
+            temp.Add("Brake", new AxisActionConfig(KeyType.Movement, 0, null));
 
             return temp;
         }
@@ -67,7 +49,9 @@ public static class KeyBindRefs
                 "Horizontal_2",
                 "Vertical_2",
                 "TriggerLeft",
-                "TriggerRight"
+                "TriggerRight",
+                "Steering",
+                "Brake"
             };
         }
     }
