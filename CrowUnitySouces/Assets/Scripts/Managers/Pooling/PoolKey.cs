@@ -8,8 +8,6 @@ public class PoolKey {
     private string m_id;
     [UnityEngine.SerializeField]
     private Object m_object;
-    [UnityEngine.SerializeField]
-    private int m_number;
 
     public string Id
     {
@@ -20,11 +18,5 @@ public class PoolKey {
     {
         get { return m_object; }
         set { m_object = value; }
-    }
-
-    public int Number
-    {
-        get { return m_number; }
-        set { m_number = value; }
     }
 }
