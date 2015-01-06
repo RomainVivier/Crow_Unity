@@ -28,7 +28,7 @@ public class Rocket : ButtonGadget {
 
     #region MonoBehaviour
 
-    void Start()
+    public override void Start()
     {
         m_offsetWithParent = transform.localPosition;
         m_rocketUI= FMOD_StudioSystem.instance.GetEvent("event:/SFX/Gadgets/Rocket/gadgetRocketUI");
@@ -45,7 +45,7 @@ public class Rocket : ButtonGadget {
         base.Start();
     }
 
-    void Update()
+    public override void Update()
     {
         if (m_rocketLaunchtimer.IsElapsedOnce)
         {

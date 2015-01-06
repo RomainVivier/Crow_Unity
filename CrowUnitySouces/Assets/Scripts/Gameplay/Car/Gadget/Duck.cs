@@ -8,14 +8,14 @@ public class Duck : ButtonGadget
     private float currentCooldown = 0;
     private const int COOLDOWN = 2;
 
-	void Start ()
+	public override void Start ()
     {
         duckSound=FMOD_StudioSystem.instance.GetEvent("event:/SFX/Gadgets/Duck/gadgetDuckExecute");
         GadgetManager.Instance.Register("Duck", this);
         base.Start();
     }
 	
-	void Update ()
+	public override void Update ()
     {
         /*if(currentCooldown==float.PositiveInfinity)
         {

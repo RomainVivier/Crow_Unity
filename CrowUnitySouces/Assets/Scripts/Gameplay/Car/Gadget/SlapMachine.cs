@@ -14,7 +14,7 @@ public class SlapMachine : ButtonGadget {
 
     #region MonoBehaviour
 
-    void Start()
+    public override void Start()
     {
         base.Start();
         GadgetManager.Instance.Register("SlapMachine", this);
@@ -22,7 +22,7 @@ public class SlapMachine : ButtonGadget {
         base.Start();
     }
 
-    void Update()
+    public override void Update()
     {
         base.Update();
         if (m_timer.IsElapsedOnce)

@@ -11,13 +11,13 @@ public class ButtonGadget : Gadget {
     private Material litMat;
     //private Vector3 baseScale;
 
-	public void Start ()
+	public virtual void Start ()
     {
         unlitMat=Resources.Load("ButtonUnlit", typeof(Material)) as Material;
         litMat=Resources.Load("ButtonLit", typeof(Material)) as Material;
     }
 	
-	public void Update ()
+	public virtual void Update ()
     {
         //m_animTime += Time.deltaTime * _animSpeed;
         //if (m_animTime > 1) m_animTime = 1;
