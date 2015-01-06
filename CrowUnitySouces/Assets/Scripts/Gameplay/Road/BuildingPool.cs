@@ -8,14 +8,42 @@ public class BuildingPool : MonoBehaviour {
     #region members
 
     public int _nbOfGO;
-    public List<GameObject> m_buidings = new List<GameObject>();
+    public Object[] m_buildings;
 
     private Dictionary<string, List<PoolableObject>> m_pool = new Dictionary<string, List<PoolableObject>>();
+    private static BuildingPool m_instance;
     #endregion
 
-    #region MonoBehaviour
+    #region Singleton
+
+    public static BuildingPool Instance
+    {
+        get
+        {
+            if (m_instance == null)
+            {
+                m_instance = GameObject.FindObjectOfType<BuildingPool>();
+            }
+
+            return m_instance;
+        }
+    }
 
     void Awake()
+    {
+        if (m_instance == null)
+        {
+            m_instance = this;
+            m_instance.Init();
+        }
+        else
+        {
+            if (this != m_instance)
+                Destroy(this.gameObject);
+        }
+    }
+
+    private void Init()
     {
         AllocateObjects();
     }
@@ -26,33 +54,34 @@ public class BuildingPool : MonoBehaviour {
 
     void AllocateObjects()
     {
+        m_buildings = Resources.LoadAll("Buildings");
+
         if (_nbOfGO == 0)
         {
             Debug.LogError("there is no purpose in loading 0 building !");
             return;
         }
 
-        Debug.Log(m_buidings.Count);
-        foreach (GameObject po in m_buidings)
+        foreach (Object go in m_buildings)
         {
             List<PoolableObject> tempList = new List<PoolableObject>();
             for (int i = 0; i < _nbOfGO; i++)
             {
-                GameObject tempObject = GameObject.Instantiate(po) as GameObject;
+                GameObject tempObject = GameObject.Instantiate(go) as GameObject;
                 tempObject.gameObject.SetActive(false);
-                tempObject.name = po.name;
+                tempObject.name = go.name;
                 PoolableObject tempPO = tempObject.GetComponent<PoolableObject>(); 
                 tempPO.IsPoolable = true;
                 tempList.Add(tempPO);
             }
 
-            m_pool.Add(po.name, tempList);
+            m_pool.Add(go.name, tempList);
         }
     }
 
     void AllocateObjectNamed(string name)
     {
-        GameObject poolObject = m_buidings.Where(po => po.gameObject.name == name).FirstOrDefault();
+        GameObject poolObject = m_buildings.Where(po => po.name == name).FirstOrDefault() as GameObject;
 
         if (poolObject)
         {

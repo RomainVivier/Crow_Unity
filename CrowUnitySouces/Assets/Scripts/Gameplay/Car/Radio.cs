@@ -43,7 +43,7 @@ public class Radio : MonoBehaviour {
         //m_radio.getParameter("radioPickup", out m_fmodRadioPickup);
         m_radio.getParameter("radioState", out m_fmodRadioState);
 
-        RadioState = 1;
+        RadioState = 0;
 	}
 	
 	void Update()

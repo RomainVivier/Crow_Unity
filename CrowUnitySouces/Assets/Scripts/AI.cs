@@ -12,10 +12,13 @@ public class AI : MonoBehaviour
     private float timeTillNextBlink = 0;
     private List<int> history;
     private const int HISTORY_NB_TRIES=6;
+    private Material unlitMat;
+    private Material litMat;
 
 	void Start ()
-    {
-	
+    {	
+        unlitMat=Resources.Load("ButtonUnlit", typeof(Material)) as Material;
+        litMat=Resources.Load("ButtonLit", typeof(Material)) as Material;
 	}
 	
 	void FixedUpdate ()
@@ -72,7 +75,7 @@ public class AI : MonoBehaviour
 
     void updateButtonsArray()
     {
-        Transform carBody=GameObject.Find("Car").transform.Find("Body/CarModel");
+		Transform carBody=GameObject.Find("Car(Clone)").transform.Find("Body/CarModel");
         int nbChildren=carBody.childCount;
         buttons = new List<GameObject>();
         for(int i=0;i<nbChildren;i++)
@@ -91,8 +94,6 @@ public class AI : MonoBehaviour
     void setButtonState(GameObject button, bool state)
     {
         // Placeholder effect
-        button.transform.localScale = state ? new Vector3(150, 150, 150) : new Vector3(100, 100, 100);
-        //button.GetComponent<MeshRenderer>().material
-        //   .SetColor("_Color", state ? new Color(1, 1, 0, 1) : new Color(1, 1, 1, 1));
+        button.GetComponent<MeshRenderer>().material = state ? litMat : unlitMat; 
     }
 }

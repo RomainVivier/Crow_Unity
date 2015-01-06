@@ -16,10 +16,10 @@ public class JBTrigger : MonoBehaviour
 	
 	}
 
-    void OnCollisionEnter(Collision collision)
+    void OnTriggerEnter(Collider other)
     {
-        GameObject oth = collision.collider.transform.root.gameObject;
-        if (oth.name == "Car")
+		GameObject oth = other.transform.root.gameObject;
+        if (oth.name == "Car(Clone)")
         {
             if(GameObject.Find("JB").GetComponent<JB>().activate()==false)
                 oth.GetComponentInChildren<RailsControl>().setSpeedKmh *= 0.7f;
