@@ -45,8 +45,20 @@ public class RailsControl : CarControl
         rails = chunk.GetComponent<Rails>();
         target = rails.getPoint(currentRail, chunkProgress);
 
-        KeyBinder.Instance.DefineActions("Steering", new AxisActionConfig(KeyType.Movement, 0, (value) => { m_steering = value; }));
-        KeyBinder.Instance.DefineActions("Brake", new AxisActionConfig(KeyType.Movement, 0, (value) => { m_brake = value; }));
+        //KeyBinder.Instance.DefineActions("Steering", new AxisActionConfig(KeyType.Movement, 0, (value) => { m_steering = value; }));
+        //KeyBinder.Instance.DefineActions("Brake", new AxisActionConfig(KeyType.Movement, 0, (value) => { m_brake = value; }));
+
+        TouchManager.Instance._touchStart +=
+            () => {
+#if UNITY_STANDALONE
+                m_steering = Input.mousePosition.x > (Screen.width/2) ? 1f : -1f;
+                Debug.Log(m_steering);
+#elif UNITY_ANDROID
+		        m_steering = Input.touches[0].position.x > (Screen.width/2) ? 1f : -1f;
+#endif
+            };
+
+        TouchManager.Instance._touchStart += () => { if (m_steering != 0f) m_steering = 0f; };
 	}
 	
 	void FixedUpdate ()
