@@ -31,7 +31,12 @@ public class RailsControl : CarControl
     //Keybinding
     private float m_steering;
     private float m_brake;
-	
+
+    public float Steering
+    {
+        set { m_steering = value; }
+    }
+
 	void Start ()
 	{
 		car = gameObject.GetComponent<Car> ();
@@ -48,17 +53,24 @@ public class RailsControl : CarControl
         //KeyBinder.Instance.DefineActions("Steering", new AxisActionConfig(KeyType.Movement, 0, (value) => { m_steering = value; }));
         //KeyBinder.Instance.DefineActions("Brake", new AxisActionConfig(KeyType.Movement, 0, (value) => { m_brake = value; }));
 
-        TouchManager.Instance._touchStart +=
-            () => {
-#if UNITY_STANDALONE
-                m_steering = Input.mousePosition.x > (Screen.width/2) ? 1f : -1f;
-                Debug.Log(m_steering);
-#elif UNITY_ANDROID
-		        m_steering = Input.touches[0].position.x > (Screen.width/2) ? 1f : -1f;
-#endif
-            };
+        //code pour changer de rails avec un click de zone droite/gauche
+//        TouchManager.Instance._touchStart +=
+//            () => {
+//#if UNITY_STANDALONE
+//                m_steering = Input.mousePosition.x > (Screen.width/2) ? 1f : -1f;
+//                Debug.Log(m_steering);
+//#elif UNITY_ANDROID
+//                m_steering = Input.touches[0].position.x > (Screen.width/2) ? 1f : -1f;
+//#endif
+//            };
 
-        TouchManager.Instance._touchStart += () => { if (m_steering != 0f) m_steering = 0f; };
+//        TouchManager.Instance._touchEnd += () => { if (m_steering != 0f) m_steering = 0f; };
+
+
+        //code pour le swipe
+        //TouchManager.Instance._swipeLeft += () => { m_steering = 1f; };
+        //TouchManager.Instance._swipeRight += () => { m_steering = -1f; };
+
 	}
 	
 	void FixedUpdate ()
