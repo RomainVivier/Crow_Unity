@@ -26,18 +26,21 @@ public class KeyBinderEditor : EditorWindow {
             keys[i] = k.ToString();
         }
 
-        var jsonBindsRefs = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(PlayerPrefs.GetString("InputsPrefs"));
+        //var jsonBindsRefs = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(PlayerPrefs.GetString("InputsPrefs"));
 
-        try
-        {
-            foreach (var kb in jsonBindsRefs)
-                keyBindsRefsSave.Add(KeyConfig.FromString(kb.Key), kb.Value);
-        }
-        catch
-        {
-            PlayerPrefs.SetString("InputsPrefs", "");
-            RestoreInputsPrefs();
-        }
+        //try
+        //{
+        //    foreach (var kb in jsonBindsRefs)
+        //        keyBindsRefsSave.Add(KeyConfig.FromString(kb.Key), kb.Value);
+        //}
+        //catch
+        //{
+        //    PlayerPrefs.SetString("InputsPrefs", "");
+        //    RestoreInputsPrefs();
+        //}
+
+        //TODO
+        // Mettre en place un système d'ajout de keybinds
 
 
         //key = EditorGUILayout.Popup((int)key, keys);
