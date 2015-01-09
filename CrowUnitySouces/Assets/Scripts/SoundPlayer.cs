@@ -27,9 +27,9 @@ public class SoundPlayer : MonoBehaviour
     #region Collider
     void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.name=="Car" && (!_onlyOnce || !m_alreadyPlayed))
+        if(other.gameObject.name=="Body" && other.gameObject.transform.parent.GetComponent<Car>()!=null
+            && (!_onlyOnce || !m_alreadyPlayed))
         {
-            Debug.Log("coucou");
             m_alreadyPlayed=true;
             if(Random.Range(0f,1f)<proba)
             {
