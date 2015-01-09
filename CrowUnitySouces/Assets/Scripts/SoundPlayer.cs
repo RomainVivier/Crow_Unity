@@ -19,18 +19,17 @@ public class SoundPlayer : MonoBehaviour
 
     void Start()
     {
-        //m_fmodEvent=FMOD_StudioSystem.instance.GetEvent("event:/"+_soundName);
-        m_fmodEvent=FMOD_StudioSystem.instance.GetEvent("event:/SFX/Env Objects/envCarSwoosh");
-        m_alreadyPlayed = true;
+        m_fmodEvent=FMOD_StudioSystem.instance.GetEvent("event:/"+_soundName);
+        m_alreadyPlayed = false;
     }
     #endregion
 
     #region Collider
     void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.name=="Car" && (!_onlyOnce || m_alreadyPlayed))
+        if(other.gameObject.name=="Body" && other.gameObject.transform.parent.GetComponent<Car>()!=null
+            && (!_onlyOnce || !m_alreadyPlayed))
         {
-            Debug.Log("coucou");
             m_alreadyPlayed=true;
             if(Random.Range(0f,1f)<proba)
             {

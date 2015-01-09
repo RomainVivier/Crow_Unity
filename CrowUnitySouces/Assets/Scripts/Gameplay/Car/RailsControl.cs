@@ -83,10 +83,8 @@ public class RailsControl : CarControl
         float curSteeringInput = m_steering;
 		if(stickToRails)
 		{
-			if(curSteeringInput>0.1f && oldSteeringInput<=0.1f && targetRail<rails.getNbRails()-1)
-				targetRail++;
-            if (curSteeringInput<-0.1f && oldSteeringInput >= -0.1f && targetRail > 0)
-				targetRail--;
+			if(curSteeringInput>0.1f && oldSteeringInput<=0.1f) ShiftRail(1);
+            if (curSteeringInput < -0.1f && oldSteeringInput >= -0.1f) ShiftRail(-1);
 			if(targetRail!=currentRail)
 			{
 				if(targetRail>currentRail)
@@ -103,9 +101,7 @@ public class RailsControl : CarControl
 		}
 		else
 		{
-			currentRail+=curSteeringInput*changeSpeed*Time.fixedDeltaTime;
-			if(currentRail<0) currentRail=0;
-			if(currentRail>rails.getNbRails()-1) currentRail=rails.getNbRails()-1;
+            ShiftRail(curSteeringInput*changeSpeed*Time.fixedDeltaTime);
 		}
 
 		// Steering
@@ -210,6 +206,22 @@ public class RailsControl : CarControl
 			updateProgress();
 		}
 	}
+    
+    public void ShiftRail(float delta)
+    {
+        if(stickToRails)
+        {
+            targetRail+=(int)delta;
+            if(targetRail<0) targetRail=0;
+            if (targetRail > rails.getNbRails() - 1) targetRail = rails.getNbRails() - 1;
+        }
+        else
+        {
+            currentRail += delta;
+            if(currentRail<0) currentRail=0;
+			if(currentRail>rails.getNbRails()-1) currentRail=rails.getNbRails()-1;
+        }
+    }
 
     //private void OnValidate()
     //{

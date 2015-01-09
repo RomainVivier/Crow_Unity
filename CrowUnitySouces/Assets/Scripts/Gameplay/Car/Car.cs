@@ -62,6 +62,7 @@ public class Car : MonoBehaviour
 
     void FixedUpdate ()
 	{
+        if (Input.GetAxis("Upshift") > 0) InstantSetSpeedKmh(300);
 		CarControl.CarInputs inputs=control.getInputs();
 		float dt=Time.fixedDeltaTime;
 		int freq=(int) (1.0f/dt);
@@ -205,6 +206,16 @@ public class Car : MonoBehaviour
 		// Update center of weight
 		body.centerOfMass=centerOfMass;
 	}
+
+    public void InstantSetSpeedKmh(float speedKmh)
+    {
+        InstantSetSpeed(speedKmh / 3.6f);
+    }
+
+    public void InstantSetSpeed(float speed)
+    {
+        body.velocity = getForwardVector() * speed;
+    }
 
 	// Public getters
 	public float getForwardVelocity()
