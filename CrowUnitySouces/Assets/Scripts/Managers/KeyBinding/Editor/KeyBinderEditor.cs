@@ -1,12 +1,15 @@
 ﻿using UnityEngine;
 using UnityEditor;
-using System.Collections;
 using System;
+using System.Linq;
+using System.Collections;
+using System.Collections.Generic;
+using Newtonsoft.Json;
 
 
 public class KeyBinderEditor : EditorWindow {
 
-    int key;
+    int[] keysIndex;
 
     [MenuItem("KeyBinder/Settings")]
     static void Init()
@@ -26,18 +29,20 @@ public class KeyBinderEditor : EditorWindow {
             keys[i] = k.ToString();
         }
 
-        //var jsonBindsRefs = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(PlayerPrefs.GetString("InputsPrefs"));
+        var jsonBindsRefs = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(PlayerPrefs.GetString("InputsPrefs"));
 
-        //try
-        //{
-        //    foreach (var kb in jsonBindsRefs)
-        //        keyBindsRefsSave.Add(KeyConfig.FromString(kb.Key), kb.Value);
-        //}
-        //catch
-        //{
-        //    PlayerPrefs.SetString("InputsPrefs", "");
-        //    RestoreInputsPrefs();
-        //}
+
+        try
+        {
+            foreach (var kb in jsonBindsRefs)
+            {
+                
+            }
+        }
+        catch
+        {
+            Debug.LogError("Editor error while editing bind.");
+        }
 
         //TODO
         // Mettre en place un système d'ajout de keybinds

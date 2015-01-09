@@ -1,12 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class SlapMachine : ButtonGadget {
-
-
-
+public class Dash : ButtonGadget
+{
     #region Members
-    public Animator _cameraAnimator;
+    public RailsControl _rc;
+    public float _speedCoeff;
 
     private Timer m_timer;
 
@@ -16,7 +15,7 @@ public class SlapMachine : ButtonGadget {
 
     public override void Start()
     {
-        GadgetManager.Instance.Register("SlapMachine", this);
+        GadgetManager.Instance.Register("Dash", this);
         m_timer = new Timer();
         base.Start();
     }
@@ -32,26 +31,18 @@ public class SlapMachine : ButtonGadget {
 
     #endregion
 
-    #region Overrided Functions
-
     public override void Play()
     {
         base.Play();
-        IsReady = false;
-
+        Debug.Log("dashing bitch !");
+        _rc.setSpeedKmh *= _speedCoeff;
         m_timer.Reset(1f);
-        FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Gadgets/Punch/gadgetPunchExecute", transform.position);
-        int value = Random.Range(4,5);
-        _cameraAnimator.SetTrigger("Slap_"+value);
-
     }
 
     public override void Stop()
     {
         base.Stop();
-        IsReady = true;
+
+        _rc.setSpeedKmh /= _speedCoeff;
     }
-
-    #endregion
-
 }
