@@ -1,6 +1,8 @@
 ﻿
 using UnityEngine;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using System.Collections;
 
 
@@ -319,7 +321,7 @@ public class Rails : MonoBehaviour
 		return nbRails;
 	}
 	
-	
+#if UNITY_EDITOR
 	[CustomEditor(typeof(Rails))]
 	class RailsEditor : Editor
 	{
@@ -347,4 +349,5 @@ public class Rails : MonoBehaviour
 		    }
 		}
 	}
+#endif
 }
