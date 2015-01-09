@@ -19,7 +19,7 @@ public class DirectionButton : ButtonGadget
     public override void Play()
     {
         base.Play();
-        _rc.Steering = _dirValue;
+        _rc.ShiftRail(_dirValue);
         Stop();
     }
 }
