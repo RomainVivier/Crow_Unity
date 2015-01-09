@@ -16,7 +16,6 @@ public class SlapMachine : ButtonGadget {
 
     public override void Start()
     {
-        base.Start();
         GadgetManager.Instance.Register("SlapMachine", this);
         m_timer = new Timer();
         base.Start();
@@ -24,7 +23,6 @@ public class SlapMachine : ButtonGadget {
 
     public override void Update()
     {
-        base.Update();
         if (m_timer.IsElapsedOnce)
         {
             Stop();
