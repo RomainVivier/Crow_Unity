@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using FMOD.Studio;
 
 public class SoundPlayer : MonoBehaviour
 {
@@ -38,6 +39,7 @@ public class SoundPlayer : MonoBehaviour
                 float speedKmh = other.gameObject.transform.parent.GetComponent<Car>().getForwardVelocity() * 3.6f;
                 if (speedKmh >= minSpeedKmh)
                 {
+                    Debug.Log("play " + _soundName);
                     m_fmodEvent.start();
                     if (!_is3D)
                     {
@@ -55,7 +57,11 @@ public class SoundPlayer : MonoBehaviour
                     }
                     else
                     {
-
+                        _3D_ATTRIBUTES threeDeeAttr = new _3D_ATTRIBUTES();
+                        threeDeeAttr.position = UnityUtil.toFMODVector(transform.position);
+                        threeDeeAttr.up = UnityUtil.toFMODVector(transform.up);
+                        threeDeeAttr.forward = UnityUtil.toFMODVector(transform.forward);
+                        m_fmodEvent.set3DAttributes(threeDeeAttr);
                     }
                 }
             }
