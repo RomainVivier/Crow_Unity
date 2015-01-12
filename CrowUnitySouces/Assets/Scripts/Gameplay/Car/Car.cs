@@ -142,7 +142,7 @@ public class Car : MonoBehaviour
         // Update sounds
         float soundRpm=rpm*ENGINE_SOUND_MAX_RPM/engine.getMaxRpm();
         engineRPM.setValue(soundRpm);
-        float frictionSound = inputs.brake;
+        float frictionSound = Mathf.Abs(inputs.steering);// inputs.brake;
         tiresFriction.setValue(frictionSound);
         tiresSpeed.setValue(forwardVelocity / maxSpeed);       
 
