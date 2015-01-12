@@ -39,6 +39,7 @@ public class Dash : ButtonGadget
         _rc.setSpeedKmh *= _speedCoeff;
         _car.InstantSetSpeedKmh(_rc.setSpeedKmh);
         m_timer.Reset(1f);
+        IsReady = false;
     }
 
     public override void Stop()
@@ -46,5 +47,6 @@ public class Dash : ButtonGadget
         base.Stop();
 
         _rc.setSpeedKmh /= _speedCoeff;
+        IsReady = true;
     }
 }

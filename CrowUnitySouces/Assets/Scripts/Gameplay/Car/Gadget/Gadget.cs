@@ -7,7 +7,8 @@ public class Gadget : MonoBehaviour
     #region Members
 
     private bool m_isReady = true;
-
+    protected string m_playSound = "";
+    protected string m_cantPlaySound = "";
     #endregion 
 
     #region Properties
@@ -18,6 +19,15 @@ public class Gadget : MonoBehaviour
 		set{ m_isReady = value; }
 	}
 
+    public string PlaySound
+    {
+        get { return m_playSound; }
+    }
+    
+    public string CantPlaySound
+    {
+        get { return m_cantPlaySound; }
+    }
     #endregion 
 
     #region Virtual Functions

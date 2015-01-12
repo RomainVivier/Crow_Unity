@@ -15,6 +15,8 @@ public class ButtonGadget : Gadget {
     {
         unlitMat=Resources.Load("ButtonUnlit", typeof(Material)) as Material;
         litMat=Resources.Load("ButtonLit", typeof(Material)) as Material;
+        m_playSound = "event:/SFX/Buttons/ButtonSmall/ButtonPushSmall/buttonPushSmallValidated";
+        m_cantPlaySound = "event:/SFX/Buttons/ButtonSmall/ButtonPushSmall/buttonPushSmallDenied";
     }
 	
 	public virtual void Update ()
@@ -31,7 +33,7 @@ public class ButtonGadget : Gadget {
         base.Play();
         //if (IsReady)
             //m_animTime = 0;
-		m_button.SetTrigger("Press");	
+		m_button.SetTrigger("Press");
     }
 
 	public override void Stop()

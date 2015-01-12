@@ -22,6 +22,8 @@ public class Rocket : ButtonGadget {
     private FMOD.Studio.EventInstance m_rocketUI;
     private FMOD.Studio.ParameterInstance m_rocketDist;
     private FMOD.Studio.EventInstance m_rocketExecute3D;
+    private FMOD.Studio.EventInstance m_blowInstance;
+
     public FMOD_StudioEventEmitter _rocketExecute;
 
     #endregion
@@ -142,16 +144,21 @@ public class Rocket : ButtonGadget {
         m_rocketUI.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
         m_rocketExecute3D.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);    
         //FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Gadgets/Rocket/gadgetRocketSuccess", transform.position);
-        FMOD.Studio.EventInstance eventInstance
+        FMOD.Studio.EventInstance m_blowInstance
             = FMOD_StudioSystem.instance.GetEvent("event:/SFX/Gadgets/Rocket/gadgetRocketSuccess");
-        eventInstance.start();
+        m_blowInstance.start();
         FMOD.Studio.ParameterInstance param;
-        eventInstance.getParameter("Position", out param);
+        m_blowInstance.getParameter("Position", out param);
         Vector3 dpos = transform.position - transform.parent.parent.position;
         Vector3 forward = transform.parent.parent.forward;
         float position = Vector3.Dot(dpos, forward);
         param.setValue(position > 0 ? 0 : 1);
-
+        FMOD.Studio._3D_ATTRIBUTES threeDeeAttr = new FMOD.Studio._3D_ATTRIBUTES();
+        threeDeeAttr.position = FMOD.Studio.UnityUtil.toFMODVector(transform.position);
+        threeDeeAttr.up = FMOD.Studio.UnityUtil.toFMODVector(transform.up);
+        threeDeeAttr.forward = FMOD.Studio.UnityUtil.toFMODVector(transform.forward);
+        threeDeeAttr.velocity = FMOD.Studio.UnityUtil.toFMODVector(Vector3.zero);
+        m_blowInstance.set3DAttributes(threeDeeAttr);
         m_target.y = -0.2f; //Offset for explosion height. DELETE ME!
 		_explosionParticles.transform.position = m_target;
         _explosionParticles.GetComponent<ParticleSystem>().Play();

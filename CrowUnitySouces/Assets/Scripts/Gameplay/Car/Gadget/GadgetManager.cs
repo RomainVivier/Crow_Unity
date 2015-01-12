@@ -92,7 +92,9 @@ public class GadgetManager : MonoBehaviour {
 			m_gadgets[name].Play();
             m_lastGadget = name;
             m_timer.Reset(0.5f);
+            if(m_gadgets[name].PlaySound!="") FMOD_StudioSystem.instance.PlayOneShot(m_gadgets[name].PlaySound,transform.position);
 		}else{
+            if(m_gadgets[name].CantPlaySound!="") FMOD_StudioSystem.instance.PlayOneShot(m_gadgets[name].CantPlaySound,transform.position);
 			Debug.Log("no gadget has been registered to this name or gadget is not ready !");
 		}
 	}
