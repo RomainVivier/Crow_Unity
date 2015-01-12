@@ -53,6 +53,10 @@ public class SoundPlayer : MonoBehaviour
                         }
                         else param.setValue(forcePan > 0 ? 1 : 0);
                     }
+                    else
+                    {
+
+                    }
                 }
             }
         }
