@@ -61,6 +61,7 @@ public class SoundPlayer : MonoBehaviour
                         threeDeeAttr.position = UnityUtil.toFMODVector(transform.position);
                         threeDeeAttr.up = UnityUtil.toFMODVector(transform.up);
                         threeDeeAttr.forward = UnityUtil.toFMODVector(transform.forward);
+                        threeDeeAttr.velocity = UnityUtil.toFMODVector(-other.gameObject.rigidbody.velocity);
                         m_fmodEvent.set3DAttributes(threeDeeAttr);
                     }
                 }
