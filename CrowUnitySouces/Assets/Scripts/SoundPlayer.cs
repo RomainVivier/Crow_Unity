@@ -10,6 +10,8 @@ public class SoundPlayer : MonoBehaviour
     public bool _is3D=false;
     public bool _onlyOnce = true;
     public float proba = 1;
+    public float minSpeedKmh = 80;
+    public int forcePan = 0;
 
     private FMOD.Studio.EventInstance m_fmodEvent;
     private bool m_alreadyPlayed;
@@ -33,16 +35,28 @@ public class SoundPlayer : MonoBehaviour
             m_alreadyPlayed=true;
             if(Random.Range(0f,1f)<proba)
             {
-                m_fmodEvent.start();
-                if(!_is3D)
+                float speedKmh = other.gameObject.transform.parent.GetComponent<Car>().getForwardVelocity() * 3.6f;
+                if (speedKmh >= minSpeedKmh)
                 {
-                    Vector3 dpos=transform.position-other.transform.position;
-                    dpos.Normalize();
-                    Vector3 right=other.transform.right;
-                    float diff=Vector3.Dot(dpos,right);
-                    FMOD.Studio.ParameterInstance param;
-                    m_fmodEvent.getParameter("Pan",out param);
-                    param.setValue(diff>0 ? 1 : 0); 
+                    m_fmodEvent.start();
+                    if (!_is3D)
+                    {
+                        FMOD.Studio.ParameterInstance param;
+                        m_fmodEvent.getParameter("Pan", out param);
+                        if (forcePan == 0)
+                        {
+                            Vector3 dpos = transform.position - other.transform.position;
+                            dpos.Normalize();
+                            Vector3 right = other.transform.right;
+                            float diff = Vector3.Dot(dpos, right);
+                            param.setValue(diff > 0 ? 1 : 0);
+                        }
+                        else param.setValue(forcePan > 0 ? 1 : 0);
+                    }
+                    else
+                    {
+
+                    }
                 }
             }
         }

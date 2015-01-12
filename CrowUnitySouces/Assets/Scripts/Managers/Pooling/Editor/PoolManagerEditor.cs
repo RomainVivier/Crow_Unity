@@ -3,9 +3,9 @@ using UnityEditor;
 using System.Collections;
 using System.Collections.Generic;
 
-[CustomEditor (typeof(GenericPool))]
+[CustomEditor (typeof(PoolManager))]
 
-public class GenericPoolEditor : Editor
+public class PoolManagerEditor : Editor
 {
     public string _chunkToAdd;
     public Object _phaseToAdd;
@@ -15,7 +15,7 @@ public class GenericPoolEditor : Editor
 
     public override void OnInspectorGUI()
     {
-        GenericPool instance = target as GenericPool;
+        PoolManager instance = target as PoolManager;
         
         DrawDefaultInspector();
 
@@ -23,7 +23,6 @@ public class GenericPoolEditor : Editor
         {
             EditorGUILayout.BeginHorizontal();
             pk.Object = EditorGUILayout.ObjectField(pk.Object, typeof(Object), false);
-            pk.Number = EditorGUILayout.IntField(pk.Number);
             if (GUILayout.Button("Delete"))
             {
                 instance._pool.Dictionary.Remove(pk);
@@ -33,7 +32,7 @@ public class GenericPoolEditor : Editor
 
         if (GUILayout.Button("Add PoolKey"))
         {
-            instance._pool.Dictionary.Add(new PoolKey(), new GenericPool.ListObject());
+            instance._pool.Dictionary.Add(new PoolKey(), new PoolManager.StackObject());
         }
 
         EditorUtility.SetDirty(target);
