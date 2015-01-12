@@ -39,7 +39,6 @@ public class SoundPlayer : MonoBehaviour
                 float speedKmh = other.gameObject.transform.parent.GetComponent<Car>().getForwardVelocity() * 3.6f;
                 if (speedKmh >= minSpeedKmh)
                 {
-                    Debug.Log("play " + _soundName);
                     m_fmodEvent.start();
                     if (!_is3D)
                     {
