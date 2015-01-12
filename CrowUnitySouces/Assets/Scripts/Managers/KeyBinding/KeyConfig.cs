@@ -49,7 +49,7 @@ public struct KeyConfig
 	{
 		get
 		{
-			return (!IsAxis && ( Input.GetKeyDown(KeyName) || Input.GetKeyUp(KeyName) ) ) || (IsAxis && Input.GetAxis(AxisName) != 0f );
+            return (!IsAxis && (Input.GetKeyDown(KeyName) || Input.GetKeyUp(KeyName))) || (IsAxis /* && Input.GetAxis(AxisName) != 0f */);
 		}
 	}
 	

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Rocket : Gadget {
+public class Rocket : ButtonGadget {
 
 
     #region Members
@@ -11,6 +11,7 @@ public class Rocket : Gadget {
     public float _rocketSpeed;
     public float _targetMaxDistance;
     public float _rocketUIMax;
+    public GameObject _explosionParticles;
 
     private Timer m_rocketLaunchtimer;
     private Timer m_timer;
@@ -27,7 +28,7 @@ public class Rocket : Gadget {
 
     #region MonoBehaviour
 
-    void Start()
+    public override void Start()
     {
         m_offsetWithParent = transform.localPosition;
         m_rocketUI= FMOD_StudioSystem.instance.GetEvent("event:/SFX/Gadgets/Rocket/gadgetRocketUI");
@@ -40,9 +41,11 @@ public class Rocket : Gadget {
         m_timer = new Timer();
         gameObject.SetActive(false);
         m_target = Vector3.zero;
+        _explosionParticles = GameObject.Find("RocketExplosion");
+        base.Start();
     }
 
-    void Update()
+    public override void Update()
     {
         if (m_rocketLaunchtimer.IsElapsedOnce)
         {
@@ -58,8 +61,8 @@ public class Rocket : Gadget {
 
         if (m_timer.IsElapsedOnce)
         {
-            transform.localPosition = m_offsetWithParent;
             Blow();
+            transform.localPosition = m_offsetWithParent;
             Stop();
         }
 
@@ -68,6 +71,7 @@ public class Rocket : Gadget {
             transform.position = Vector3.Lerp(m_startPosition, m_target, 1 - m_timer.CurrentNormalized);
             m_rocketDist.setValue(Mathf.Clamp((Vector3.Distance(transform.position, m_target) / _rocketUIMax), 0f, 1f));
         }
+        base.Update();
     }
 
     #endregion
@@ -81,17 +85,22 @@ public class Rocket : Gadget {
         IsReady = false;
 
         var obstacles = GameObject.FindGameObjectsWithTag("Obstacle");
-        if(obstacles.Length > 0)
+        if (obstacles.Length > 0)
         {
-            foreach(GameObject go in obstacles)
+            foreach (GameObject go in obstacles)
             {
-                if (m_target == Vector3.zero || Vector3.Distance(transform.position, m_target) > Vector3.Distance(transform.position, go.transform.position))
+                if (go.transform.position.x > transform.position.x && (m_target == Vector3.zero || Vector3.Distance(transform.position, m_target) > Vector3.Distance(transform.position, go.transform.position)))
                 {
                     m_target = go.transform.position;
                     FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Gadgets/Rocket/gadgetRocketEngage", transform.position);
                     m_rocketLaunchtimer.Reset(0.6f);
                 }
             }
+        }
+
+        if (obstacles.Length == 0 || m_target == Vector3.zero)
+        {
+            Stop();
         }
 
         
@@ -131,8 +140,21 @@ public class Rocket : Gadget {
     {
         //play visual effect
         m_rocketUI.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
-        m_rocketExecute3D.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
-        FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Gadgets/Rocket/gadgetRocketSuccess", transform.position);
+        m_rocketExecute3D.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);    
+        //FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Gadgets/Rocket/gadgetRocketSuccess", transform.position);
+        FMOD.Studio.EventInstance eventInstance
+            = FMOD_StudioSystem.instance.GetEvent("event:/SFX/Gadgets/Rocket/gadgetRocketSuccess");
+        eventInstance.start();
+        FMOD.Studio.ParameterInstance param;
+        eventInstance.getParameter("Position", out param);
+        Vector3 dpos = transform.position - transform.parent.parent.position;
+        Vector3 forward = transform.parent.parent.forward;
+        float position = Vector3.Dot(dpos, forward);
+        param.setValue(position > 0 ? 0 : 1);
+
+        m_target.y = -0.2f; //Offset for explosion height. DELETE ME!
+		_explosionParticles.transform.position = m_target;
+        _explosionParticles.GetComponent<ParticleSystem>().Play();
         var colliders = Physics.OverlapSphere(transform.position, _blastRadius);
         m_target = Vector3.zero;
         foreach(Collider collider in colliders)

@@ -11,6 +11,9 @@ ModelImporter:
     100010: ParaBrise
     100012: Porte
     100014: Tableau
+    100016: toit
+    100018: habitacle.001
+    100020: Tableau.002
     400000: Base Volant
     400002: Base Volant.001
     400004: //RootNode
@@ -19,6 +22,9 @@ ModelImporter:
     400010: ParaBrise
     400012: Porte
     400014: Tableau
+    400016: toit
+    400018: habitacle.001
+    400020: Tableau.002
     2300000: Base Volant
     2300002: Base Volant.001
     2300004: Fenetre
@@ -26,6 +32,9 @@ ModelImporter:
     2300008: ParaBrise
     2300010: Porte
     2300012: Tableau
+    2300014: toit
+    2300016: habitacle.001
+    2300018: Tableau.002
     3300000: Base Volant
     3300002: Base Volant.001
     3300004: Fenetre
@@ -33,6 +42,9 @@ ModelImporter:
     3300008: ParaBrise
     3300010: Porte
     3300012: Tableau
+    3300014: toit
+    3300016: habitacle.001
+    3300018: Tableau.002
     4300000: Fenetre
     4300002: Porte
     4300004: ParaBrise
@@ -40,10 +52,13 @@ ModelImporter:
     4300008: Base Volant.001
     4300010: Base Volant
     4300012: Tableau
+    4300014: toit
+    4300016: habitacle.001
+    4300018: Tableau.002
     9500000: //RootNode
   materials:
     importMaterials: 1
-    materialName: 0
+    materialName: 1
     materialSearch: 1
   animations:
     legacyGenerateAnimations: 4

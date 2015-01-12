@@ -13,7 +13,8 @@ public class Car : MonoBehaviour
 	public float steerAngleTopSpeedDeg=20;
 	public float antiRoll=8000;
 	public float downforce=10;
-	
+    public float wheelRotation = 180;
+
 	// Components
 	private Engine engine;
 	private CarControl control;
@@ -33,6 +34,8 @@ public class Car : MonoBehaviour
 	private float wheelTrack;
 	private CarControl.CarInputs oldInputs;
 	private Vector3 centerOfMass;
+    private Quaternion wheelQuaternion;
+    private GameObject wheelObject;
 
 	// Sounds
     private FMOD.Studio.EventInstance engineSound;
@@ -53,10 +56,13 @@ public class Car : MonoBehaviour
         tiresSound.getParameter("Friction", out tiresFriction);
         tiresSound.getParameter("Speed", out tiresSpeed);
         tiresSound.start();
+        wheelObject = transform.FindChild("Body/CarModel/volant").gameObject;
+        wheelQuaternion = wheelObject.transform.localRotation;
 	}
 
-	void FixedUpdate ()
+    void FixedUpdate ()
 	{
+        if (Input.GetAxis("Upshift") > 0) InstantSetSpeedKmh(300);
 		CarControl.CarInputs inputs=control.getInputs();
 		float dt=Time.fixedDeltaTime;
 		int freq=(int) (1.0f/dt);
@@ -88,10 +94,11 @@ public class Car : MonoBehaviour
 		
 		// Steering
 		float steerAngleOut=Mathf.Lerp(steerAngle0kmhDeg,steerAngleTopSpeedDeg,forwardVelocity/maxSpeed)*inputs.steering;
-		float steerAngleIn=90-Mathf.Atan (Mathf.Tan ((90-steerAngleOut)*Mathf.Deg2Rad)-wheelTrack/wheelBase)*Mathf.Rad2Deg;
-		//Debug.Log (steerAngleOut+" "+(Mathf.Tan ((90-steerAngleOut)*Mathf.Deg2Rad)-wheelTrack/wheelBase));
-		if(steerAngleOut==0) steerAngleIn=0;
-		if(steerAngleOut>0)
+        float steerAngleIn;
+        if(steerAngleOut>0) steerAngleIn=90-Mathf.Atan (Mathf.Tan ((90-steerAngleOut)*Mathf.Deg2Rad)-wheelTrack/wheelBase)*Mathf.Rad2Deg;
+        else if(steerAngleOut<0) steerAngleIn=Mathf.Atan (Mathf.Tan ((90+steerAngleOut)*Mathf.Deg2Rad)-wheelTrack/wheelBase)*Mathf.Rad2Deg-90;
+        else steerAngleIn=0;
+        if(steerAngleOut>0)
 		{
 			wheels[0].steerAngle=steerAngleOut;
 			wheels[1].steerAngle=steerAngleIn;	
@@ -101,6 +108,9 @@ public class Car : MonoBehaviour
 			wheels[0].steerAngle=steerAngleIn;
 			wheels[1].steerAngle=steerAngleOut;			
 		}
+        Quaternion newRotation = wheelQuaternion;
+        newRotation *= Quaternion.Euler(new Vector3(0, -wheelRotation*inputs.steering, 0));
+        wheelObject.transform.localRotation = newRotation;
 		
 		// Aerodynamic drag & downforce
 		float force=forwardVelocity*forwardVelocity*dragCoef;
@@ -196,6 +206,16 @@ public class Car : MonoBehaviour
 		// Update center of weight
 		body.centerOfMass=centerOfMass;
 	}
+
+    public void InstantSetSpeedKmh(float speedKmh)
+    {
+        InstantSetSpeed(speedKmh / 3.6f);
+    }
+
+    public void InstantSetSpeed(float speed)
+    {
+        body.velocity = getForwardVector() * speed;
+    }
 
 	// Public getters
 	public float getForwardVelocity()

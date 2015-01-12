@@ -55,7 +55,7 @@ public class Spoonbill : Gadget
             Disengage();
         }
 
-        if(m_engageTimer.IsElapsedOnce)
+        if(m_engageTimer.IsElapsedOnce && m_state != State.Attacking)
         {
             m_state = m_state == State.Engaging ? State.Engaged : State.Disengaged;
         }

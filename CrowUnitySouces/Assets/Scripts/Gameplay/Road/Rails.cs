@@ -1,6 +1,8 @@
 ﻿
 using UnityEngine;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using System.Collections;
 
 
@@ -277,6 +279,7 @@ public class Rails : MonoBehaviour
         return pr + (nr - pr) * railPos; 
     }
 
+#if UNITY_EDITOR
 	void OnDrawGizmos()
 	{
 		if(needToComputePositions) computePositions();
@@ -313,13 +316,14 @@ public class Rails : MonoBehaviour
 				Gizmos.DrawLine(transform.TransformPoint(computedPositions[p*nbRails+r]),transform.TransformPoint(computedPositions[(p+1)*nbRails+r]));
 		}
 	}
+#endif
 
 	public int getNbRails()
 	{
 		return nbRails;
 	}
 	
-	
+#if UNITY_EDITOR
 	[CustomEditor(typeof(Rails))]
 	class RailsEditor : Editor
 	{
@@ -347,4 +351,5 @@ public class Rails : MonoBehaviour
 		    }
 		}
 	}
+#endif
 }

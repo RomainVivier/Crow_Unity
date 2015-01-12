@@ -11,6 +11,8 @@ public class RoadManager : MonoBehaviour
     public int _numberOfChunk;
     public bool _useChunkPool = false;
     public ChunkPool _pool;
+    public float _lightRange;
+    public float _lightIntensity;
 
     public List<string> _introChunks = new List<string>();
     public List<string> _testChunks = new List<string>();
@@ -113,6 +115,13 @@ public class RoadManager : MonoBehaviour
             {
                 Debug.LogError("Fail during the road generation one chunk does not possess \"RoadChunk\" script.");
                 return;
+            }
+
+            Light light = chunk.transform.FindChild("Point light").GetComponent<Light>();
+            if(light!=null)
+            {
+                light.range = _lightRange;
+                light.intensity = _lightIntensity;
             }
 
             if(m_chunks.Count > 0)

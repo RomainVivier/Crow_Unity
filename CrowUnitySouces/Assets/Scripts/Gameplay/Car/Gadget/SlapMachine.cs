@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class SlapMachine : Gadget {
+public class SlapMachine : ButtonGadget {
 
 
 
@@ -14,18 +14,20 @@ public class SlapMachine : Gadget {
 
     #region MonoBehaviour
 
-    void Start()
+    public override void Start()
     {
         GadgetManager.Instance.Register("SlapMachine", this);
         m_timer = new Timer();
+        base.Start();
     }
 
-    void Update()
+    public override void Update()
     {
         if (m_timer.IsElapsedOnce)
         {
             Stop();
         }
+        base.Update();
     }
 
     #endregion
@@ -39,7 +41,7 @@ public class SlapMachine : Gadget {
 
         m_timer.Reset(1f);
         FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Gadgets/Punch/gadgetPunchExecute", transform.position);
-        int value = Random.Range(0,5);
+        int value = Random.Range(4,5);
         _cameraAnimator.SetTrigger("Slap_"+value);
 
     }

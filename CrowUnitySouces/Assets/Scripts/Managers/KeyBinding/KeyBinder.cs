@@ -138,29 +138,6 @@ public class KeyBinder : MonoBehaviour
 			});
 	}
 	
-	//    public void SetKeyDownBind(string keyId, Action act)
-	//    {
-	//        if (keyId == null)
-	//            Debug.LogError("keyId can't be null in SetKeyDownBind");
-	//
-	//        if(_ActionBinds [keyId].GetType() == typeof(KeyActionConfig))
-	//        {
-	//            KeyActionConfig kac = (KeyActionConfig)_ActionBinds [keyId];
-	//            kac.KeyDownAction = act;
-	//        }
-	//    }
-	//
-	//    public void SetKeyUpBind(string keyId, Action act)
-	//    {
-	//        if (keyId == null)
-	//            Debug.LogError("keyId can't be null in SetKeyUpBind");
-	//
-	//        if(_ActionBinds [keyId].GetType() == typeof(KeyActionConfig))
-	//        {
-	//            KeyActionConfig kac = (KeyActionConfig)_ActionBinds [keyId];
-	//            kac.KeyUpAction = act;
-	//        }
-	//    }
 	
 	public void ChangeBind(KeyConfig currentInput, string keyId, KeyConfig newInput)
 	{
@@ -219,22 +196,6 @@ public class KeyBinder : MonoBehaviour
 			DefineActions(actionId, new AxisActionConfig(actionConf.Category, actionConf.Order, null));
 		}
 	}
-
-	//    public void RemoveDownBind(string keyId)
-	//    {
-	//        if (keyId == null)
-	//            Debug.LogError("keyId can't be null in RemoveDownBind");
-	//
-	//        _ActionBinds [keyId].KeyDownAction = (Action)null;
-	//    }
-	//    
-	//    public void RemoveUpBind(string keyId)
-	//    {
-	//        if (keyId == null)
-	//            Debug.LogError("keyId can't be null in RemoveUpBind");
-	//
-	//        _ActionBinds [keyId].KeyUpAction = (Action)null;
-	//    }
 	
 	public void ClearBinds()
 	{ 
