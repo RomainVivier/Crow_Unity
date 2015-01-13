@@ -202,8 +202,8 @@ public class Car : MonoBehaviour
 		brakeTorque=brakeDecceleration*acceleration2Torque/2;
 		wheelBase=body.transform.localScale.z;
 		wheelTrack=body.transform.localScale.x;
-		
-		// Update center of weight
+
+        // Update center of weight
 		body.centerOfMass=centerOfMass;
 	}
 
@@ -223,7 +223,16 @@ public class Car : MonoBehaviour
 		Vector3 velocity=body.GetRelativePointVelocity(new Vector3(0,0,0));
 		return Vector3.Dot(velocity,body.transform.forward);
 	}
-	
+	public float getForwardVelocityKmh()
+	{
+        return getForwardVelocity() * 3.6f;
+	}
+
+    public Vector3 getVelocity()
+    { 
+		return body.GetRelativePointVelocity(new Vector3(0,0,0));
+    }
+
 	public Vector3 getPosition()
 	{
 		return body.transform.position;
