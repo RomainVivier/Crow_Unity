@@ -10,6 +10,8 @@ public class CarCollisionsHandler : MonoBehaviour
     private FMOD.Studio.EventInstance m_impactConcreteSound;
     private FMOD.Studio.ParameterInstance m_impactConcreteSpeed;
     private Car m_car;
+    private Timer cooldownTimer;
+
     #endregion
 
     #region MonoBehaviour
@@ -20,6 +22,8 @@ public class CarCollisionsHandler : MonoBehaviour
         m_impactConcreteSound=FMOD_StudioSystem.instance.GetEvent("event:/SFX/Impacts/impactConcrete");
         m_impactConcreteSound.getParameter("Speed", out m_impactConcreteSpeed);
         m_car = transform.parent.gameObject.GetComponent<Car>();
+        cooldownTimer = new Timer();
+        cooldownTimer.Reset(0.01f);
     }
     #endregion
 
@@ -27,14 +31,21 @@ public class CarCollisionsHandler : MonoBehaviour
     void OnCollisionEnter(Collision collision)
     {
         GameObject oth = collision.gameObject;
-        if (oth.name == "Body") playSound(collision, m_impactVehicleSound, m_impactVehicleSpeed);
-        else if(!collision.collider.isTrigger)
+        if (oth.name == "Body")
+        {
+            if (cooldownTimer.IsElapsedLoop)
+            {
+                playSound(collision, m_impactVehicleSound, m_impactVehicleSpeed);
+                cooldownTimer.Reset(2f);
+            }
+        }
+        else if (!collision.collider.isTrigger)
         {
             Vector3 contactPoint = collision.contacts[0].point;
             Vector3 center = transform.position;
             Vector3 diff = contactPoint - center;
             float relDy = Vector3.Dot(transform.up, diff);
-            if(relDy>-0.7) playSound(collision, m_impactConcreteSound, m_impactConcreteSpeed);
+            if (relDy > -0.7) playSound(collision, m_impactConcreteSound, m_impactConcreteSpeed);
         }
     }
     #endregion
