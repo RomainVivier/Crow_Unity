@@ -28,7 +28,7 @@ public class CarCollisionsHandler : MonoBehaviour
     {
         GameObject oth = collision.gameObject;
         if (oth.name == "Body") playSound(collision, m_impactVehicleSound, m_impactVehicleSpeed);
-        else
+        else if(!collision.collider.isTrigger)
         {
             Vector3 contactPoint = collision.contacts[0].point;
             Vector3 center = transform.position;

@@ -78,6 +78,7 @@ public class Spoonbill : Gadget
             m_attackTimer.Reset(1.5f);
             m_state = State.Attacking;
         }
+        if(!other.isTrigger) FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Gadgets/Spatula/gadgetSpatulaImpact", transform.position);
     }
 
     #endregion
