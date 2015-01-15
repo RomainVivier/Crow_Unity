@@ -27,7 +27,6 @@ public class CarCollisionsHandler : MonoBehaviour
     void OnCollisionEnter(Collision collision)
     {
         GameObject oth = collision.gameObject;
-        Debug.Log(oth.name);
         if (oth.name == "Body") playSound(collision, m_impactVehicleSound, m_impactVehicleSpeed);
         else
         {

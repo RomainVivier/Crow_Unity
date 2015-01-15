@@ -44,6 +44,7 @@ public class Car : MonoBehaviour
     private FMOD.Studio.EventInstance tiresSound;
     private FMOD.Studio.ParameterInstance tiresFriction;
     private FMOD.Studio.ParameterInstance tiresSpeed;
+    private FMOD.Studio.ParameterInstance tiresGround;
 
      // MonoBehaviour methods
 	void Start ()
@@ -55,6 +56,7 @@ public class Car : MonoBehaviour
         tiresSound = FMOD_StudioSystem.instance.GetEvent("event:/SFX/Car Mechanics/carTyres");
         tiresSound.getParameter("Friction", out tiresFriction);
         tiresSound.getParameter("Speed", out tiresSpeed);
+        tiresSound.getParameter("Ground", out tiresGround);
         tiresSound.start();
         wheelObject = transform.FindChild("Body/CarModel/volant").gameObject;
         wheelQuaternion = wheelObject.transform.localRotation;
@@ -143,9 +145,11 @@ public class Car : MonoBehaviour
         float soundRpm=rpm*ENGINE_SOUND_MAX_RPM/engine.getMaxRpm();
         engineRPM.setValue(soundRpm);
         float frictionSound = Mathf.Abs(inputs.steering);// inputs.brake;
+        float onGround = 0;
+        for (int i = 0; i < 4; i++) if (wheels[i].isGrounded) onGround = 1;
+        tiresGround.setValue(onGround);
         tiresFriction.setValue(frictionSound);
         tiresSpeed.setValue(forwardVelocity / maxSpeed);       
-
 		// Debug print
 		/*if(nbUpdates%10==0)
 		{
