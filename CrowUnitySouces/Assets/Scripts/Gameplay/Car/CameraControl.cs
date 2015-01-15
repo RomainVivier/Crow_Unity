@@ -16,7 +16,7 @@ public class CameraControl : MonoBehaviour {
         }
 
         KeyBinder.Instance.DefineActions("MouseLeftClick", new KeyActionConfig(KeyType.Action, 0, OnClick, null));
-
+        //TouchManager.Instance._touchStart += OnClick;
 	}
 	
 	void Update ()

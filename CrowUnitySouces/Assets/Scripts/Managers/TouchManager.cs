@@ -113,7 +113,7 @@ public class TouchManager : MonoBehaviour
 		{
 			if(Input.GetTouch(0).phase == TouchPhase.Began)
 			{
-				_swipeStart = new Vector2(Input.touches[0].position.x, Input.touches[0].position.y);
+				m_swipeStart = new Vector2(Input.touches[0].position.x, Input.touches[0].position.y);
                 if (_touchStart != null)
                 {
                     _touchStart(); 
@@ -130,11 +130,11 @@ public class TouchManager : MonoBehaviour
 			{
                 if(Input.touchCount > 0)
                 {
-                    _swipeEnd = new Vector2(Input.touches[0].position.x, Input.touches[0].position.y);
+                    m_swipeEnd = new Vector2(Input.touches[0].position.x, Input.touches[0].position.y);
                 }
                 else
                 {
-                    _swipeEnd = new Vector2(Mathf.Infinity, Mathf.Infinity);
+                    m_swipeEnd = new Vector2(Mathf.Infinity, Mathf.Infinity);
                 }
 
                 if(_touchEnd != null)
