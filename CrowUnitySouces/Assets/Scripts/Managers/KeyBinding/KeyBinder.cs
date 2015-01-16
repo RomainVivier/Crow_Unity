@@ -42,7 +42,6 @@ public class KeyBinder : MonoBehaviour
 	
 	void Update()
 	{
-
 		if(KeyChangeTimer.IsElapsedLoop && KeyBindRefs.ChangingKey != "")
 		{
 			KeyCode keycode = Keyfunctions.FetchKey();
