@@ -9,7 +9,7 @@ public class VignetteTrigger : MonoBehaviour
     {
         if(other.gameObject.transform.root.gameObject.name.Equals("Car"))
         {
-            vignette.pop();
+            //vignette.Pop();
         }
     }
 }

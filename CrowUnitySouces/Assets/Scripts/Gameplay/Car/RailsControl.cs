@@ -249,6 +249,10 @@ public class RailsControl : CarControl
         }
     }
 
+    public int getCurrentNbRails()
+    {
+        return rails.nbRails;
+    }
     //private void OnValidate()
     //{
     //    rails = chunk.GetComponent<Rails>();
