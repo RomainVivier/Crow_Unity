@@ -257,5 +257,10 @@ public class Car : MonoBehaviour
 		return body.transform.forward;
 	}
 	
+	public Vector3 getUpVector()
+	{
+		return body.transform.up;
+	}
+	
 }
 
