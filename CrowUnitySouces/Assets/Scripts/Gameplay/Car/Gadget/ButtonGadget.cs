@@ -13,6 +13,7 @@ public class ButtonGadget : Gadget {
 
 	public virtual void Start ()
     {
+
         unlitMat=Resources.Load("ButtonUnlit", typeof(Material)) as Material;
         litMat=Resources.Load("ButtonLit", typeof(Material)) as Material;
     }
