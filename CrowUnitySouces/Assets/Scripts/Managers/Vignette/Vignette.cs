@@ -14,6 +14,7 @@ public class Vignette : MonoBehaviour
     private VignetteType _type;    
     private Timer m_timer;
     private RectTransform m_rect;
+    private CanvasScaler m_cs;
 
     #region Properties
 
@@ -26,6 +27,7 @@ public class Vignette : MonoBehaviour
         m_timer = new Timer();
         isFinished = true;
         m_rect = gameObject.GetComponent<RectTransform>();
+        m_cs = GameObject.FindObjectOfType<CanvasScaler>();
         gameObject.SetActive(false);
     }
 
@@ -46,7 +48,11 @@ public class Vignette : MonoBehaviour
         //TODO set vignette's frame depending of type
         _railsTaken = rails;
 
-        Vector3 rectPos = m_rect.position;
+        Vector2 rectPos = m_rect.anchoredPosition;
+        Vector2 size = m_rect.sizeDelta;
+
+        if (size.x < 0) size.x = m_cs.referenceResolution.x + size.x;
+        if (size.y < 0) size.y = m_cs.referenceResolution.y + size.y;
 
         //TODO better way to set the Size
         switch(rails.Count)
@@ -56,17 +62,17 @@ public class Vignette : MonoBehaviour
 
                 if(rails.Contains(0))
                 {
-                    rectPos.x =  m_rect.rect.width / 2;
+                    rectPos.x = size.x / 2 - m_cs.referenceResolution.x / 2;
                 }
 
                 if (rails.Contains(1))
                 {
-                    rectPos.x = Screen.width / 2;
+                    rectPos.x = 0;
                 }
 
                 if (rails.Contains(2))
                 {
-                    rectPos.x = Screen.width - m_rect.rect.width / 2;
+                    rectPos.x = m_cs.referenceResolution.x / 2 - size.x / 2;
                 }
                 break;
 
@@ -75,23 +81,23 @@ public class Vignette : MonoBehaviour
 
                 if (rails.Contains(0) && rails.Contains(1))
                 {
-                    rectPos.x = Screen.width / 3 - m_rect.rect.width / 2;
+                    rectPos.x = size.x - m_cs.referenceResolution.x / 2;
                 }
 
                 if (rails.Contains(1) && rails.Contains(2))
                 {
-                    rectPos.x = 2 * Screen.width / 3 + m_rect.rect.width / 2;
+                    rectPos.x = m_cs.referenceResolution.x / 2 - size.x;
                 }
 
                 break;
             case 3 :
                 m_rect.localScale = new Vector3(3f, 1f, 1f);
-                rectPos.x = Screen.width / 2;
+                rectPos.x = 0;
                 
                 break;
         }
 
-        m_rect.position = rectPos;
+        m_rect.anchoredPosition = rectPos;
         //TODO set of animation
     }
 
