@@ -14,6 +14,8 @@ public class Car : MonoBehaviour
 	public float antiRoll=8000;
 	public float downforce=10;
     public float wheelRotation = 180;
+    public float fakeSoundAcceleration = 0;
+    public float fakeSoundBrakes = 0;
 
 	// Components
 	private Engine engine;
@@ -21,7 +23,8 @@ public class Car : MonoBehaviour
 	private Rigidbody body;
 	private WheelCollider[] wheels;
 	private Transmission transmission;
-
+    private RailsControl railsControl;
+   
 	// Private attributes
 	private float dragCoef;
 	private float mass;
@@ -45,6 +48,7 @@ public class Car : MonoBehaviour
     private FMOD.Studio.ParameterInstance tiresFriction;
     private FMOD.Studio.ParameterInstance tiresSpeed;
     private FMOD.Studio.ParameterInstance tiresGround;
+    private float fakeSoundSpeed=0; // 0=0m/s, 1=max speed
 
      // MonoBehaviour methods
 	void Start ()
@@ -141,8 +145,16 @@ public class Car : MonoBehaviour
 		// Store old inputs
 		oldInputs=inputs;
 		
+        // Update fake speed
+        float tgtFakeSpeed = forwardVelocity / (railsControl ? railsControl.setSpeedKmh/3.6f : maxSpeed);
+        float lerpVal= tgtFakeSpeed>fakeSoundSpeed ? Mathf.Pow(fakeSoundAcceleration,Time.fixedDeltaTime)
+                                                : Mathf.Pow(fakeSoundBrakes,Time.fixedDeltaTime);
+        fakeSoundSpeed = Mathf.Lerp(tgtFakeSpeed, fakeSoundSpeed, lerpVal);
+        float fakeSpeed = fakeSoundSpeed * maxSpeed;
+        float fakeRPM = transmission.getMaxPossibleRPM(fakeSpeed, engine.getMaxRpm());
+
         // Update sounds
-        float soundRpm=rpm*ENGINE_SOUND_MAX_RPM/engine.getMaxRpm();
+        float soundRpm=fakeRPM*ENGINE_SOUND_MAX_RPM/engine.getMaxRpm();
         engineRPM.setValue(soundRpm);
         float frictionSound = Mathf.Abs(inputs.steering);// inputs.brake;
         float onGround = 0;
@@ -181,6 +193,7 @@ public class Car : MonoBehaviour
 		}
 		control=controls[0];
 		control.init(0);
+        railsControl = gameObject.GetComponent<RailsControl>();
 		transmission=gameObject.GetComponent<Transmission>();
 		if(transmission==null)
 		{

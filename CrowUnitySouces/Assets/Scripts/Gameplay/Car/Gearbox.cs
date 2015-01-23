@@ -102,4 +102,16 @@ public class Gearbox : Transmission
 		return ratios[currentGear-1];
 	}
 	
+    public override float getMaxPossibleRPM(float speed, float maxRPM)
+    {
+        int gear = 0;
+        float rpm = speed * ratios[gear];
+        while(rpm>maxRPM && gear<nbGears-1)
+        {
+            gear++;
+            rpm = speed * ratios[gear];
+        }
+        Debug.Log(rpm + " " + gear);
+        return rpm;
+    }
 }
