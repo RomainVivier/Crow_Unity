@@ -111,7 +111,6 @@ public class Gearbox : Transmission
             gear++;
             rpm = speed * ratios[gear];
         }
-        Debug.Log(rpm + " " + gear);
         return rpm;
     }
 }
