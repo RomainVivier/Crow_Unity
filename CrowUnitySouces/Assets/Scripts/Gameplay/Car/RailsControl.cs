@@ -54,24 +54,24 @@ public class RailsControl : CarControl
         //KeyBinder.Instance.DefineActions("Brake", new AxisActionConfig(KeyType.Movement, 0, (value) => { m_brake = value; }));
 
         //code pour changer de rails avec un click de zone droite/gauche
-        TouchManager.Instance._touchStart +=
-            () =>
-            {
-#if UNITY_STANDALONE
-                if (Input.mousePosition.y > (Screen.height / 2))
-                    m_steering = Input.mousePosition.x > (Screen.width / 2) ? 1f : -1f;
-#elif UNITY_ANDROID
-                if (Input.mousePosition.y > (Screen.height / 2))
-                    m_steering = Input.touches[0].position.x > (Screen.width/2) ? 1f : -1f;
-#endif
-            };
+//        TouchManager.Instance._touchStart +=
+//            () =>
+//            {
+//#if UNITY_STANDALONE
+//                if (Input.mousePosition.y > (Screen.height / 2))
+//                    ShiftRail( Input.mousePosition.x > (Screen.width / 2) ? 1f : -1f);
+//#elif UNITY_ANDROID
+//                if (Input.mousePosition.y > (Screen.height / 2))
+//                    ShiftRail( Input.touches[0].position.x > (Screen.width/2) ? 1f : -1f);
+//#endif
+//            };
 
 //        TouchManager.Instance._touchEnd += () => { if (m_steering != 0f) m_steering = 0f; };
 
 
         //code pour le swipe
-        //TouchManager.Instance._swipeLeft += () => { m_steering = 1f; };
-        //TouchManager.Instance._swipeRight += () => { m_steering = -1f; };
+        //TouchManager.Instance._swipeLeft += () => { ShiftRail(1f); };
+        //TouchManager.Instance._swipeRight += () => { ShiftRail(-1f); };
 
 	}
 	
@@ -249,6 +249,10 @@ public class RailsControl : CarControl
         }
     }
 
+    public int getCurrentNbRails()
+    {
+        return rails.nbRails;
+    }
     //private void OnValidate()
     //{
     //    rails = chunk.GetComponent<Rails>();

@@ -96,6 +96,8 @@ public class Spoonbill : Gadget
                 gameObject.SetActive(true);
                 m_state = State.Engaging;
                 m_engageTimer.Reset(1f);
+                //transform.FindChild("Vignette").GetComponent<Vignette>().pop(1f);
+
                 _spoonbillAnimator.SetTrigger("Engage");
                 _flipflopAnimator.SetBool("Engage", true);
                 break;
