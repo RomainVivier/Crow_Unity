@@ -102,7 +102,7 @@ public class Gearbox : Transmission
 		return ratios[currentGear-1];
 	}
 	
-    public override float getMaxPossibleRPM(float speed, float maxRPM)
+    public override float getMaxPossibleRPM(float speed, float maxRPM, out int newFakeGear)
     {
         int gear = 0;
         float rpm = speed * ratios[gear];
@@ -111,6 +111,7 @@ public class Gearbox : Transmission
             gear++;
             rpm = speed * ratios[gear];
         }
+        newFakeGear = gear;
         return rpm;
     }
 }

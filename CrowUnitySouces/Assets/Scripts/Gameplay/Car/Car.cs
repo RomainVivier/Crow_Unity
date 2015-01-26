@@ -17,6 +17,7 @@ public class Car : MonoBehaviour
     public float fakeSoundAcceleration = 0.9f;
     public float fakeSoundBrakes = 0.7f;
     public float fakeSoundBrakesSpeedFriction = 0.2f;
+    public float fakeSoundInstantThresholdKmh = 2f;
 
 	// Components
 	private Engine engine;
@@ -49,7 +50,9 @@ public class Car : MonoBehaviour
     private FMOD.Studio.ParameterInstance tiresFriction;
     private FMOD.Studio.ParameterInstance tiresSpeed;
     private FMOD.Studio.ParameterInstance tiresGround;
+
     private float fakeSoundSpeed=0; // 0=0m/s, 1=max speed
+    private int fakeGear = 0;
 
      // MonoBehaviour methods
 	void Start ()
@@ -149,13 +152,26 @@ public class Car : MonoBehaviour
         // Update fake speed
         float frictionSound = Mathf.Abs(inputs.steering);
         float tgtFakeSpeed = forwardVelocity / (railsControl ? railsControl.setSpeedKmh/3.6f : maxSpeed);
+        if (tgtFakeSpeed < fakeSoundSpeed - fakeSoundInstantThresholdKmh / 3.6)
+            fakeSoundSpeed = tgtFakeSpeed;
         float lerpVal= tgtFakeSpeed>fakeSoundSpeed ? Mathf.Pow(fakeSoundAcceleration,Time.fixedDeltaTime)
                                                 : Mathf.Pow(fakeSoundBrakes,Time.fixedDeltaTime);
         fakeSoundSpeed -= frictionSound * fakeSoundBrakesSpeedFriction*Time.fixedDeltaTime;
         if (fakeSoundSpeed < 0) fakeSoundSpeed = 0;
         fakeSoundSpeed = Mathf.Lerp(tgtFakeSpeed, fakeSoundSpeed, lerpVal);
         float fakeSpeed = fakeSoundSpeed * maxSpeed;
-        float fakeRPM = transmission.getMaxPossibleRPM(fakeSpeed, engine.getMaxRpm());
+        int newFakeGear;
+        float fakeRPM = transmission.getMaxPossibleRPM(fakeSpeed, engine.getMaxRpm(), out newFakeGear);
+        if(newFakeGear>fakeGear)
+        {
+            fakeGear = newFakeGear;
+            FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Car Mechanics/carGearUp", transform.position);
+        }
+        if(newFakeGear<fakeGear)
+        {
+            fakeGear = newFakeGear;
+            FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Car Mechanics/carGearDown", transform.position);
+        }
 
         // Update sounds
         float soundRpm=fakeRPM*ENGINE_SOUND_MAX_RPM/engine.getMaxRpm();

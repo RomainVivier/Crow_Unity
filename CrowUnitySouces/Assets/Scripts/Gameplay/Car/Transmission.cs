@@ -12,7 +12,7 @@ public abstract class Transmission : MonoBehaviour
 	public virtual float getPreviousSpeed2Rpm() { return getSpeed2Rpm();}
 	public virtual void downshift() {}
 	public virtual void updateValues() {}
-    public abstract float getMaxPossibleRPM(float speed, float maxRPM);
+    public abstract float getMaxPossibleRPM(float speed, float maxRPM, out int newFakeGear);
 
 	void Start()
 	{
