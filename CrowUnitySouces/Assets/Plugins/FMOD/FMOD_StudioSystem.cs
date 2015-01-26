@@ -217,7 +217,7 @@ public class FMOD_StudioSystem : MonoBehaviour
 		PlayOneShot(path, position, 1.0f);
 	}
 	
-	void PlayOneShot(string path, Vector3 position, float volume)
+	public void PlayOneShot(string path, Vector3 position, float volume)
 	{
 		var instance = GetEvent(path);
 		if (instance == null) 
@@ -228,7 +228,7 @@ public class FMOD_StudioSystem : MonoBehaviour
 		
 		var attributes = FMOD.Studio.UnityUtil.to3DAttributes(position);
 		ERRCHECK( instance.set3DAttributes(attributes) );
-		//TODO ERRCHECK( instance.setVolume(volume) );
+		ERRCHECK( instance.setVolume(volume) );
 		ERRCHECK( instance.start() );
 		ERRCHECK( instance.release() );
 	}
@@ -280,14 +280,6 @@ public class FMOD_StudioSystem : MonoBehaviour
 
         FMOD.Studio.UnityUtil.Log("FMOD_StudioSystem: system.init");
         FMOD.RESULT result = FMOD.RESULT.OK;
-
-		// Set the seed
-		FMOD.ADVANCEDSETTINGS advancedsettings = new FMOD.ADVANCEDSETTINGS();
-		long seed = global::System.DateTime.Now.ToBinary();
-		advancedsettings.randomSeed = ((uint)seed) ^ ((uint)(seed >> 32));
-		FMOD.System lowlevel;
-		ERRCHECK(system.getLowLevelSystem(out lowlevel));
-		ERRCHECK(lowlevel.setAdvancedSettings(ref advancedsettings));
         result = system.initialize(1024, flags, FMOD.INITFLAGS.NORMAL, global::System.IntPtr.Zero);
 
         if (result == FMOD.RESULT.ERR_NET_SOCKET_ERROR)

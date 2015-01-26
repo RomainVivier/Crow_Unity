@@ -1,6 +1,6 @@
 /*$ preserve start $*/
 /* ========================================================================================== */
-/* FMOD Ex - DSP header file. Copyright (c), Firelight Technologies Pty, Ltd. 2004-2014.      */
+/* FMOD Ex - DSP header file. Copyright (c), Firelight Technologies Pty, Ltd. 2004-2015.      */
 /*                                                                                            */
 /* Use this header if you are interested in delving deeper into the FMOD software mixing /    */
 /* DSP engine.  In this header you can find parameter structures for FMOD system reigstered   */
@@ -129,6 +129,7 @@ namespace FMOD
         FFT,                /* This unit simply analyzes the signal and provides spectrum information back through getParameter. */
         LOUDNESS_METER,     /* This unit analyzes the loudness and true peak of the signal. */
         ENVELOPEFOLLOWER,   /* This unit tracks the envelope of the input/sidechain signal */
+        CONVOLUTIONREVERB,  /* This unit implements convolution reverb. */
     }
 
 
@@ -176,9 +177,9 @@ namespace FMOD
 
     public struct PieceWiseLinearMapping
     {
-        int numpoints;			            /* [w] The number of <position, value> pairs in the piecewise mapping (at least 2). */
-        IntPtr pointparamvalues;           /* [w] The values in the parameter's units for each point */
-        IntPtr pointpositions;	            /* [w] The positions along the control's scale (e.g. dial angle) corresponding to each parameter value.  The range of this scale is arbitrary and all positions will be relative to the minimum and maximum values (e.g. [0,1,3] is equivalent to [1,2,4] and [2,4,8]).  If this array is zero, pointparamvalues will be distributed with equal spacing. */
+        public int numpoints;			            /* [w] The number of <position, value> pairs in the piecewise mapping (at least 2). */
+        public IntPtr pointparamvalues;           /* [w] The values in the parameter's units for each point */
+        public IntPtr pointpositions;	            /* [w] The positions along the control's scale (e.g. dial angle) corresponding to each parameter value.  The range of this scale is arbitrary and all positions will be relative to the minimum and maximum values (e.g. [0,1,3] is equivalent to [1,2,4] and [2,4,8]).  If this array is zero, pointparamvalues will be distributed with equal spacing. */
     }
 
     /*
@@ -198,8 +199,8 @@ namespace FMOD
     */
     public struct DSP_PARAMETER_FLOAT_MAPPING
     {
-        DSP_PARAMETER_FLOAT_MAPPING_TYPE type;
-        PieceWiseLinearMapping piecewiselinearmapping;	/* [w] Only required for FMOD_DSP_PARAMETER_FLOAT_MAPPING_TYPE_PIECEWISE_LINEAR type mapping. */
+        public DSP_PARAMETER_FLOAT_MAPPING_TYPE type;
+        public PieceWiseLinearMapping piecewiselinearmapping;	/* [w] Only required for FMOD_DSP_PARAMETER_FLOAT_MAPPING_TYPE_PIECEWISE_LINEAR type mapping. */
     }
 
 
@@ -223,10 +224,10 @@ namespace FMOD
     */
     public struct DSP_PARAMETER_DESC_FLOAT
     {
-        float                     min;                      /* [w] Minimum parameter value. */
-        float                     max;                      /* [w] Maximum parameter value. */
-        float                     defaultval;               /* [w] Default parameter value. */
-        DSP_PARAMETER_FLOAT_MAPPING mapping;           /* [w] How the values are distributed across dials and automation curves (e.g. linearly, exponentially etc). */
+        public float                     min;                      /* [w] Minimum parameter value. */
+        public float                     max;                      /* [w] Maximum parameter value. */
+        public float                     defaultval;               /* [w] Default parameter value. */
+        public DSP_PARAMETER_FLOAT_MAPPING mapping;           /* [w] How the values are distributed across dials and automation curves (e.g. linearly, exponentially etc). */
     }
 
 
@@ -249,11 +250,11 @@ namespace FMOD
     */
     public struct DSP_PARAMETER_DESC_INT
     {
-        int                       min;                      /* [w] Minimum parameter value. */
-        int                       max;                      /* [w] Maximum parameter value. */
-        int                       defaultval;               /* [w] Default parameter value. */
-        bool                      goestoinf;                /* [w] Whether the last value represents infiniy. */
-        IntPtr                    valuenames;               /* [w] Names for each value.  There should be as many strings as there are possible values (max - min + 1).  Optional. */
+        public int                       min;                      /* [w] Minimum parameter value. */
+        public int                       max;                      /* [w] Maximum parameter value. */
+        public int                       defaultval;               /* [w] Default parameter value. */
+        public bool                      goestoinf;                /* [w] Whether the last value represents infiniy. */
+        public IntPtr                    valuenames;               /* [w] Names for each value.  There should be as many strings as there are possible values (max - min + 1).  Optional. */
     }
 
 
@@ -276,8 +277,8 @@ namespace FMOD
     */
     public struct DSP_PARAMETER_DESC_BOOL
     {
-        bool                      defaultval;               /* [w] Default parameter value. */
-        IntPtr                    valuenames;               /* [w] Names for false and true, respectively.  There should be two strings.  Optional. */
+        public bool                      defaultval;               /* [w] Default parameter value. */
+        public IntPtr                    valuenames;               /* [w] Names for false and true, respectively.  There should be two strings.  Optional. */
     }
 
 
@@ -301,7 +302,7 @@ namespace FMOD
     */
     public struct DSP_PARAMETER_DESC_DATA
     {
-        int                       datatype;                 /* [w] The type of data for this parameter.  Use 0 or above for custom types or set to one of the FMOD_DSP_PARAMETER_DATA_TYPE values. */
+        public int                       datatype;                 /* [w] The type of data for this parameter.  Use 0 or above for custom types or set to one of the FMOD_DSP_PARAMETER_DATA_TYPE values. */
     }
 
 
@@ -374,6 +375,7 @@ namespace FMOD
         DSP_PARAMETER_DATA_TYPE_OVERALLGAIN = -1,      /* The data type for FMOD_DSP_PARAMETER_OVERALLGAIN parameters.  There should a maximum of one per DSP. */
         DSP_PARAMETER_DATA_TYPE_3DATTRIBUTES = -2,     /* The data type for FMOD_DSP_PARAMETER_3DATTRIBUTES parameters.  There should a maximum of one per DSP. */
         DSP_PARAMETER_DATA_TYPE_SIDECHAIN = -3,        /* The data type for FMOD_DSP_PARAMETER_SIDECHAIN parameters.  There should a maximum of one per DSP. */
+        DSP_PARAMETER_DATA_TYPE_FFT = -4,              /* The data type for FMOD_DSP_PARAMETER_FFT parameters.  There should a maximum of one per DSP. */
     }
 
 
@@ -718,8 +720,8 @@ namespace FMOD
     {
         DELAY,       /* (Type:float) - Echo delay in ms.  10  to 5000.  Default = 500. */
         FEEDBACK,    /* (Type:float) - Echo decay per delay.  0 to 100.  100.0 = No decay, 0.0 = total decay (ie simple 1 line delay).  Default = 50.0. */
-        DRYMIX,      /* (Type:float) - Original sound volume in dB.  -80.0 to 10.0.  Default = 0. */
-        WETMIX       /* (Type:float) - Volume of echo signal to pass to output in dB.  -80.0 to 10.0.  Default = 0. */
+        DRYLEVEL,    /* (Type:float) - Original sound volume in dB.  -80.0 to 10.0.  Default = 0. */
+        WETLEVEL     /* (Type:float) - Volume of echo signal to pass to output in dB.  -80.0 to 10.0.  Default = 0. */
     }
 
 
@@ -783,10 +785,9 @@ namespace FMOD
     */
     public enum DSP_FLANGE
     {
-        DRYMIX,      /* Volume of original signal to pass to output.  0.0 to 1.0. Default = 0.45. */
-        WETMIX,      /* Volume of flange signal to pass to output.  0.0 to 1.0. Default = 0.55. */
-        DEPTH,       /* Flange depth.  0.01 to 1.0.  Default = 1.0. */
-        RATE         /* Flange speed in hz.  0.0 to 20.0.  Default = 0.1. */
+        MIX,         /* (Type:float) - Percentage of wet signal in mix.  0 to 100. Default = 50. */
+        DEPTH,       /* (Type:float) - Flange depth (percentage of 40ms delay).  0.01 to 1.0.  Default = 1.0. */
+        RATE         /* (Type:float) - Flange speed in hz.  0.0 to 20.0.  Default = 0.1. */
     }
 
 
@@ -875,6 +876,28 @@ namespace FMOD
     [ENUM]
     [
         [DESCRIPTION]
+        Parameter types for the FMOD_DSP_TYPE_LIMITER filter.
+
+        [REMARKS]
+
+        [SEE_ALSO]
+        DSP::setParameterFloat
+        DSP::getParameterFloat
+        FMOD_DSP_TYPE
+    ]
+    */
+    public enum DSP_LIMITER
+    {
+        RELEASETIME,   /* (Type:float) - Time to ramp the silence to full in ms.  1.0 to 1000.0. Default = 10.0. */
+        CEILING,       /* (Type:float) - Maximum level of the output signal in dB.  -12.0 to 0.0.  Default = 0.0. */
+        MAXIMIZERGAIN, /* (Type:float) - Maximum amplification allowed in dB.  0.0 to 12.0.  Default = 0.0. 0.0 = no amplifaction, higher values allow more boost. */
+        MODE,          /* (Type:float) - Channel processing mode. 0 or 1. Default = 0. 0 = Independent (limiter per channel), 1 = Linked*/
+    }
+    
+    /*
+    [ENUM]
+    [
+        [DESCRIPTION]
         Parameter types for the FMOD_DSP_TYPE_PARAMEQ filter.
 
         [REMARKS]
@@ -956,14 +979,9 @@ namespace FMOD
     */
     public enum DSP_CHORUS
     {
-        DRYMIX,   /* Volume of original signal to pass to output.  0.0 to 1.0. Default = 0.5. */
-        WETMIX1,  /* Volume of 1st chorus tap.  0.0 to 1.0.  Default = 0.5. */
-        WETMIX2,  /* Volume of 2nd chorus tap. This tap is 90 degrees out of phase of the first tap.  0.0 to 1.0.  Default = 0.5. */
-        WETMIX3,  /* Volume of 3rd chorus tap. This tap is 90 degrees out of phase of the second tap.  0.0 to 1.0.  Default = 0.5. */
-        DELAY,    /* Chorus delay in ms.  0.1 to 100.0.  Default = 40.0 ms. */
-        RATE,     /* Chorus modulation rate in hz.  0.0 to 20.0.  Default = 0.8 hz. */
-        DEPTH,    /* Chorus modulation depth.  0.0 to 1.0.  Default = 0.03. */
-        FEEDBACK  /* Chorus feedback.  Controls how much of the wet signal gets fed back into the chorus buffer.  0.0 to 1.0.  Default = 0.0. */
+        MIX,      /* (Type:float) - Volume of original signal to pass to output.  0.0 to 100.0. Default = 50.0. */
+        RATE,     /* (Type:float) - Chorus modulation rate in Hz.  0.0 to 20.0.  Default = 0.8 Hz. */
+        DEPTH,    /* (Type:float) - Chorus modulation depth.  0.0 to 100.0.  Default = 3.0. */
     }
 
 
@@ -1001,16 +1019,10 @@ namespace FMOD
     [ENUM]
     [
         [DESCRIPTION]
-        Parameter types for the FMOD_DSP_TYPE_COMPRESSOR unit.<br>
+        Parameter types for the FMOD_DSP_TYPE_COMPRESSOR unit.
         This is a simple linked multichannel software limiter that is uniform across the whole spectrum.<br>
 
         [REMARKS]
-        The parameters are as follows:
-        Threshold: [-60dB to 0dB, default 0dB]
-        Attack Time: [10ms to 200ms, default 50ms]
-        Release Time: [20ms to 1000ms, default 50ms]
-        Gain Make Up: [0dB to +30dB, default 0dB]
-        <br>
         The limiter is not guaranteed to catch every peak above the threshold level,
         because it cannot apply gain reduction instantaneously - the time delay is
         determined by the attack time. However setting the attack time too short will
@@ -1021,17 +1033,20 @@ namespace FMOD
 
         [SEE_ALSO]
         DSP::setParameterFloat
-        DSP::GetParameterFloat
+        DSP::getParameterFloat
+        DSP::setParameterBool
+        DSP::getParameterBool
         FMOD_DSP_TYPE
-        System::addDSP
     ]
     */
     public enum DSP_COMPRESSOR
     {
-        THRESHOLD,  /* Threshold level (dB)in the range from -60 through 0. The default value is 50. */
-        ATTACK,     /* Gain reduction attack time (milliseconds), in the range from 10 through 200. The default value is 50. */
-        RELEASE,    /* Gain reduction release time (milliseconds), in the range from 20 through 1000. The default value is 50. */
-        GAINMAKEUP /* Make-up gain applied after limiting, in the range from 0.0 through 100.0. The default value is 50. */
+        THRESHOLD,   /* (Type:float) - Threshold level (dB) in the range from -80 through 0. The default value is 0. */ 
+        RATIO,       /* (Type:float) - Compression Ratio (dB/dB) in the range from 1 to 50. The default value is 2.5. */ 
+        ATTACK,      /* (Type:float) - Attack time (milliseconds), in the range from 0.1 through 1000. The default value is 20. */
+        RELEASE,     /* (Type:float) - Release time (milliseconds), in the range from 10 through 5000. The default value is 100 */
+        GAINMAKEUP,  /* (Type:float) - Make-up gain (dB) applied after limiting, in the range from 0 through 30. The default value is 0. */
+        USESIDECHAIN /* (Type:bool)  - Whether to analyse the sidechain signal instead of the input signal. The default value is false */
     }
 
 
@@ -1042,38 +1057,33 @@ namespace FMOD
         Parameter types for the FMOD_DSP_TYPE_SFXREVERB unit.<br>
 
         [REMARKS]
-        This is a high quality I3DL2 based reverb which improves greatly on FMOD_DSP_REVERB.<br>
+        This is a high quality I3DL2 based reverb.<br>
         On top of the I3DL2 property set, "Dry Level" is also included to allow the dry mix to be changed.<br>
-        <br>
-        Currently FMOD_DSP_SFXREVERB_REFLECTIONSLEVEL, FMOD_DSP_SFXREVERB_REFLECTIONSDELAY and FMOD_DSP_SFXREVERB_REVERBDELAY are not enabled but will come in future versions.<br>
         <br>
         These properties can be set with presets in FMOD_REVERB_PRESETS.
 
         [SEE_ALSO]
         DSP::setParameterFloat
-        DSP::GetParameterFloat
+        DSP::getParameterFloat
         FMOD_DSP_TYPE
-        System::addDSP
         FMOD_REVERB_PRESETS
     ]
     */
     public enum DSP_SFXREVERB
     {
-        DRYLEVEL,            /* Dry Level      : Mix level of dry signal in output in mB.  Ranges from -10000.0 to 0.0.  Default is 0.0. */
-        ROOM,                /* Room           : Room effect level at low frequencies in mB.  Ranges from -10000.0 to 0.0.  Default is 0.0. */
-        ROOMHF,              /* Room HF        : Room effect high-frequency level re. low frequency level in mB.  Ranges from -10000.0 to 0.0.  Default is 0.0. */
-        ROOMROLLOFFFACTOR,   /* Room Rolloff   : Like DS3D flRolloffFactor but for room effect.  Ranges from 0.0 to 10.0. Default is 10.0 */
-        DECAYTIME,           /* Decay Time     : Reverberation decay time at low-frequencies in seconds.  Ranges from 0.1 to 20.0. Default is 1.0. */
-        DECAYHFRATIO,        /* Decay HF Ratio : High-frequency to low-frequency decay time ratio.  Ranges from 0.1 to 2.0. Default is 0.5. */
-        REFLECTIONSLEVEL,    /* Reflections    : Early reflections level relative to room effect in mB.  Ranges from -10000.0 to 1000.0.  Default is -10000.0. */
-        REFLECTIONSDELAY,    /* Reflect Delay  : Delay time of first reflection in seconds.  Ranges from 0.0 to 0.3.  Default is 0.02. */
-        REVERBLEVEL,         /* Reverb         : Late reverberation level relative to room effect in mB.  Ranges from -10000.0 to 2000.0.  Default is 0.0. */
-        REVERBDELAY,         /* Reverb Delay   : Late reverberation delay time relative to first reflection in seconds.  Ranges from 0.0 to 0.1.  Default is 0.04. */
-        DIFFUSION,           /* Diffusion      : Reverberation diffusion (echo density) in percent.  Ranges from 0.0 to 100.0.  Default is 100.0. */
-        DENSITY,             /* Density        : Reverberation density (modal density) in percent.  Ranges from 0.0 to 100.0.  Default is 100.0. */
-        HFREFERENCE,         /* HF Reference   : Reference high frequency in Hz.  Ranges from 20.0 to 20000.0. Default is 5000.0. */
-        ROOMLF,              /* Room LF        : Room effect low-frequency level in mB.  Ranges from -10000.0 to 0.0.  Default is 0.0. */
-        LFREFERENCE          /* LF Reference   : Reference low-frequency in Hz.  Ranges from 20.0 to 1000.0. Default is 250.0. */
+        DECAYTIME,           /* (Type:float) - Decay Time       : Reverberation decay time at low-frequencies in milliseconds.  Ranges from 100.0 to 20000.0. Default is 1500. */
+        EARLYDELAY,          /* (Type:float) - Early Delay      : Delay time of first reflection in milliseconds.  Ranges from 0.0 to 300.0.  Default is 20. */
+        LATEDELAY,           /* (Type:float) - Reverb Delay     : Late reverberation delay time relative to first reflection in milliseconds.  Ranges from 0.0 to 100.0.  Default is 40. */
+        HFREFERENCE,         /* (Type:float) - HF Reference     : Reference frequency for high-frequency decay in Hz.  Ranges from 20.0 to 20000.0. Default is 5000. */
+        HFDECAYRATIO,        /* (Type:float) - Decay HF Ratio   : High-frequency decay time relative to decay time in percent.  Ranges from 10.0 to 100.0. Default is 50. */
+        DIFFUSION,           /* (Type:float) - Diffusion        : Reverberation diffusion (echo density) in percent.  Ranges from 0.0 to 100.0.  Default is 100. */
+        DENSITY,             /* (Type:float) - Density          : Reverberation density (modal density) in percent.  Ranges from 0.0 to 100.0.  Default is 100. */
+        LOWSHELFFREQUENCY,   /* (Type:float) - Low Shelf Frequency : Transition frequency of low-shelf filter in Hz.  Ranges from 20.0 to 1000.0. Default is 250. */
+        LOWSHELFGAIN,        /* (Type:float) - Low Shelf Gain   : Gain of low-shelf filter in dB.  Ranges from -36.0 to 12.0.  Default is 0. */
+        HIGHCUT,             /* (Type:float) - High Cut         : Cutoff frequency of low-pass filter in Hz.  Ranges from 20.0 to 20000.0. Default is 20000. */
+        EARLYLATEMIX,        /* (Type:float) - Early/Late Mix   : Blend ratio of late reverb to early reflections in percent.  Ranges from 0.0 to 100.0.  Default is 50. */
+        WETLEVEL,            /* (Type:float) - Wet Level        : Reverb signal level in dB.  Ranges from -80.0 to 20.0.  Default is -6. */
+        DRYLEVEL             /* (Type:float) - Dry Level        : Dry signal level in dB.  Ranges from -80.0 to 20.0.  Default is 0. */
     }
 
     /*
@@ -1100,17 +1110,17 @@ namespace FMOD
 
     /*
     [ENUM]
-    [  
-        [DESCRIPTION]   
+    [
+        [DESCRIPTION]
         Parameter types for the FMOD_DSP_TYPE_SEND DSP.
 
         [REMARKS]
 
-        [SEE_ALSO]      
-        DSP::SetParameterInt
-        DSP::GetParameterInt
-        DSP::SetParameterFloat
-        DSP::GetParameterFloat
+        [SEE_ALSO]
+        DSP::setParameterInt
+        DSP::getParameterInt
+        DSP::setParameterFloat
+        DSP::getParameterFloat
         FMOD_DSP_TYPE
     ]
     */
@@ -1123,15 +1133,15 @@ namespace FMOD
 
     /*
     [ENUM]
-    [  
-        [DESCRIPTION]   
+    [
+        [DESCRIPTION]
         Parameter types for the FMOD_DSP_TYPE_RETURN DSP.
 
         [REMARKS]
 
-        [SEE_ALSO]      
-        DSP::SetParameterInt
-        DSP::GetParameterInt
+        [SEE_ALSO]
+        DSP::setParameterInt
+        DSP::getParameterInt
         FMOD_DSP_TYPE
     ]
     */
@@ -1144,17 +1154,17 @@ namespace FMOD
 
     /*
     [ENUM]
-    [  
-        [DESCRIPTION]   
+    [
+        [DESCRIPTION]
         Parameter types for the FMOD_DSP_TYPE_HIGHPASS_SIMPLE filter.<br>
         This is a very simple single-order high pass filter.
         The emphasis is on speed rather than accuracy, so this should not be used for task requiring critical filtering.<br> 
 
         [REMARKS]
 
-        [SEE_ALSO]      
-        DSP::SetParameterFloat
-        DSP::GetParameterFloat
+        [SEE_ALSO]
+        DSP::setParameterFloat
+        DSP::getParameterFloat
         FMOD_DSP_TYPE
     ]
     */
@@ -1166,13 +1176,13 @@ namespace FMOD
 
     /*
     [ENUM]
-    [  
-        [DESCRIPTION]   
+    [
+        [DESCRIPTION]
         Parameter values for the FMOD_DSP_PAN_SURROUND_FROM_STEREO_MODE parameter of the FMOD_DSP_TYPE_PAN DSP.
 
         [REMARKS]
 
-        [SEE_ALSO]      
+        [SEE_ALSO]
         FMOD_DSP_PAN
     ]
     */
@@ -1185,13 +1195,13 @@ namespace FMOD
 
     /*
     [ENUM]
-    [  
-        [DESCRIPTION]   
+    [
+        [DESCRIPTION]
         Parameter values for the FMOD_DSP_PAN_3D_ROLLOFF parameter of the FMOD_DSP_TYPE_PAN DSP.
 
         [REMARKS]
 
-        [SEE_ALSO]      
+        [SEE_ALSO]
         FMOD_DSP_PAN
     ]
     */
@@ -1207,13 +1217,13 @@ namespace FMOD
 
     /*
     [ENUM]
-    [  
-        [DESCRIPTION]   
+    [
+        [DESCRIPTION]
         Parameter values for the FMOD_DSP_PAN_3D_EXTENT_MODE parameter of the FMOD_DSP_TYPE_PAN DSP.
 
         [REMARKS]
 
-        [SEE_ALSO]      
+        [SEE_ALSO]
         FMOD_DSP_PAN
     ]
     */
@@ -1227,19 +1237,19 @@ namespace FMOD
 
     /*
     [ENUM]
-    [  
-        [DESCRIPTION]   
+    [
+        [DESCRIPTION]
         Parameter types for the FMOD_DSP_TYPE_PAN DSP.
 
         [REMARKS]
 
-        [SEE_ALSO]      
-        DSP::SetParameterFloat
-        DSP::GetParameterFloat
-        DSP::SetParameterInt
-        DSP::GetParameterInt
-        DSP::SetParameterData
-        DSP::GetParameterData
+        [SEE_ALSO]
+        DSP::setParameterFloat
+        DSP::getParameterFloat
+        DSP::setParameterInt
+        DSP::getParameterInt
+        DSP::setParameterData
+        DSP::getParameterData
         FMOD_DSP_TYPE
     ]
     */
@@ -1270,13 +1280,13 @@ namespace FMOD
 
     /*
     [ENUM]
-    [  
-        [DESCRIPTION]   
+    [
+        [DESCRIPTION]
         Parameter values for the FMOD_DSP_THREE_EQ_CROSSOVERSLOPE parameter of the FMOD_DSP_TYPE_THREE_EQ DSP.
 
         [REMARKS]
 
-        [SEE_ALSO]      
+        [SEE_ALSO]
         FMOD_DSP_THREE_EQ
     ]
     */
@@ -1290,17 +1300,17 @@ namespace FMOD
 
     /*
     [ENUM]
-    [  
-        [DESCRIPTION]   
+    [
+        [DESCRIPTION]
         Parameter types for the FMOD_DSP_TYPE_THREE_EQ filter.
 
         [REMARKS]
 
-        [SEE_ALSO]      
-        DSP::SetParameterFloat
-        DSP::GetParameterFloat
-        DSP::SetParameterInt
-        DSP::GetParameterInt
+        [SEE_ALSO]
+        DSP::setParameterFloat
+        DSP::getParameterFloat
+        DSP::setParameterInt
+        DSP::getParameterInt
         FMOD_DSP_TYPE
         FMOD_DSP_THREE_EQ_CROSSOVERSLOPE_TYPE
     ]
@@ -1319,7 +1329,7 @@ namespace FMOD
     /*
     [ENUM]
     [
-        [DESCRIPTION]   
+        [DESCRIPTION]
         List of windowing methods for the FMOD_DSP_TYPE_FFT unit.  Used in spectrum analysis to reduce leakage / transient signals intefering with the analysis.<br>
         This is a problem with analysis of continuous signals that only have a small portion of the signal sample (the fft window size).<br>
         Windowing the signal with a curve or triangle tapers the sides of the fft window to help alleviate this problem.
@@ -1350,7 +1360,7 @@ namespace FMOD
         <img src="..\static\overview\blackmanharris.gif"></img>
         </exclude>
     
-        [SEE_ALSO]      
+        [SEE_ALSO]
         FMOD_DSP_FFT
     ]
     */
@@ -1367,15 +1377,15 @@ namespace FMOD
 
     /*
     [ENUM]
-    [  
-        [DESCRIPTION]   
+    [
+        [DESCRIPTION]
         Parameter types for the FMOD_DSP_TYPE_FFT dsp effect.
 
         [REMARKS]
         Set the attributes for the spectrum analysis with FMOD_DSP_FFT_WINDOWSIZE and FMOD_DSP_FFT_WINDOWTYPE, and retrieve the results with FMOD_DSP_FFT_SPECTRUM and FMOD_DSP_FFT_DOMINANT_FREQ.
         FMOD_DSP_FFT_SPECTRUM stores its data in the FMOD_DSP_PARAMETER_DATA_TYPE_FFT.  You will need to cast to this structure to get the right data.
 
-        [SEE_ALSO]      
+        [SEE_ALSO]
         DSP::setParameterFloat
         DSP::getParameterFloat
         DSP::setParameterInt
@@ -1397,8 +1407,8 @@ namespace FMOD
 
     /*
     [ENUM]
-    [  
-        [DESCRIPTION]   
+    [
+        [DESCRIPTION]
         Parameter types for the FMOD_DSP_TYPE_ENVELOPEFOLLOWER unit.
         This is a simple envelope follower for tracking the signal level.<br>
 
@@ -1406,11 +1416,11 @@ namespace FMOD
         This unit does not affect the incoming signal
         <br>
 
-        [SEE_ALSO]      
-        DSP::SetParameterFloat
-        DSP::GetParameterFloat
-        DSP::SetParameterBool
-        DSP::GetParameterBool
+        [SEE_ALSO]
+        DSP::setParameterFloat
+        DSP::getParameterFloat
+        DSP::setParameterBool
+        DSP::getParameterBool
         FMOD_DSP_TYPE
     ]
     */
@@ -1424,7 +1434,7 @@ namespace FMOD
 
     /*
     [ENUM]
-    [  
+    [
         [DESCRIPTION]
         Parameter types for the FMOD_DSP_TYPE_CHORUS filter.
 

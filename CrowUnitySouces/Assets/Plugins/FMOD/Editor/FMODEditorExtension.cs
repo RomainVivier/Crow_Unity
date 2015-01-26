@@ -37,6 +37,17 @@ public class FMODEditorExtension : MonoBehaviour
 	        //LoadAllBanks();
 		}
 	}
+
+    [PostProcessScene]
+    public static void OnPostprocessScene()
+    {
+        // Hack: clean up stale files from old versions of the integration that will mess 
+        // with the build. DeleteAsset is a NoOp if the file doesn't exist
+
+        // moved in 1.05.10
+        AssetDatabase.DeleteAsset("Assets/Plugins/Android/libfmod.so");
+        AssetDatabase.DeleteAsset("Assets/Plugins/Android/libfmodstudio.so");
+    }
 	
 	[PostProcessBuild]
 	public static void OnPostprocessBuild(BuildTarget target, string pathToBuiltProject)
