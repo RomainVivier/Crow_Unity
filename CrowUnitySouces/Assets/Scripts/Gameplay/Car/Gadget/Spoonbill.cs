@@ -8,7 +8,7 @@ public class Spoonbill : Gadget
 
 	public GameObject _spoonbill;
     public float _spoonbillForce;
-    public Animator _flipflopAnimator;
+    public Animator _handleAnimator;
     public Animator _spoonbillAnimator;
 
 
@@ -98,7 +98,7 @@ public class Spoonbill : Gadget
                 //transform.FindChild("Vignette").GetComponent<Vignette>().pop(1f);
 
                 _spoonbillAnimator.SetTrigger("Engage");
-                _flipflopAnimator.SetBool("Engage", true);
+                _handleAnimator.SetBool("Engage", true);
                 break;
 
             case State.Engaged :
@@ -114,14 +114,14 @@ public class Spoonbill : Gadget
         m_state = State.Disengaging;
         m_engageTimer.Reset(1f);
         _spoonbillAnimator.SetTrigger("Disengage");
-        _flipflopAnimator.SetBool("Engage", false);
+        _handleAnimator.SetBool("Engage", false);
     }
 
     public override void Stop()
     {
         base.Stop();
         gameObject.SetActive(false);
-        _flipflopAnimator.SetBool("Engage", false);
+        _handleAnimator.SetBool("Engage", false);
     }
 
     #endregion
