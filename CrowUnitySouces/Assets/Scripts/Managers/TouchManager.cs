@@ -26,8 +26,9 @@ public class TouchManager : MonoBehaviour
     private static TouchManager m_instance;
     private Vector2 m_swipeStart;
     private Vector2 m_swipeEnd;
-
-
+    private Vector2 m_wheelCenter;
+    private float m_wheelRadius;
+    private bool m_inSwipe=false;
     #region Singleton
 
     public static TouchManager Instance
@@ -66,6 +67,9 @@ public class TouchManager : MonoBehaviour
     private void Init()
     {
         _touchEnd += Swipe;
+        m_wheelCenter.x = -0.43f * Screen.height + Screen.width / 2;
+        m_wheelCenter.y = 0.062f;
+        m_wheelRadius = 0.155f * Screen.height;
     }
 
     #endregion
@@ -79,27 +83,36 @@ public class TouchManager : MonoBehaviour
 
     public void Touch()
     {
-
 #if UNITY_STANDALONE
         if (Input.GetMouseButtonDown(0))
         {
-            m_swipeStart = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
-            if (_touchStart != null)
+            Vector2 mousePos = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+            if((mousePos-m_wheelCenter).magnitude<m_wheelRadius)
             {
-                _touchStart(); 
+                m_inSwipe = true;
+                m_swipeStart = mousePos;
+                if (_touchStart != null)
+                {
+                    _touchStart(); 
+                }
             }
         }
-
+        bool endSwipe = false;
         if (Input.GetMouseButton(0))
         {
+            Vector2 mousePos = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+            if ((mousePos - m_wheelCenter).magnitude > m_wheelRadius && m_inSwipe) endSwipe = true;
             if (_touchStay != null)
             {
                 _touchStay();
             }
         }
 
-        if (Input.GetMouseButtonUp(0))
+        if (Input.GetMouseButtonUp(0) && m_inSwipe ) endSwipe = true;
+
+        if(endSwipe)
         {
+            m_inSwipe = false;
             m_swipeEnd = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
             if(_touchEnd != null)
             {
@@ -150,8 +163,7 @@ public class TouchManager : MonoBehaviour
     public void Swipe()
     {
         Vector2 swipeVector = m_swipeStart - m_swipeEnd;
-
-        if(swipeVector.magnitude > (Screen.width / 6) )
+        if(swipeVector.magnitude > m_wheelRadius/4)//(Screen.width / 6) )
         {
             if(swipeVector.x > 0)
             {

@@ -70,8 +70,8 @@ public class RailsControl : CarControl
 
 
         //code pour le swipe
-        //TouchManager.Instance._swipeLeft += () => { ShiftRail(1f); };
-        //TouchManager.Instance._swipeRight += () => { ShiftRail(-1f); };
+        TouchManager.Instance._swipeLeft += () => { ShiftRail(1f); };
+        TouchManager.Instance._swipeRight += () => { ShiftRail(-1f); };
 
 	}
 	
