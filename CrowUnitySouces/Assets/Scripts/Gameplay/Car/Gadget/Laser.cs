@@ -3,6 +3,15 @@ using System.Collections;
 
 public class Laser : ButtonGadget
 {
+    private struct LaserMembers
+    {
+        public Transform lightTransform;
+        public LineRenderer lineRenderer;
+        public Transform particlesTransform;
+        public ParticleSystem particles;
+        public GameObject contactObject;
+        public float contactTime;
+    }
 
     #region constants
     const float COOLDOWN_TIME=10f;
@@ -14,22 +23,15 @@ public class Laser : ButtonGadget
     const float END_ANGLE_DEG = 10f;
     const float RANGE = 100f;
     const float DISPLAY_RANGE = RANGE;
+    const float TARGET_CONTACT_TIME = 0.2f;
     #endregion
 
     #region members
     private Timer m_cooldownTimer;
     private Timer m_stateTimer;
-    private Transform m_leftLightTransform;
-    private Transform m_rightLightTransform;
     private Car m_car;
-    private LineRenderer m_leftLineRenderer;
-    private LineRenderer m_rightLineRenderer;
-    private Transform m_particlesLTransform;
-    private Transform m_particlesRTransform;
-    private ParticleSystem m_particlesL;
-    private ParticleSystem m_particlesR;
     private float m_lightsYOffset;
-
+    private LaserMembers[] m_lasers;
     private enum State
     {
         READY,
@@ -52,20 +54,21 @@ public class Laser : ButtonGadget
         GadgetManager.Instance.Register("Laser", this);
 
         // Set references
+        m_lasers = new LaserMembers[2];
         Transform valvesPivotTransform=transform.Find("ValvesPivot");
-        m_leftLightTransform = valvesPivotTransform.Find("ValveL");
-        m_rightLightTransform = transform.Find("ValvesPivot").Find("ValveR");
+        m_lasers[0].lightTransform = valvesPivotTransform.Find("ValveL");
+        m_lasers[1].lightTransform = valvesPivotTransform.Find("ValveR");
         m_car = transform.parent.parent.parent.GetComponent<Car>();
-        m_leftLineRenderer = m_leftLightTransform.GetComponent<LineRenderer>();
-        m_rightLineRenderer = m_rightLightTransform.GetComponent<LineRenderer>();
-        m_particlesL = transform.FindChild("ParticlesL").GetComponent<ParticleSystem>();
-        m_particlesR = transform.FindChild("ParticlesR").GetComponent<ParticleSystem>();
-        m_particlesLTransform = transform.FindChild("ParticlesL");
-        m_particlesRTransform = transform.FindChild("ParticlesR");
+        m_lasers[0].lineRenderer = m_lasers[0].lightTransform.GetComponent<LineRenderer>();
+        m_lasers[1].lineRenderer = m_lasers[1].lightTransform.GetComponent<LineRenderer>();
+        m_lasers[0].particles = transform.FindChild("ParticlesL").GetComponent<ParticleSystem>();
+        m_lasers[1].particles = transform.FindChild("ParticlesR").GetComponent<ParticleSystem>();
+        m_lasers[0].particlesTransform = transform.FindChild("ParticlesL");
+        m_lasers[1].particlesTransform = transform.FindChild("ParticlesR");
 
         // Compute lightsYOffset
-        Vector3 leftLightPos = m_leftLightTransform.position;
-        Vector3 rightLightPos = m_rightLightTransform.position;
+        Vector3 leftLightPos = m_lasers[0].lightTransform.position;
+        Vector3 rightLightPos = m_lasers[1].lightTransform.position;
         Vector3 lightPosCenter = (leftLightPos + rightLightPos) / 2;
         m_lightsYOffset = (valvesPivotTransform.position - lightPosCenter).magnitude * 2;
         base.Start();
@@ -82,8 +85,11 @@ public class Laser : ButtonGadget
                     transform.FindChild("ValvesPivot").localEulerAngles=new Vector3(-180, 0, 0);
                     m_state = State.FIRING;
                     m_stateTimer.Reset(FIRING_TIME);
-                    m_leftLineRenderer.enabled = true;
-                    m_rightLineRenderer.enabled = true;
+                    for (int i = 0; i < 2;i++)
+                    {
+                        m_lasers[i].lineRenderer.enabled = true;
+                        m_lasers[i].contactObject = null;
+                    }
                 }
                 else transform.FindChild("ValvesPivot").localEulerAngles=new Vector3(-180+m_stateTimer.CurrentNormalized * 180,0,0);
                 break;
@@ -100,40 +106,52 @@ public class Laser : ButtonGadget
                 {
                     m_state = State.VALVE_CLOSING;
                     m_stateTimer.Reset(VALVE_CLOSING_TIME);
-                    m_leftLineRenderer.enabled = false;
-                    m_rightLineRenderer.enabled = false;
-                    m_particlesL.Stop();
-                    m_particlesR.Stop();
+                    for (int i = 0; i < 2;i++)
+                    {
+                        m_lasers[i].lineRenderer.enabled = false;
+                        m_lasers[i].particles.Stop();
+                    }
                 }
                 else
                 {
                     float angle = Mathf.Lerp(END_ANGLE_DEG, START_ANGLE_DEG, m_stateTimer.CurrentNormalized)*Mathf.Deg2Rad;
-                    Vector3 pos0L = m_leftLightTransform.position;
-                    Vector3 up = m_car.getUpVector();
-                    pos0L -= up * m_lightsYOffset;
                     Vector3 forward=m_car.getForwardVector();
-                    Vector3 direc = forward * Mathf.Cos(angle) + up * Mathf.Sin(angle);
-                    direc.Normalize();
-                    Vector3 pos1L = pos0L + direc * DISPLAY_RANGE;
-                    Vector3 pos0R = m_rightLightTransform.position - up * m_lightsYOffset;
-                    Vector3 pos1R = pos0R + direc * DISPLAY_RANGE;
-                    m_leftLineRenderer.SetPosition(0, pos0L);
-                    m_leftLineRenderer.SetPosition(1, pos1L);
-                    m_rightLineRenderer.SetPosition(0, pos0R);
-                    m_rightLineRenderer.SetPosition(1, pos1R);
-                    RaycastHit rh;
-                    if (Physics.Raycast(pos0L, direc, out rh, RANGE))
+                    Vector3 up = m_car.getUpVector();
+                    for(int i=0;i<2;i++)
                     {
-                        if (!m_particlesL.isPlaying) m_particlesL.Play();
-                        m_particlesLTransform.position = rh.point;
-                    }
-                    else m_particlesL.Stop();
-                    if (Physics.Raycast(pos0R, direc, out rh, RANGE))
-                    {
-                        if (!m_particlesR.isPlaying) m_particlesR.Play();
-                        m_particlesRTransform.position = rh.point;
-                    }
-                    else m_particlesR.Stop();
+                        Vector3 pos0 = m_lasers[i].lightTransform.position;
+                        pos0 -= up * m_lightsYOffset;
+                        Vector3 direc = forward * Mathf.Cos(angle) + up * Mathf.Sin(angle);
+                        direc.Normalize();
+                        Vector3 pos1 = pos0 + direc * DISPLAY_RANGE;
+                        m_lasers[i].lineRenderer.SetPosition(0, pos0);
+                        m_lasers[i].lineRenderer.SetPosition(1, pos1);
+                        RaycastHit rh;
+                        if (Physics.Raycast(pos0, direc, out rh, RANGE))
+                        {
+                            if (!m_lasers[i].particles.isPlaying) m_lasers[i].particles.Play();
+                            m_lasers[i].particlesTransform.position = rh.point;
+                            if(rh.collider!=null)
+                            {
+                                GameObject go = rh.collider.gameObject;
+                                if(go!=m_lasers[i].contactObject)
+                                {
+                                    m_lasers[i].contactObject = go;
+                                    m_lasers[i].contactTime = 0;
+                                }
+                                else
+                                {
+                                    m_lasers[i].contactTime += Time.deltaTime;
+                                    if(m_lasers[i].contactTime>=TARGET_CONTACT_TIME)
+                                    {
+                                        //TODO : destruction
+                                    }
+                                }
+                            }
+                            else m_lasers[i].contactObject=null;
+                        }
+                        else m_lasers[i].particles.Stop();
+                   }
                 }    
                 break;
             case State.VALVE_CLOSING:
