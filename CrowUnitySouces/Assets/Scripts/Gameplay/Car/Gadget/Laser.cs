@@ -24,6 +24,10 @@ public class Laser : ButtonGadget
     private Car m_car;
     private LineRenderer m_leftLineRenderer;
     private LineRenderer m_rightLineRenderer;
+    private Transform m_particlesLTransform;
+    private Transform m_particlesRTransform;
+    private ParticleSystem m_particlesL;
+    private ParticleSystem m_particlesR;
     private float m_lightsYOffset;
 
     private enum State
@@ -54,6 +58,10 @@ public class Laser : ButtonGadget
         m_car = transform.parent.parent.parent.GetComponent<Car>();
         m_leftLineRenderer = m_leftLightTransform.GetComponent<LineRenderer>();
         m_rightLineRenderer = m_rightLightTransform.GetComponent<LineRenderer>();
+        m_particlesL = transform.FindChild("ParticlesL").GetComponent<ParticleSystem>();
+        m_particlesR = transform.FindChild("ParticlesR").GetComponent<ParticleSystem>();
+        m_particlesLTransform = transform.FindChild("ParticlesL");
+        m_particlesRTransform = transform.FindChild("ParticlesR");
 
         // Compute lightsYOffset
         Vector3 leftLightPos = m_leftLightTransform.position;
@@ -94,6 +102,8 @@ public class Laser : ButtonGadget
                     m_stateTimer.Reset(VALVE_CLOSING_TIME);
                     m_leftLineRenderer.enabled = false;
                     m_rightLineRenderer.enabled = false;
+                    m_particlesL.Stop();
+                    m_particlesR.Stop();
                 }
                 else
                 {
@@ -103,6 +113,7 @@ public class Laser : ButtonGadget
                     pos0L -= up * m_lightsYOffset;
                     Vector3 forward=m_car.getForwardVector();
                     Vector3 direc = forward * Mathf.Cos(angle) + up * Mathf.Sin(angle);
+                    direc.Normalize();
                     Vector3 pos1L = pos0L + direc * DISPLAY_RANGE;
                     Vector3 pos0R = m_rightLightTransform.position - up * m_lightsYOffset;
                     Vector3 pos1R = pos0R + direc * DISPLAY_RANGE;
@@ -110,6 +121,19 @@ public class Laser : ButtonGadget
                     m_leftLineRenderer.SetPosition(1, pos1L);
                     m_rightLineRenderer.SetPosition(0, pos0R);
                     m_rightLineRenderer.SetPosition(1, pos1R);
+                    RaycastHit rh;
+                    if (Physics.Raycast(pos0L, direc, out rh, RANGE))
+                    {
+                        if (!m_particlesL.isPlaying) m_particlesL.Play();
+                        m_particlesLTransform.position = rh.point;
+                    }
+                    else m_particlesL.Stop();
+                    if (Physics.Raycast(pos0R, direc, out rh, RANGE))
+                    {
+                        if (!m_particlesR.isPlaying) m_particlesR.Play();
+                        m_particlesRTransform.position = rh.point;
+                    }
+                    else m_particlesR.Stop();
                 }    
                 break;
             case State.VALVE_CLOSING:
