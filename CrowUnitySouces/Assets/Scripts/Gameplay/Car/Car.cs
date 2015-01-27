@@ -14,6 +14,10 @@ public class Car : MonoBehaviour
 	public float antiRoll=8000;
 	public float downforce=10;
     public float wheelRotation = 180;
+    public float fakeSoundAcceleration = 0.9f;
+    public float fakeSoundBrakes = 0.7f;
+    public float fakeSoundBrakesSpeedFriction = 0.2f;
+    public float fakeSoundInstantThresholdKmh = 2f;
 
 	// Components
 	private Engine engine;
@@ -21,7 +25,8 @@ public class Car : MonoBehaviour
 	private Rigidbody body;
 	private WheelCollider[] wheels;
 	private Transmission transmission;
-
+    private RailsControl railsControl;
+   
 	// Private attributes
 	private float dragCoef;
 	private float mass;
@@ -45,6 +50,9 @@ public class Car : MonoBehaviour
     private FMOD.Studio.ParameterInstance tiresFriction;
     private FMOD.Studio.ParameterInstance tiresSpeed;
     private FMOD.Studio.ParameterInstance tiresGround;
+
+    private float fakeSoundSpeed=0; // 0=0m/s, 1=max speed
+    private int fakeGear = 0;
 
      // MonoBehaviour methods
 	void Start ()
@@ -141,11 +149,36 @@ public class Car : MonoBehaviour
 		// Store old inputs
 		oldInputs=inputs;
 		
+        // Update fake speed
+        float frictionSound = Mathf.Abs(inputs.steering);
+        float tgtFakeSpeed = forwardVelocity / (railsControl ? railsControl.setSpeedKmh/3.6f : maxSpeed);
+        if (tgtFakeSpeed < fakeSoundSpeed - fakeSoundInstantThresholdKmh / 3.6)
+            fakeSoundSpeed = tgtFakeSpeed;
+        float lerpVal= tgtFakeSpeed>fakeSoundSpeed ? Mathf.Pow(fakeSoundAcceleration,Time.fixedDeltaTime)
+                                                : Mathf.Pow(fakeSoundBrakes,Time.fixedDeltaTime);
+        fakeSoundSpeed -= frictionSound * fakeSoundBrakesSpeedFriction*Time.fixedDeltaTime;
+        if (fakeSoundSpeed < 0) fakeSoundSpeed = 0;
+        fakeSoundSpeed = Mathf.Lerp(tgtFakeSpeed, fakeSoundSpeed, lerpVal);
+        float fakeSpeed = fakeSoundSpeed * maxSpeed;
+        int newFakeGear;
+        float fakeRPM = transmission.getMaxPossibleRPM(fakeSpeed, engine.getMaxRpm(), out newFakeGear);
+        if(newFakeGear>fakeGear)
+        {
+            fakeGear = newFakeGear;
+            FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Car Mechanics/carGearUp", transform.position);
+        }
+        if(newFakeGear<fakeGear)
+        {
+            fakeGear = newFakeGear;
+            FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Car Mechanics/carGearDown", transform.position);
+        }
+
         // Update sounds
-        float soundRpm=rpm*ENGINE_SOUND_MAX_RPM/engine.getMaxRpm();
+        float soundRpm=fakeRPM*ENGINE_SOUND_MAX_RPM/engine.getMaxRpm();
         engineRPM.setValue(soundRpm);
-        float frictionSound = Mathf.Abs(inputs.steering);// inputs.brake;
-        tiresGround.setValue(isOnGround() ? 1 : 0);
+        float onGround = 0;
+        for (int i = 0; i < 4; i++) if (wheels[i].isGrounded) onGround = 1;
+        tiresGround.setValue(onGround);
         tiresFriction.setValue(frictionSound);
         tiresSpeed.setValue(forwardVelocity / maxSpeed);       
 		// Debug print
@@ -179,6 +212,7 @@ public class Car : MonoBehaviour
 		}
 		control=controls[0];
 		control.init(0);
+        railsControl = gameObject.GetComponent<RailsControl>();
 		transmission=gameObject.GetComponent<Transmission>();
 		if(transmission==null)
 		{
@@ -209,13 +243,6 @@ public class Car : MonoBehaviour
 		body.centerOfMass=centerOfMass;
 	}
 
-    public bool isOnGround()
-    {
-        bool ret = false;
-        for (int i = 0; i < 4; i++) if (wheels[i].isGrounded) ret = true;
-        return ret;
-    }
-
     public void InstantSetSpeedKmh(float speedKmh)
     {
         InstantSetSpeed(speedKmh / 3.6f);
@@ -223,7 +250,7 @@ public class Car : MonoBehaviour
 
     public void InstantSetSpeed(float speed)
     {
-        if(isOnGround()) body.velocity = getForwardVector() * speed;
+        body.velocity = getForwardVector() * speed;
     }
 
 	// Public getters
@@ -255,11 +282,6 @@ public class Car : MonoBehaviour
 	public Vector3 getForwardVector()
 	{
 		return body.transform.forward;
-	}
-	
-	public Vector3 getUpVector()
-	{
-		return body.transform.up;
 	}
 	
 }

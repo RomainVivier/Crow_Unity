@@ -173,7 +173,29 @@ public class FMOD_StudioEventEmitter : MonoBehaviour
 			var attributes = UnityUtil.to3DAttributes(gameObject, cachedRigidBody);			
 			ERRCHECK(evt.set3DAttributes(attributes));
 		}
+	}    
+    
+    #if (UNITY_EDITOR)
+	void OnDrawGizmosSelected() 
+	{
+        if (asset != null && enabled)
+        {
+            FMOD.Studio.EventDescription desc = null;
+            desc = FMODEditorExtension.GetEventDescription(asset.id);
+
+            if (desc != null)
+            {
+                float max, min;
+                desc.getMaximumDistance(out max);
+                desc.getMinimumDistance(out min);
+
+                Gizmos.color = Color.blue;
+                Gizmos.DrawWireSphere(transform.position, min);
+                Gizmos.DrawWireSphere(transform.position, max);
+            }
+        }		
 	}
+    #endif
 	
 	FMOD.RESULT ERRCHECK(FMOD.RESULT result)
 	{

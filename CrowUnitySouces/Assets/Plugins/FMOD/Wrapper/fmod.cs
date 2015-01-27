@@ -1,6 +1,6 @@
 /* ========================================================================================== */
 /*                                                                                            */
-/* FMOD Ex - C# Wrapper . Copyright (c), Firelight Technologies Pty, Ltd. 2004-2014.          */
+/* FMOD Ex - C# Wrapper . Copyright (c), Firelight Technologies Pty, Ltd. 2004-2015.          */
 /*                                                                                            */
 /* ========================================================================================== */
 
@@ -15,16 +15,19 @@ namespace FMOD
         0xaaaabbcc -> aaaa = major version number.  bb = minor version number.  cc = development version number.
     */
     public class VERSION
-	{
+    {
+        public const int    number = 0x00010511;
 #if UNITY_IPHONE && !UNITY_EDITOR
-		public const string dll    = "__Internal";
-#elif (UNITY_PS4 || UNITY_WIIU) && !UNITY_EDITOR
-		public const string dll    = "libfmod";
+        public const string dll    = "__Internal";
+#elif (UNITY_PS4) && !UNITY_EDITOR
+        public const string dll    = "libfmod";
+#elif (UNITY_WIIU) && !UNITY_EDITOR
+        public const string dll    = "libfmodstudio";
 #else
-		public const string dll    = "fmod";
+        public const string dll    = "fmod";
 #endif
-		public const int    number = 0x00010500;
     }
+
 
     /*
         FMOD types
@@ -122,6 +125,8 @@ namespace FMOD
         ERR_STUDIO_NOT_LOADED,     /* The specified resource is not loaded, so it can't be unloaded. */
 
         ERR_INVALID_STRING,        /* An invalid string was passed to this function. */
+        ERR_ALREADY_LOCKED,        /* The specified resource is already locked. */
+        ERR_NOT_LOCKED,            /* The specified resource is not locked, so it can't be unlocked. */
     }
 
 
@@ -339,7 +344,6 @@ namespace FMOD
         FMOD_Debug_Initialize
     ]
     */
-    [Flags]
     public enum DEBUG_MODE : int
     {
         TTY,        /* Default log location per platform, i.e. Visual Studio output window, stderr, LogCat, etc */
@@ -363,7 +367,7 @@ namespace FMOD
     ]
     */
     [Flags]
-    public enum DEBUG_FLAGS : int
+    public enum DEBUG_FLAGS : uint
     {
         NONE                    = 0x00000000,   /* Disable all messages */
         ERROR                   = 0x00000001,   /* Enable only error messages. */
@@ -563,7 +567,7 @@ namespace FMOD
     ]
     */
     [Flags]
-    public enum CHANNELMASK : int
+    public enum CHANNELMASK : uint
     {
         FRONT_LEFT             = 0x00000001,
         FRONT_RIGHT            = 0x00000002,
@@ -577,10 +581,12 @@ namespace FMOD
 
         MONO                   = (FRONT_LEFT),
         STEREO                 = (FRONT_LEFT | FRONT_RIGHT),
+        LRC                    = (FRONT_LEFT | FRONT_RIGHT | FRONT_CENTER),
         QUAD                   = (FRONT_LEFT | FRONT_RIGHT | SURROUND_LEFT | SURROUND_RIGHT),
         SURROUND               = (FRONT_LEFT | FRONT_RIGHT | FRONT_CENTER | SURROUND_LEFT | SURROUND_RIGHT),
         _5POINT1               = (FRONT_LEFT | FRONT_RIGHT | FRONT_CENTER | LOW_FREQUENCY | SURROUND_LEFT | SURROUND_RIGHT),
         _5POINT1_REARS         = (FRONT_LEFT | FRONT_RIGHT | FRONT_CENTER | LOW_FREQUENCY | BACK_LEFT | BACK_RIGHT),
+        _7POINT0               = (FRONT_LEFT | FRONT_RIGHT | FRONT_CENTER | SURROUND_LEFT | SURROUND_RIGHT | BACK_LEFT | BACK_RIGHT),
         _7POINT1               = (FRONT_LEFT | FRONT_RIGHT | FRONT_CENTER | LOW_FREQUENCY | SURROUND_LEFT | SURROUND_RIGHT | BACK_LEFT | BACK_RIGHT)
     }
 
@@ -661,55 +667,39 @@ namespace FMOD
     }
 
     /*
-    [ENUM]
+    [DEFINE]
     [
+        [NAME]
+        FMOD_INITFLAGS
+
         [DESCRIPTION]
+        Initialization flags.  Use them with System::init in the *flags* parameter to change various behavior.
 
         [REMARKS]
-
-        [SEE_ALSO]
-    ]
-    */
-    public enum CAPS
-    {
-        NONE                   = 0x00000000,    /* Device has no special capabilities. */
-        HARDWARE               = 0x00000001,    /* Device supports hardware mixing. */
-        HARDWARE_EMULATED      = 0x00000002,    /* User has device set to 'Hardware acceleration = off' in control panel, and now extra 200ms latency is incurred. */
-        OUTPUT_MULTICHANNEL    = 0x00000004,    /* Device can do multichannel output, ie greater than 2 channels. */
-        OUTPUT_FORMAT_PCM8     = 0x00000008,    /* Device can output to 8bit integer PCM. */
-        OUTPUT_FORMAT_PCM16    = 0x00000010,    /* Device can output to 16bit integer PCM. */
-        OUTPUT_FORMAT_PCM24    = 0x00000020,    /* Device can output to 24bit integer PCM. */
-        OUTPUT_FORMAT_PCM32    = 0x00000040,    /* Device can output to 32bit integer PCM. */
-        OUTPUT_FORMAT_PCMFLOAT = 0x00000080,    /* Device can output to 32bit floating point PCM. */
-        REVERB_LIMITED         = 0x00002000     /* Device supports some form of limited hardware reverb, maybe parameterless and only selectable by environment. */
-    }
-
-    /*
-    [ENUM]
-    [
-        [DESCRIPTION]
-        Initialization flags.  Use them with System::init in the flags parameter to change various behaviour.
-
-        [REMARKS]
+        Use System::setAdvancedSettings to adjust settings for some of the features that are enabled by these flags.
 
         [SEE_ALSO]
         System::init
+        System::update
+        System::setAdvancedSettings
+        Channel::set3DOcclusion
     ]
     */
     [Flags]
-    public enum INITFLAGS : int
+    public enum INITFLAGS : uint
     {
         NORMAL                    = 0x00000000, /* Initialize normally */
         STREAM_FROM_UPDATE        = 0x00000001, /* No stream thread is created internally.  Streams are driven from System::update.  Mainly used with non-realtime outputs. */
         MIX_FROM_UPDATE           = 0x00000002, /* Win/Wii/PS3/Xbox/Xbox 360 Only - FMOD Mixer thread is woken up to do a mix when System::update is called rather than waking periodically on its own timer. */
         _3D_RIGHTHANDED           = 0x00000004, /* FMOD will treat +X as right, +Y as up and +Z as backwards (towards you). */
-        SOFTWARE_DISABLE          = 0x00000100, /* Disable software mixer to save memory.  Anything created with FMOD_SOFTWARE will fail and DSP will not work. */
-        CHANNEL_LOWPASS           = 0x00000200, /* All FMOD_3D based voices will add a software lowpass filter effect into the DSP chain which is automatically used when Channel::set3DOcclusion is used or the geometry API.   This also causes sounds to sound duller when the sound goes behind the listener, as a fake HRTF style effect.  Use System::setAdvancedSettings to disable or adjust cutoff frequency for this feature. */
+        CHANNEL_LOWPASS           = 0x00000100, /* All FMOD_3D based voices will add a software lowpass filter effect into the DSP chain which is automatically used when Channel::set3DOcclusion is used or the geometry API.   This also causes sounds to sound duller when the sound goes behind the listener, as a fake HRTF style effect.  Use System::setAdvancedSettings to disable or adjust cutoff frequency for this feature. */
+        CHANNEL_DISTANCEFILTER    = 0x00000200, /* All FMOD_3D based voices will add a software lowpass and highpass filter effect into the DSP chain which will act as a distance-automated bandpass filter. Use System::setAdvancedSettings to adjust the center frequency. */
         PROFILE_ENABLE            = 0x00010000, /* Enable TCP/IP based host which allows FMOD Designer or FMOD Profiler to connect to it, and view memory, CPU and the DSP network graph in real-time. */
         VOL0_BECOMES_VIRTUAL      = 0x00020000, /* Any sounds that are 0 volume will go virtual and not be processed except for having their positions updated virtually.  Use System::setAdvancedSettings to adjust what volume besides zero to switch to virtual at. */
         GEOMETRY_USECLOSEST       = 0x00040000, /* With the geometry engine, only process the closest polygon rather than accumulating all polygons the sound to listener line intersects. */
         PREFER_DOLBY_DOWNMIX      = 0x00080000, /* When using FMOD_SPEAKERMODE_5POINT1 with a stereo output device, use the Dolby Pro Logic II downmix algorithm instead of the SRS Circle Surround algorithm. */
-        THREAD_UNSAFE             = 0x00100000  /* Disables thread safety for API calls. Only use this if FMOD low level is being called from a single thread, and if Studio API is not being used! */
+        THREAD_UNSAFE             = 0x00100000, /* Disables thread safety for API calls. Only use this if FMOD low level is being called from a single thread, and if Studio API is not being used! */
+        PROFILE_METER_ALL         = 0x00200000  /* Slower, but adds level metering for every single DSP unit in the graph.  Use DSP::setMeteringEnabled to turn meters off individually. */
     }
 
 
@@ -743,7 +733,6 @@ namespace FMOD
         PLAYLIST,         /* Information only from ASX/PLS/M3U/WAX playlists */
         RAW,              /* Raw PCM data. */
         S3M,              /* ScreamTracker 3. */
-        SF2,              /* Sound font 2 format. */
         USER,             /* User created sound. */
         WAV,              /* Microsoft WAV. */
         XM,               /* FastTracker 2 XM. */
@@ -755,7 +744,7 @@ namespace FMOD
         AT9,              /* NGP ATRAC 9 format */
         VORBIS,           /* Raw vorbis */
         MEDIA_FOUNDATION, /* Windows Store Application built in system codecs */
-
+        MEDIACODEC,       /* Android MediaCodec */
         MAX,              /* Maximum number of sound types supported. */
     }
 
@@ -835,7 +824,8 @@ namespace FMOD
         Sound::getOpenState
     ]
     */
-    public enum MODE :uint
+    [Flags]
+    public enum MODE : uint
     {
         DEFAULT                = 0x00000000,  /* Default for all modes listed below. FMOD_LOOP_OFF, FMOD_2D, FMOD_3D_WORLDRELATIVE, FMOD_3D_INVERSEROLLOFF */
         LOOP_OFF               = 0x00000001,  /* For non looping sounds. (default).  Overrides FMOD_LOOP_NORMAL / FMOD_LOOP_BIDI. */
@@ -858,9 +848,9 @@ namespace FMOD
         _3D_HEADRELATIVE       = 0x00040000,  /* Make the sound's position, velocity and orientation relative to the listener. */
         _3D_WORLDRELATIVE      = 0x00080000,  /* Make the sound's position, velocity and orientation absolute (relative to the world). (DEFAULT) */
         _3D_INVERSEROLLOFF     = 0x00100000,  /* This sound will follow the inverse rolloff model where mindistance = full volume, maxdistance = where sound stops attenuating, and rolloff is fixed according to the global rolloff factor.  (DEFAULT) */
-        _3D_LINEARSQUAREROLLOFF= 0x00400000,  /* This sound will follow a linear-square rolloff model where mindistance = full volume, maxdistance = silence.  Rolloffscale is ignored. */
-        _3D_LOGROLLOFF         = 0x00100000,  /* This sound will follow the standard logarithmic rolloff model where mindistance = full volume, maxdistance = where sound stops attenuating, and rolloff is fixed according to the global rolloff factor.  (default) */
         _3D_LINEARROLLOFF      = 0x00200000,  /* This sound will follow a linear rolloff model where mindistance = full volume, maxdistance = silence.  */
+        _3D_LINEARSQUAREROLLOFF= 0x00400000,  /* This sound will follow a linear-square rolloff model where mindistance = full volume, maxdistance = silence.  Rolloffscale is ignored. */
+        _3D_INVERSETAPEREDROLLOFF = 0x00800000,  /* This sound will follow the inverse rolloff model at distances close to mindistance and a linear-square rolloff close to maxdistance. */
         _3D_CUSTOMROLLOFF      = 0x04000000,  /* This sound will follow a rolloff model defined by Sound::set3DCustomRolloff / Channel::set3DCustomRolloff.  */
         _3D_IGNOREGEOMETRY     = 0x40000000,  /* Is not affect by geometry occlusion.  If not specified in Sound::setMode, or Channel::setMode, the flag is cleared and it is affected by geometry again. */
         IGNORETAGS             = 0x02000000,  /* Skips id3v2/asf/etc tag checks when opening a sound, to reduce seek/read overhead when opening files (helps with CD performance). */
@@ -1008,7 +998,8 @@ namespace FMOD
         STUDIO_EVENTINSTANCE,
         STUDIO_PARAMETERINSTANCE,
         STUDIO_CUEINSTANCE,
-        STUDIO_MIXERSTRIP,
+        STUDIO_BUS,
+        STUDIO_VCA,
         STUDIO_BANK
     }
 
@@ -1039,25 +1030,30 @@ namespace FMOD
     }
 
     /*
-    [ENUM]
+    [DEFINE]
     [
+        [NAME]
+        FMOD_SYSTEM_CALLBACK_TYPE
+
         [DESCRIPTION]
         These callback types are used with System::setCallback.
 
         [REMARKS]
-        Each callback has commanddata parameters passed as int unique to the type of callback.<br>
+        Each callback has commanddata parameters passed as void* unique to the type of callback.<br>
         See reference to FMOD_SYSTEM_CALLBACK to determine what they might mean for each type of callback.<br>
         <br>
-        <b>Note!</b>  Currently the user must call System::update for these callbacks to trigger!
+        <b>Note!</b> Using FMOD_SYSTEM_CALLBACK_DEVICELISTCHANGED (on Mac only) requires the application to be running an event loop which will allow external changes to device list to be detected by FMOD.<br>
+        <br>
+        <b>Note!</b> The 'system' object pointer will be null for FMOD_SYSTEM_CALLBACK_THREADCREATED and FMOD_SYSTEM_CALLBACK_MEMORYALLOCATIONFAILED callbacks.
 
         [SEE_ALSO]
         System::setCallback
-        FMOD_SYSTEM_CALLBACK
         System::update
+        DSP::addInput
     ]
     */
     [Flags]
-    public enum SYSTEM_CALLBACK_TYPE : int
+    public enum SYSTEM_CALLBACK_TYPE : uint
     {
         DEVICELISTCHANGED      = 0x00000001,  /* Called from System::update when the enumerated list of devices has changed. */
         DEVICELOST             = 0x00000002,  /* Called from System::update when an output device has been lost due to control panel parameter changes and FMOD cannot automatically recover. */
@@ -1259,12 +1255,16 @@ namespace FMOD
 
 
     /*
-    [ENUM]
+    [DEFINE]
     [
+        [NAME]
+        FMOD_TIMEUNIT
+
         [DESCRIPTION]
         List of time types that can be returned by Sound::getLength and used with Channel::setPosition or Channel::getPosition.
 
         [REMARKS]
+        Do not combine flags except FMOD_TIMEUNIT_BUFFERED.
 
         [SEE_ALSO]
         Sound::getLength
@@ -1272,7 +1272,8 @@ namespace FMOD
         Channel::getPosition
     ]
     */
-    public enum TIMEUNIT
+    [Flags]
+    public enum TIMEUNIT : uint
     {
         MS                = 0x00000001,  /* Milliseconds. */
         PCM               = 0x00000002,  /* PCM Samples, related to milliseconds * samplerate / 1000. */
@@ -1502,33 +1503,33 @@ namespace FMOD
     System::setReverbProperties
     ]
     */
-    class PRESET
+    public class PRESET
     {
         /*                                                                           Instance  Env   Diffus  Room   RoomHF  RmLF DecTm   DecHF  DecLF   Refl  RefDel   Revb  RevDel  ModTm  ModDp   HFRef    LFRef   Diffus  Densty  FLAGS */
-        public REVERB_PROPERTIES OFF()                 { return new REVERB_PROPERTIES(  1000,    7,  11, 5000, 100, 100, 100, 250, 0,    20,  96, -80.0f );}
-        public REVERB_PROPERTIES GENERIC()             { return new REVERB_PROPERTIES(  1500,    7,  11, 5000,  83, 100, 100, 250, 0, 14500,  96,  -8.0f );}
-        public REVERB_PROPERTIES PADDEDCELL()          { return new REVERB_PROPERTIES(   170,    1,   2, 5000,  10, 100, 100, 250, 0,   160,  84,  -7.8f );}
-        public REVERB_PROPERTIES ROOM()                { return new REVERB_PROPERTIES(   400,    2,   3, 5000,  83, 100, 100, 250, 0,  6050,  88,  -9.4f );}
-        public REVERB_PROPERTIES BATHROOM()            { return new REVERB_PROPERTIES(  1500,    7,  11, 5000,  54, 100,  60, 250, 0,  2900,  83,   0.5f );}
-        public REVERB_PROPERTIES LIVINGROOM()          { return new REVERB_PROPERTIES(   500,    3,   4, 5000,  10, 100, 100, 250, 0,   160,  58, -19.0f );}
-        public REVERB_PROPERTIES STONEROOM()           { return new REVERB_PROPERTIES(  2300,   12,  17, 5000,  64, 100, 100, 250, 0,  7800,  71,  -8.5f );}
-        public REVERB_PROPERTIES AUDITORIUM()          { return new REVERB_PROPERTIES(  4300,   20,  30, 5000,  59, 100, 100, 250, 0,  5850,  64, -11.7f );}
-        public REVERB_PROPERTIES CONCERTHALL()         { return new REVERB_PROPERTIES(  3900,   20,  29, 5000,  70, 100, 100, 250, 0,  5650,  80,  -9.8f );}
-        public REVERB_PROPERTIES CAVE()                { return new REVERB_PROPERTIES(  2900,   15,  22, 5000, 100, 100, 100, 250, 0, 20000,  59, -11.3f );}
-        public REVERB_PROPERTIES ARENA()               { return new REVERB_PROPERTIES(  7200,   20,  30, 5000,  33, 100, 100, 250, 0,  4500,  80,  -9.6f );}
-        public REVERB_PROPERTIES HANGAR()              { return new REVERB_PROPERTIES( 10000,   20,  30, 5000,  23, 100, 100, 250, 0,  3400,  72,  -7.4f );}
-        public REVERB_PROPERTIES CARPETTEDHALLWAY()    { return new REVERB_PROPERTIES(   300,    2,  30, 5000,  10, 100, 100, 250, 0,   500,  56, -24.0f );}
-        public REVERB_PROPERTIES HALLWAY()             { return new REVERB_PROPERTIES(  1500,    7,  11, 5000,  59, 100, 100, 250, 0,  7800,  87,  -5.5f );}
-        public REVERB_PROPERTIES STONECORRIDOR()       { return new REVERB_PROPERTIES(   270,   13,  20, 5000,  79, 100, 100, 250, 0,  9000,  86,  -6.0f );}
-        public REVERB_PROPERTIES ALLEY()               { return new REVERB_PROPERTIES(  1500,    7,  11, 5000,  86, 100, 100, 250, 0,  8300,  80,  -9.8f );}
-        public REVERB_PROPERTIES FOREST()              { return new REVERB_PROPERTIES(  1500,  162,  88, 5000,  54,  79, 100, 250, 0,   760,  94, -12.3f );}
-        public REVERB_PROPERTIES CITY()                { return new REVERB_PROPERTIES(  1500,    7,  11, 5000,  67,  50, 100, 250, 0,  4050,  66, -26.0f );}
-        public REVERB_PROPERTIES MOUNTAINS()           { return new REVERB_PROPERTIES(  1500,  300, 100, 5000,  21,  27, 100, 250, 0,  1220,  82, -24.0f );}
-        public REVERB_PROPERTIES QUARRY()              { return new REVERB_PROPERTIES(  1500,   61,  25, 5000,  83, 100, 100, 250, 0,  3400, 100,  -5.0f );}
-        public REVERB_PROPERTIES PLAIN()               { return new REVERB_PROPERTIES(  1500,  179, 100, 5000,  50,  21, 100, 250, 0,  1670,  65, -28.0f );}
-        public REVERB_PROPERTIES PARKINGLOT()          { return new REVERB_PROPERTIES(  1700,    8,  12, 5000, 100, 100, 100, 250, 0, 20000,  56, -19.5f );}
-        public REVERB_PROPERTIES SEWERPIPE()           { return new REVERB_PROPERTIES(  2800,   14,  21, 5000,  14,  80,  60, 250, 0,  3400,  66,   1.2f );}
-        public REVERB_PROPERTIES UNDERWATER()          { return new REVERB_PROPERTIES(  1500,    7,  11, 5000,  10, 100, 100, 250, 0,   500,  92,   7.0f );}
+        public static REVERB_PROPERTIES OFF()                 { return new REVERB_PROPERTIES(  1000,    7,  11, 5000, 100, 100, 100, 250, 0,    20,  96, -80.0f );}
+        public static REVERB_PROPERTIES GENERIC()             { return new REVERB_PROPERTIES(  1500,    7,  11, 5000,  83, 100, 100, 250, 0, 14500,  96,  -8.0f );}
+        public static REVERB_PROPERTIES PADDEDCELL()          { return new REVERB_PROPERTIES(   170,    1,   2, 5000,  10, 100, 100, 250, 0,   160,  84,  -7.8f );}
+        public static REVERB_PROPERTIES ROOM()                { return new REVERB_PROPERTIES(   400,    2,   3, 5000,  83, 100, 100, 250, 0,  6050,  88,  -9.4f );}
+        public static REVERB_PROPERTIES BATHROOM()            { return new REVERB_PROPERTIES(  1500,    7,  11, 5000,  54, 100,  60, 250, 0,  2900,  83,   0.5f );}
+        public static REVERB_PROPERTIES LIVINGROOM()          { return new REVERB_PROPERTIES(   500,    3,   4, 5000,  10, 100, 100, 250, 0,   160,  58, -19.0f );}
+        public static REVERB_PROPERTIES STONEROOM()           { return new REVERB_PROPERTIES(  2300,   12,  17, 5000,  64, 100, 100, 250, 0,  7800,  71,  -8.5f );}
+        public static REVERB_PROPERTIES AUDITORIUM()          { return new REVERB_PROPERTIES(  4300,   20,  30, 5000,  59, 100, 100, 250, 0,  5850,  64, -11.7f );}
+        public static REVERB_PROPERTIES CONCERTHALL()         { return new REVERB_PROPERTIES(  3900,   20,  29, 5000,  70, 100, 100, 250, 0,  5650,  80,  -9.8f );}
+        public static REVERB_PROPERTIES CAVE()                { return new REVERB_PROPERTIES(  2900,   15,  22, 5000, 100, 100, 100, 250, 0, 20000,  59, -11.3f );}
+        public static REVERB_PROPERTIES ARENA()               { return new REVERB_PROPERTIES(  7200,   20,  30, 5000,  33, 100, 100, 250, 0,  4500,  80,  -9.6f );}
+        public static REVERB_PROPERTIES HANGAR()              { return new REVERB_PROPERTIES( 10000,   20,  30, 5000,  23, 100, 100, 250, 0,  3400,  72,  -7.4f );}
+        public static REVERB_PROPERTIES CARPETTEDHALLWAY()    { return new REVERB_PROPERTIES(   300,    2,  30, 5000,  10, 100, 100, 250, 0,   500,  56, -24.0f );}
+        public static REVERB_PROPERTIES HALLWAY()             { return new REVERB_PROPERTIES(  1500,    7,  11, 5000,  59, 100, 100, 250, 0,  7800,  87,  -5.5f );}
+        public static REVERB_PROPERTIES STONECORRIDOR()       { return new REVERB_PROPERTIES(   270,   13,  20, 5000,  79, 100, 100, 250, 0,  9000,  86,  -6.0f );}
+        public static REVERB_PROPERTIES ALLEY()               { return new REVERB_PROPERTIES(  1500,    7,  11, 5000,  86, 100, 100, 250, 0,  8300,  80,  -9.8f );}
+        public static REVERB_PROPERTIES FOREST()              { return new REVERB_PROPERTIES(  1500,  162,  88, 5000,  54,  79, 100, 250, 0,   760,  94, -12.3f );}
+        public static REVERB_PROPERTIES CITY()                { return new REVERB_PROPERTIES(  1500,    7,  11, 5000,  67,  50, 100, 250, 0,  4050,  66, -26.0f );}
+        public static REVERB_PROPERTIES MOUNTAINS()           { return new REVERB_PROPERTIES(  1500,  300, 100, 5000,  21,  27, 100, 250, 0,  1220,  82, -24.0f );}
+        public static REVERB_PROPERTIES QUARRY()              { return new REVERB_PROPERTIES(  1500,   61,  25, 5000,  83, 100, 100, 250, 0,  3400, 100,  -5.0f );}
+        public static REVERB_PROPERTIES PLAIN()               { return new REVERB_PROPERTIES(  1500,  179, 100, 5000,  50,  21, 100, 250, 0,  1670,  65, -28.0f );}
+        public static REVERB_PROPERTIES PARKINGLOT()          { return new REVERB_PROPERTIES(  1700,    8,  12, 5000, 100, 100, 100, 250, 0, 20000,  56, -19.5f );}
+        public static REVERB_PROPERTIES SEWERPIPE()           { return new REVERB_PROPERTIES(  2800,   14,  21, 5000,  14,  80,  60, 250, 0,  3400,  66,   1.2f );}
+        public static REVERB_PROPERTIES UNDERWATER()          { return new REVERB_PROPERTIES(  1500,    7,  11, 5000,  10, 100, 100, 250, 0,   500,  92,   7.0f );}
     }
 
     /*
@@ -1717,7 +1718,12 @@ namespace FMOD
     {
         public RESULT release                ()
         {
-            return FMOD5_System_Release(rawPtr);
+            RESULT result = FMOD5_System_Release(rawPtr);
+            if (result == RESULT.OK)
+            {
+                rawPtr = IntPtr.Zero;
+            }
+            return result;
         }
 
 
@@ -1735,15 +1741,15 @@ namespace FMOD
             return FMOD5_System_GetNumDrivers(rawPtr, out numdrivers);
         }
         public RESULT getDriverInfo          (int id, StringBuilder name, int namelen, out GUID guid, out int systemrate, out SPEAKERMODE speakermode, out int speakermodechannels)
-		{
-			IntPtr stringMem = Marshal.AllocHGlobal(name.Capacity);
-			
-			RESULT result = FMOD5_System_GetDriverInfo(rawPtr, id, stringMem, namelen, out guid, out systemrate, out speakermode, out speakermodechannels);
-			
-			StringMarshalHelper.NativeToBuilder(name, stringMem);
-			Marshal.FreeHGlobal(stringMem);
+        {
+            IntPtr stringMem = Marshal.AllocHGlobal(name.Capacity);
 
-			return result;
+            RESULT result = FMOD5_System_GetDriverInfo(rawPtr, id, stringMem, namelen, out guid, out systemrate, out speakermode, out speakermodechannels);
+
+            StringMarshalHelper.NativeToBuilder(name, stringMem);
+            Marshal.FreeHGlobal(stringMem);
+
+            return result;
         }
         public RESULT setDriver              (int driver)
         {
@@ -1868,6 +1874,12 @@ namespace FMOD
         {
             return FMOD5_System_RegisterDSP(rawPtr, ref description, out handle);
         }
+        /*
+        public RESULT registerOutput(ref OUTPUT_DESCRIPTION description, out uint handle)
+        {
+            return FMOD5_System_RegisterOutput(rawPtr, ref description, out handle);
+        }
+        */
 
         // Init/Close.
         public RESULT init                   (int maxchannels, INITFLAGS flags, IntPtr extradriverdata)
@@ -2326,6 +2338,8 @@ namespace FMOD
         //[DllImport(VERSION.dll)]
         private static extern RESULT FMOD5_System_RegisterDSP            (IntPtr system, ref DSP_DESCRIPTION description, out uint handle);
         [DllImport(VERSION.dll)]
+        //private static extern RESULT FMOD5_System_RegisterOutput         (IntPtr system, ref OUTPUT_DESCRIPTION description, out uint handle);
+        //[DllImport(VERSION.dll)]
         private static extern RESULT FMOD5_System_Init                   (IntPtr system, int maxchannels, INITFLAGS flags, IntPtr extradriverdata);
         [DllImport(VERSION.dll)]
         private static extern RESULT FMOD5_System_Close                  (IntPtr system);
@@ -2934,6 +2948,10 @@ namespace FMOD
         {
             return FMOD5_ChannelGroup_AddFadePoint(rawPtr, dspclock, volume);
         }
+        public RESULT setFadePointRamp(ulong dspclock, float volume)
+        {
+            return FMOD5_ChannelGroup_SetFadePointRamp(rawPtr, dspclock, volume);
+        }
         public RESULT removeFadePoints(ulong dspclock_start, ulong dspclock_end)
         {
             return FMOD5_ChannelGroup_RemoveFadePoints(rawPtr, dspclock_start, dspclock_end);
@@ -3129,6 +3147,8 @@ namespace FMOD
         private static extern RESULT FMOD5_ChannelGroup_GetDelay(IntPtr channelgroup, out ulong dspclock_start, out ulong dspclock_end, out bool stopchannels);
         [DllImport(VERSION.dll)]
         private static extern RESULT FMOD5_ChannelGroup_AddFadePoint(IntPtr channelgroup, ulong dspclock, float volume);
+        [DllImport(VERSION.dll)]
+        private static extern RESULT FMOD5_ChannelGroup_SetFadePointRamp(IntPtr channelgroup, ulong dspclock, float volume);
         [DllImport(VERSION.dll)]
         private static extern RESULT FMOD5_ChannelGroup_RemoveFadePoints(IntPtr channelgroup, ulong dspclock_start, ulong dspclock_end);
         [DllImport(VERSION.dll)]
@@ -3812,7 +3832,7 @@ namespace FMOD
         {
             return FMOD5_DSP_GetUserData(rawPtr, out userdata);
         }
-        
+
         // Metering.
         public RESULT setMeteringEnabled(bool inputEnabled, bool outputEnabled)
         {

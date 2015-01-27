@@ -78,21 +78,6 @@ public class PoolManager : MonoBehaviour {
         foreach (PoolKey pk in _pool.Dictionary.Keys)
         {
             pk.Id = pk.Object.name;
-
-            //for (int i = 0; i < pk.Number; i++)
-            //{
-            //    GameObject tempObject = GameObject.Instantiate(pk.Object) as GameObject;
-            //    tempObject.SetActive(false);
-            //    tempObject.name = pk.Id;
-            //    PoolableObject tempPO = tempObject.GetComponent<PoolableObject>();
-            //    if (tempPO == null)
-            //    {
-            //        Debug.LogError("GameObject named : " + pk.Id + ", has no PoolableObject component.");
-            //        return;
-            //    }
-            //    tempPO.IsPoolable = true;
-            //    _pool.Dictionary[pk].Add(tempPO);
-            //}
         }
     }
 
@@ -111,23 +96,9 @@ public class PoolManager : MonoBehaviour {
         tempObject.SetActive(false);
         tempObject.name = poolKey.Id;
         PoolableObject tempPO = tempObject.GetComponent<PoolableObject>();
+        tempPO.Init();
         return tempPO;
 
-
-        //for (int i = 0; i < poolType.Key.Number; i++)
-        //{
-        //    GameObject tempObject = GameObject.Instantiate(poolType.Key.Object) as GameObject;
-        //    tempObject.SetActive(false);
-        //    tempObject.name = poolType.Key.Id;
-        //    PoolableObject tempPO = tempObject.GetComponent<PoolableObject>();
-        //    if (tempPO == null)
-        //    {
-        //        Debug.LogError("GameObject named : " + poolType.Key.Id + ", has no PoolableObject component.");
-        //        return;
-        //    }
-        //    tempPO.IsPoolable = true;
-        //    _pool.Dictionary[poolType.Key].Add(tempPO);
-        //}
     }
 
     public GameObject GetUnusedObject(string id)
@@ -142,9 +113,8 @@ public class PoolManager : MonoBehaviour {
 
         if (_pool.Dictionary[poolType.Key].Count > 0)
         {
+            Debug.Log(_pool.Dictionary[poolType.Key].Count);
             PoolableObject tempPO = _pool.Dictionary[poolType.Key].Pop();
-
-            tempPO.Reset();
 
             return tempPO.gameObject;
         }
@@ -154,22 +124,11 @@ public class PoolManager : MonoBehaviour {
 
         }
 
+    }
 
-        //PoolableObject tempPO = poolType.Value.Where(po => po.IsPoolable == true).FirstOrDefault();
-
-        //if (tempPO)
-        //{
-        //    tempPO.IsPoolable = false;
-        //    return tempPO.gameObject;
-        //}
-        //else
-        //{
-        //    AllocateObjectsByID(poolType.Key.Id);
-        //    tempPO = poolType.Value.Where(po => po.IsPoolable == true).FirstOrDefault();
-        //    tempPO.IsPoolable = false;
-        //    return tempPO.gameObject;
-        //}
-
+    public void PushUnusedObject(string id)
+    {
+        //TODO Mise en place de l'ajout d'éléments non utilisé.
     }
 
     #endregion

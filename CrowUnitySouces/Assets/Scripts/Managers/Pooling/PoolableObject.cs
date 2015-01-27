@@ -14,10 +14,14 @@ public abstract class PoolableObject : MonoBehaviour
 	public virtual void Init(){}
 
 	/// <summary>
-	/// Called whenever the object is 
+	/// Called whenever the object is reset
 	/// This should be used for deactivating stuff.
 	/// </summary>
-	public virtual void Reset(){}
+	public virtual void Reset()
+    {
+        //TODO register to the PoolManager stack again
+    }
+
 
 
 	#endregion

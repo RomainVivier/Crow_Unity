@@ -1,5 +1,5 @@
 /* ============================================================================================= = */
-/* FMOD Ex - Error string header file. Copyright (c), Firelight Technologies Pty, Ltd. 2004-2014.  */
+/* FMOD Ex - Error string header file. Copyright (c), Firelight Technologies Pty, Ltd. 2004-2015.  */
 /*                                                                                                 */
 /* Use this header if you want to store or display a string version / english explanation of       */
 /* the FMOD error codes.                                                                           */
@@ -92,6 +92,8 @@ namespace FMOD
                 case FMOD.RESULT.ERR_STUDIO_UNINITIALIZED:      return "The Studio::System object is not yet initialized.";
                 case FMOD.RESULT.ERR_STUDIO_NOT_LOADED:         return "The specified resource is not loaded, so it can't be unloaded.";
                 case FMOD.RESULT.ERR_INVALID_STRING:            return "An invalid string was passed to this function.";
+                case FMOD.RESULT.ERR_ALREADY_LOCKED:            return "The specified resource is already locked.";
+                case FMOD.RESULT.ERR_NOT_LOCKED:                return "The specified resource is not locked, so it can't be unlocked.";
                 default:                                        return "Unknown error.";
             }
         }

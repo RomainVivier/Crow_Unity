@@ -1,5 +1,5 @@
 /* ========================================================================================== */
-/* FMOD System - C# Wrapper . Copyright (c), Firelight Technologies Pty, Ltd. 2004-2014.       */
+/* FMOD System - C# Wrapper . Copyright (c), Firelight Technologies Pty, Ltd. 2004-2015.       */
 /*                                                                                            */
 /*                                                                                            */
 /* ========================================================================================== */
@@ -45,7 +45,7 @@ namespace Studio
         public VECTOR forward;
         public VECTOR up;
     }
-    
+
     [StructLayout(LayoutKind.Sequential)]
     public struct PROGRAMMER_SOUND_PROPERTIES
     {
@@ -101,7 +101,7 @@ namespace Studio
     }
 
     [Flags]
-    public enum SYSTEM_CALLBACK_TYPE : int
+    public enum SYSTEM_CALLBACK_TYPE : uint
     {
         PREUPDATE      = 0x00000001,  /* Called before Studio main update. */
         POSTUPDATE     = 0x00000002,  /* Called after Studio main update. */
@@ -171,7 +171,7 @@ namespace Studio
             {
                 if (((mode & (MODE.OPENMEMORY | MODE.OPENMEMORY_POINT)) == 0) && (name_or_data != null))
                 {
-                    return Encoding.UTF8.GetString(name_or_data, 0, name_or_data.Length);
+                    return Encoding.UTF8.GetString(name_or_data);
                 }
                 else
                 {
@@ -333,7 +333,7 @@ namespace Studio
     #endregion
 
     [Flags]
-    public enum INITFLAGS
+    public enum INITFLAGS : uint
     {
         NORMAL                  = 0x00000000,   /* Initialize normally. */
         LIVEUPDATE              = 0x00000001,   /* Enable live update. */
@@ -342,14 +342,14 @@ namespace Studio
     }
 
     [Flags]
-    public enum LOAD_BANK_FLAGS
+    public enum LOAD_BANK_FLAGS : uint
     {
         NORMAL      = 0x00000000,   /* Standard behaviour. */
         NONBLOCKING = 0x00000001,   /* Bank loading occurs asynchronously rather than occurring immediately. */
     }
 
     [Flags]
-    public enum RECORD_COMMANDS_FLAGS
+    public enum RECORD_COMMANDS_FLAGS : uint
     {
         NORMAL      = 0x00000000,   /* Standard behaviour. */
         FILEFLUSH   = 0x00000001,   /* Call file flush on every command. */
@@ -396,7 +396,7 @@ namespace Studio
     }
 
     public delegate RESULT EVENT_CALLBACK(EVENT_CALLBACK_TYPE type, IntPtr eventInstance, IntPtr parameters);
-    
+
     public class Util
     {
         public static RESULT ParseID(string idString, out GUID id)
@@ -409,7 +409,7 @@ namespace Studio
         private static extern RESULT FMOD_Studio_ParseID                      (byte[] idString, out GUID id);
         #endregion
     }
-    
+
     public abstract class HandleBase
     {
         public HandleBase(IntPtr newPtr)
@@ -489,12 +489,12 @@ namespace Studio
             return result;
         }
         public RESULT setAdvancedSettings(ADVANCEDSETTINGS settings)
-        {        
+        {
             #if NETFX_CORE
             settings.cbSize = Marshal.SizeOf<ADVANCEDSETTINGS>();
             #else
             settings.cbSize = Marshal.SizeOf(typeof(ADVANCEDSETTINGS));
-            #endif            
+            #endif
             return FMOD_Studio_System_SetAdvancedSettings(rawPtr, ref settings);
         }
         public RESULT getAdvancedSettings(out ADVANCEDSETTINGS settings)
@@ -503,7 +503,7 @@ namespace Studio
             settings.cbSize = Marshal.SizeOf<ADVANCEDSETTINGS>();
             #else
             settings.cbSize = Marshal.SizeOf(typeof(ADVANCEDSETTINGS));
-            #endif            
+            #endif
             return FMOD_Studio_System_GetAdvancedSettings(rawPtr, out settings);
         }
         public RESULT initialize(int maxchannels, INITFLAGS studioFlags, FMOD.INITFLAGS flags, IntPtr extradriverdata)
@@ -916,7 +916,7 @@ namespace Studio
 
         #endregion
     }
-    
+
     public class EventDescription : HandleBase
     {
         public RESULT getID(out GUID id)
@@ -1152,7 +1152,7 @@ namespace Studio
         [DllImport (STUDIO_VERSION.dll)]
         private static extern RESULT FMOD_Studio_EventDescription_IsStream(IntPtr eventdescription, out bool isStream);
         [DllImport (STUDIO_VERSION.dll)]
-        private static extern RESULT FMOD_Studio_EventDescription_Is3D(IntPtr eventdescription, out bool is3D);        
+        private static extern RESULT FMOD_Studio_EventDescription_Is3D(IntPtr eventdescription, out bool is3D);
         [DllImport (STUDIO_VERSION.dll)]
         private static extern RESULT FMOD_Studio_EventDescription_CreateInstance(IntPtr eventdescription, out IntPtr instance);
         [DllImport (STUDIO_VERSION.dll)]
@@ -1587,6 +1587,14 @@ namespace Studio
         {
             return FMOD_Studio_Bus_StopAllEvents(rawPtr, mode);
         }
+        public RESULT lockChannelGroup()
+        {
+            return FMOD_Studio_Bus_LockChannelGroup(rawPtr);
+        }
+        public RESULT unlockChannelGroup()
+        {
+            return FMOD_Studio_Bus_UnlockChannelGroup(rawPtr);
+        }
         public RESULT getChannelGroup(out FMOD.ChannelGroup group)
         {
             group = null;
@@ -1607,25 +1615,29 @@ namespace Studio
         [DllImport(STUDIO_VERSION.dll)]
         private static extern bool FMOD_Studio_Bus_IsValid(IntPtr bus);
         [DllImport(STUDIO_VERSION.dll)]
-        private static extern RESULT FMOD_Studio_Bus_GetID           (IntPtr bus, out GUID id);
+        private static extern RESULT FMOD_Studio_Bus_GetID(IntPtr bus, out GUID id);
         [DllImport(STUDIO_VERSION.dll)]
-        private static extern RESULT FMOD_Studio_Bus_GetPath         (IntPtr bus, [Out] byte[] path, int size, out int retrieved);
+        private static extern RESULT FMOD_Studio_Bus_GetPath(IntPtr bus, [Out] byte[] path, int size, out int retrieved);
         [DllImport(STUDIO_VERSION.dll)]
-        private static extern RESULT FMOD_Studio_Bus_GetFaderLevel   (IntPtr bus, out float value);
+        private static extern RESULT FMOD_Studio_Bus_GetFaderLevel(IntPtr bus, out float value);
         [DllImport(STUDIO_VERSION.dll)]
-        private static extern RESULT FMOD_Studio_Bus_SetFaderLevel   (IntPtr bus, float value);
+        private static extern RESULT FMOD_Studio_Bus_SetFaderLevel(IntPtr bus, float value);
         [DllImport(STUDIO_VERSION.dll)]
-        private static extern RESULT FMOD_Studio_Bus_GetPaused       (IntPtr bus, out bool paused);
+        private static extern RESULT FMOD_Studio_Bus_GetPaused(IntPtr bus, out bool paused);
         [DllImport(STUDIO_VERSION.dll)]
-        private static extern RESULT FMOD_Studio_Bus_SetPaused       (IntPtr bus, bool paused);
+        private static extern RESULT FMOD_Studio_Bus_SetPaused(IntPtr bus, bool paused);
         [DllImport(STUDIO_VERSION.dll)]
-        private static extern RESULT FMOD_Studio_Bus_GetMute         (IntPtr bus, out bool mute);
+        private static extern RESULT FMOD_Studio_Bus_GetMute(IntPtr bus, out bool mute);
         [DllImport(STUDIO_VERSION.dll)]
-        private static extern RESULT FMOD_Studio_Bus_SetMute         (IntPtr bus, bool mute);
+        private static extern RESULT FMOD_Studio_Bus_SetMute(IntPtr bus, bool mute);
         [DllImport(STUDIO_VERSION.dll)]
-        private static extern RESULT FMOD_Studio_Bus_StopAllEvents   (IntPtr bus, STOP_MODE mode);
+        private static extern RESULT FMOD_Studio_Bus_StopAllEvents(IntPtr bus, STOP_MODE mode);
         [DllImport(STUDIO_VERSION.dll)]
-        private static extern RESULT FMOD_Studio_Bus_GetChannelGroup (IntPtr bus, out IntPtr group);
+        private static extern RESULT FMOD_Studio_Bus_LockChannelGroup(IntPtr bus);
+        [DllImport(STUDIO_VERSION.dll)]
+        private static extern RESULT FMOD_Studio_Bus_UnlockChannelGroup(IntPtr bus);
+        [DllImport(STUDIO_VERSION.dll)]
+        private static extern RESULT FMOD_Studio_Bus_GetChannelGroup(IntPtr bus, out IntPtr group);
         #endregion
 
         #region wrapperinternal
@@ -1746,7 +1758,7 @@ namespace Studio
             }
 
             rawPtr = IntPtr.Zero;
-                
+
             return RESULT.OK;
         }
         public RESULT loadSampleData()
@@ -1981,11 +1993,11 @@ namespace Studio
             if (len == 0) return string.Empty;
             byte[] buffer = new byte[len];
             Marshal.Copy(nativeUtf8, buffer, 0, buffer.Length);
-            return Encoding.UTF8.GetString(buffer, 0, buffer.Length);
+            return Encoding.UTF8.GetString(buffer);
         }
     }
 
     #endregion
 } // System
-        
+
 } // FMOD

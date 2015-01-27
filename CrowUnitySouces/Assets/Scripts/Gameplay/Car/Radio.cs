@@ -6,7 +6,7 @@ public class Radio : MonoBehaviour {
 
     public float _switchDuration;
 
-    private int m_radioState = 0;
+    private int m_radioState = 1;
     private float m_currentFrequency;
     private int m_startFrequency;
     private int m_targetFrequency;

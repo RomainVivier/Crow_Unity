@@ -10,7 +10,10 @@ using System;
 
 public class FMOD_Listener : MonoBehaviour 
 {
-	public string[] pluginPaths;
+	public string[] pluginPaths = 
+    {
+        // List plugin libraries here
+    };
 	
 	static FMOD_Listener sListener = null;
 	Rigidbody cachedRigidBody;
@@ -52,6 +55,9 @@ public class FMOD_Listener : MonoBehaviour
 #endif
 #if UNITY_XBOXONE
 			|| Application.platform == RuntimePlatform.XboxOne
+#endif
+#if UNITY_WIIU
+            || Application.platform == RuntimePlatform.WiiU
 #endif
 		    )
 		{
@@ -249,7 +255,11 @@ public class FMOD_Listener : MonoBehaviour
 #else
 			if (Application.platform == RuntimePlatform.WindowsEditor)
 			{
+#if UNITY_5 && UNITY_64
+                return Application.dataPath + "/Plugins/x86_64";
+#else
 				return Application.dataPath + "/Plugins/x86";
+#endif
 			}
 			else if (Application.platform == RuntimePlatform.WindowsPlayer ||
 			         Application.platform == RuntimePlatform.OSXEditor ||
