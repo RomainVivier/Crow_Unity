@@ -3,16 +3,6 @@ using System.Collections;
 
 public class Laser : ButtonGadget
 {
-    private struct LaserMembers
-    {
-        public Transform lightTransform;
-        public LineRenderer lineRenderer;
-        public Transform particlesTransform;
-        public ParticleSystem particles;
-        public GameObject contactObject;
-        public float contactTime;
-    }
-
     #region constants
     const float COOLDOWN_TIME=10f;
     const float VALVE_OPENING_TIME = 0.2f;
@@ -27,11 +17,24 @@ public class Laser : ButtonGadget
     #endregion
 
     #region members
+    public GameObject _laserEffect;
     private Timer m_cooldownTimer;
     private Timer m_stateTimer;
     private Car m_car;
     private float m_lightsYOffset;
     private LaserMembers[] m_lasers;
+    
+    private struct LaserMembers
+    {
+        public Transform lightTransform;
+        public LineRenderer lineRenderer;
+        public Transform particlesTransform;
+        public ParticleSystem particles;
+        public GameObject contactObject;
+        public float contactTime;
+    }
+
+
     private enum State
     {
         READY,
@@ -45,7 +48,7 @@ public class Laser : ButtonGadget
     #endregion
 
     #region methods
-	void Start () {
+    void Start () {
         // Init timers
         m_cooldownTimer = new Timer(0.01f);
         m_stateTimer = new Timer();
@@ -65,6 +68,7 @@ public class Laser : ButtonGadget
         m_lasers[1].particles = transform.FindChild("ParticlesR").GetComponent<ParticleSystem>();
         m_lasers[0].particlesTransform = transform.FindChild("ParticlesL");
         m_lasers[1].particlesTransform = transform.FindChild("ParticlesR");
+        _laserEffect=GameObject.Find("LaserEffect");
 
         // Compute lightsYOffset
         Vector3 leftLightPos = m_lasers[0].lightTransform.position;
@@ -142,9 +146,11 @@ public class Laser : ButtonGadget
                                 else
                                 {
                                     m_lasers[i].contactTime += Time.deltaTime;
-                                    if(m_lasers[i].contactTime>=TARGET_CONTACT_TIME)
+                                    if(m_lasers[i].contactTime>=TARGET_CONTACT_TIME && rh.collider.CompareTag("Obstacle"))
                                     {
-                                        //TODO : destruction
+                                        rh.collider.gameObject.SetActive(false);
+                                        _laserEffect.transform.position = rh.point;
+                                        _laserEffect.GetComponent<ParticleSystem>().Play();
                                     }
                                 }
                             }
