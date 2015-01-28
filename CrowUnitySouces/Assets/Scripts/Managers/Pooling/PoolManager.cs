@@ -83,7 +83,6 @@ public class PoolManager : MonoBehaviour {
 
     PoolableObject AllocateObjectsByID(PoolKey pk)
     {
-
         PoolKey poolKey = _pool.Dictionary.Where(pt => pt.Key == pk).FirstOrDefault().Key;
 
         if (poolKey == null)
