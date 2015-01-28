@@ -176,9 +176,7 @@ public class Car : MonoBehaviour
         // Update sounds
         float soundRpm=fakeRPM*ENGINE_SOUND_MAX_RPM/engine.getMaxRpm();
         engineRPM.setValue(soundRpm);
-        float onGround = 0;
-        for (int i = 0; i < 4; i++) if (wheels[i].isGrounded) onGround = 1;
-        tiresGround.setValue(onGround);
+        tiresGround.setValue(isOnGround() ? 1 : 0);
         tiresFriction.setValue(frictionSound);
         tiresSpeed.setValue(forwardVelocity / maxSpeed);       
 		// Debug print
@@ -243,6 +241,13 @@ public class Car : MonoBehaviour
 		body.centerOfMass=centerOfMass;
 	}
 
+    private bool isOnGround()
+    {
+        bool ret = false;
+        for (int i = 0; i < 4; i++) if (wheels[i].isGrounded) ret = true;
+        return ret;
+    }
+
     public void InstantSetSpeedKmh(float speedKmh)
     {
         InstantSetSpeed(speedKmh / 3.6f);
@@ -250,7 +255,7 @@ public class Car : MonoBehaviour
 
     public void InstantSetSpeed(float speed)
     {
-        body.velocity = getForwardVector() * speed;
+        if(isOnGround()) body.velocity = getForwardVector() * speed;
     }
 
 	// Public getters
@@ -283,6 +288,11 @@ public class Car : MonoBehaviour
 	{
 		return body.transform.forward;
 	}
+
+    public Vector3 getUpVector()
+    {
+        return body.transform.up;
+    }
 	
 }
 
