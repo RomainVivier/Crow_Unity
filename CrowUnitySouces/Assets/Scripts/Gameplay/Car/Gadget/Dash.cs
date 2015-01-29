@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Dash : ButtonGadget
+public class Dash : Gadget
 {
     #region Members
     public RailsControl _rc;

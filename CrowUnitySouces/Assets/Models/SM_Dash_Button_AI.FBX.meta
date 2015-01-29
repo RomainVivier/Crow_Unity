@@ -1,18 +1,18 @@
 fileFormatVersion: 2
-guid: 3c2ada6b96aa93a41b63047f3ec93b92
+guid: d7a6df5ae9d1cb5488a49cfc97af1a1c
 ModelImporter:
   serializedVersion: 16
   fileIDToRecycleName:
-    100000: Button
+    100000: AI_Screen
     100002: //RootNode
-    400000: Button
+    400000: AI_Screen
     400002: //RootNode
-    2300000: Button
+    2300000: AI_Screen
     2300002: //RootNode
-    3300000: Button
+    3300000: AI_Screen
     3300002: //RootNode
-    4300000: Button_Border
-    4300002: Button
+    4300000: AI_Border
+    4300002: AI_Screen
     9500000: //RootNode
   materials:
     importMaterials: 1

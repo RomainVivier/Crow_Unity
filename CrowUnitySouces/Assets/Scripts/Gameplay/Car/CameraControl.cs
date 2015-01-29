@@ -71,7 +71,7 @@ public class CameraControl : MonoBehaviour {
 
             if (hit.collider.CompareTag("Clickable"))
             {
-                GadgetTrigger gt = hit.collider.GetComponent<GadgetTrigger>(); 
+                GadgetButton gt = hit.collider.GetComponent<GadgetButton>(); 
 
                 if(gt)
                 {

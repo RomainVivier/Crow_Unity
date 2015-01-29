@@ -1,18 +1,23 @@
 fileFormatVersion: 2
-guid: 3c2ada6b96aa93a41b63047f3ec93b92
+guid: ffe2b5852cdda55428346f1e241d9efa
 ModelImporter:
   serializedVersion: 16
   fileIDToRecycleName:
-    100000: Button
-    100002: //RootNode
-    400000: Button
-    400002: //RootNode
-    2300000: Button
-    2300002: //RootNode
-    3300000: Button
-    3300002: //RootNode
-    4300000: Button_Border
-    4300002: Button
+    100000: Slider_Button
+    100002: Slider_Screen
+    100004: //RootNode
+    400000: Slider_Button
+    400002: Slider_Screen
+    400004: //RootNode
+    2300000: Slider_Button
+    2300002: Slider_Screen
+    2300004: //RootNode
+    3300000: Slider_Button
+    3300002: Slider_Screen
+    3300004: //RootNode
+    4300000: Slider_Border
+    4300002: Slider_Screen
+    4300004: Slider_Button
     9500000: //RootNode
   materials:
     importMaterials: 1
