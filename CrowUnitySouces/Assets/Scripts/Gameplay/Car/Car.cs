@@ -5,6 +5,7 @@ public class Car : MonoBehaviour
 {
 
 	// Inspector visible variables
+    [Header("Physics parameters")]
 	public float maxSpeedKmh=300; // km/h
 	public float fwd; // Front wheels drive [0;1] 0=RWD 1=FWD
 	public float brakeDecceleration=10; // m/s²
@@ -14,6 +15,8 @@ public class Car : MonoBehaviour
 	public float antiRoll=8000;
 	public float downforce=10;
     public float wheelRotation = 180;
+
+    [Header("Fake engine sound parameters")]
     public float fakeSoundAcceleration = 0.9f;
     public float fakeSoundBrakes = 0.7f;
     public float fakeSoundBrakesSpeedFriction = 0.2f;
