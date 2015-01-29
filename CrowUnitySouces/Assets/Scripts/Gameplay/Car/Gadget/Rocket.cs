@@ -18,10 +18,12 @@ public class Rocket : ButtonGadget {
     private Vector3 m_offsetWithParent;
     private Vector3 m_startPosition;
     private Vector3 m_target;
+    private Transform m_carTransform;
 
     private FMOD.Studio.EventInstance m_rocketUI;
     private FMOD.Studio.ParameterInstance m_rocketDist;
     private FMOD.Studio.EventInstance m_rocketExecute3D;
+    private FMOD.Studio.ParameterInstance m_rocketExecute3DDist;
     private FMOD.Studio.EventInstance m_blowInstance;
 
     public FMOD_StudioEventEmitter _rocketExecute;
@@ -37,13 +39,16 @@ public class Rocket : ButtonGadget {
         m_rocketUI.getParameter("distToTarget", out m_rocketDist);
 
         m_rocketExecute3D = FMOD_StudioSystem.instance.GetEvent("event:/SFX/Gadgets/Rocket/gadgetRocketExecute3D");
-
+        m_rocketExecute3D.getParameter("Distance", out m_rocketExecute3DDist);
+        
         GadgetManager.Instance.Register("Rocket", this);
         m_rocketLaunchtimer = new Timer();
         m_timer = new Timer();
         gameObject.SetActive(false);
         m_target = Vector3.zero;
         _explosionParticles = GameObject.Find("RocketExplosion");
+
+        m_carTransform = transform.parent.parent;
         base.Start();
     }
 
@@ -73,6 +78,19 @@ public class Rocket : ButtonGadget {
             transform.position = Vector3.Lerp(m_startPosition, m_target, 1 - m_timer.CurrentNormalized);
             m_rocketDist.setValue(Mathf.Clamp((Vector3.Distance(transform.position, m_target) / _rocketUIMax), 0f, 1f));
         }
+
+        // Set gadgetRocketExecte3D 3D attributesFMOD.Studio._3D_ATTRIBUTES threeDeeAttr = new FMOD.Studio._3D_ATTRIBUTES();
+        FMOD.Studio._3D_ATTRIBUTES threeDeeAttr = new FMOD.Studio._3D_ATTRIBUTES();
+        threeDeeAttr.position = FMOD.Studio.UnityUtil.toFMODVector(transform.position);
+        threeDeeAttr.up = FMOD.Studio.UnityUtil.toFMODVector(transform.up);
+        threeDeeAttr.forward = FMOD.Studio.UnityUtil.toFMODVector(transform.forward);
+        threeDeeAttr.velocity = FMOD.Studio.UnityUtil.toFMODVector(Vector3.zero);
+        m_rocketExecute3D.set3DAttributes(threeDeeAttr);
+
+        float dist = (transform.position - m_carTransform.position).magnitude;
+        dist = Mathf.Clamp(dist, 10, 200);
+        m_rocketExecute3DDist.setValue(dist);
+
         base.Update();
     }
 

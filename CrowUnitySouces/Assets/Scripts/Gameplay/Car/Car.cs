@@ -5,6 +5,7 @@ public class Car : MonoBehaviour
 {
 
 	// Inspector visible variables
+    [Header("Physics parameters")]
 	public float maxSpeedKmh=300; // km/h
 	public float fwd; // Front wheels drive [0;1] 0=RWD 1=FWD
 	public float brakeDecceleration=10; // m/s²
@@ -14,6 +15,8 @@ public class Car : MonoBehaviour
 	public float antiRoll=8000;
 	public float downforce=10;
     public float wheelRotation = 180;
+
+    [Header("Fake engine sound parameters")]
     public float fakeSoundAcceleration = 0.9f;
     public float fakeSoundBrakes = 0.7f;
     public float fakeSoundBrakesSpeedFriction = 0.2f;
@@ -45,6 +48,7 @@ public class Car : MonoBehaviour
 	// Sounds
     private FMOD.Studio.EventInstance engineSound;
     private FMOD.Studio.ParameterInstance engineRPM;
+    private FMOD.Studio.ParameterInstance engineSpeed;
     private const int ENGINE_SOUND_MAX_RPM = 6000;
     private FMOD.Studio.EventInstance tiresSound;
     private FMOD.Studio.ParameterInstance tiresFriction;
@@ -61,6 +65,7 @@ public class Car : MonoBehaviour
         engineSound = FMOD_StudioSystem.instance.GetEvent("event:/SFX/Car Mechanics/carEngine");
         engineSound.start();
         engineSound.getParameter("RPM", out engineRPM);
+        engineSound.getParameter("Speed", out engineSpeed);
         tiresSound = FMOD_StudioSystem.instance.GetEvent("event:/SFX/Car Mechanics/carTyres");
         tiresSound.getParameter("Friction", out tiresFriction);
         tiresSound.getParameter("Speed", out tiresSpeed);
@@ -176,11 +181,10 @@ public class Car : MonoBehaviour
         // Update sounds
         float soundRpm=fakeRPM*ENGINE_SOUND_MAX_RPM/engine.getMaxRpm();
         engineRPM.setValue(soundRpm);
-        float onGround = 0;
-        for (int i = 0; i < 4; i++) if (wheels[i].isGrounded) onGround = 1;
-        tiresGround.setValue(onGround);
+        tiresGround.setValue(isOnGround() ? 1 : 0);
         tiresFriction.setValue(frictionSound);
-        tiresSpeed.setValue(forwardVelocity / maxSpeed);       
+        tiresSpeed.setValue(forwardVelocity / maxSpeed);
+        engineSpeed.setValue(fakeSoundSpeed);
 		// Debug print
 		/*if(nbUpdates%10==0)
 		{
@@ -243,6 +247,13 @@ public class Car : MonoBehaviour
 		body.centerOfMass=centerOfMass;
 	}
 
+    private bool isOnGround()
+    {
+        bool ret = false;
+        for (int i = 0; i < 4; i++) if (wheels[i].isGrounded) ret = true;
+        return ret;
+    }
+
     public void InstantSetSpeedKmh(float speedKmh)
     {
         InstantSetSpeed(speedKmh / 3.6f);
@@ -250,7 +261,7 @@ public class Car : MonoBehaviour
 
     public void InstantSetSpeed(float speed)
     {
-        body.velocity = getForwardVector() * speed;
+        if(isOnGround()) body.velocity = getForwardVector() * speed;
     }
 
 	// Public getters
@@ -283,6 +294,11 @@ public class Car : MonoBehaviour
 	{
 		return body.transform.forward;
 	}
+
+    public Vector3 getUpVector()
+    {
+        return body.transform.up;
+    }
 	
 }
 
