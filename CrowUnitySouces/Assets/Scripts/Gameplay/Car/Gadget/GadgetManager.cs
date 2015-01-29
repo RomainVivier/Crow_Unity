@@ -81,7 +81,7 @@ public class GadgetManager : MonoBehaviour {
 
 	public void PlayGadget(string name)
 	{
-        if(m_timer.IsElapsedLoop && HasOneGadgetPlaying && m_lastGadget != name)
+        if(!m_timer.IsElapsedLoop/* && HasOneGadgetPlaying && m_lastGadget != name*/)
         {
             Debug.Log("Can't play button, timer elapsed = " + m_timer.IsElapsedLoop + ", gadget playing = " + HasOneGadgetPlaying + ", last gagdet : " + m_lastGadget);
             return;
