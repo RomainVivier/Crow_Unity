@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Duck : ButtonGadget
+public class Duck : Gadget
 {
 
     private FMOD.Studio.EventInstance duckSound;

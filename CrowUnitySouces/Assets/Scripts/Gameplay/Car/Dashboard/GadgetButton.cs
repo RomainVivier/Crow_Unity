@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class GadgetTrigger : MonoBehaviour {
+public class GadgetButton : MonoBehaviour {
 
     public string _gadgetID;
 

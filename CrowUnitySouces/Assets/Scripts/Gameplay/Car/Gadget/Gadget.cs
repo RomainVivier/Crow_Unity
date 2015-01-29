@@ -7,18 +7,15 @@ public class Gadget : MonoBehaviour
 
     #region Members
 
+    public Animator _buttonAnim;
+
     private bool m_isReady = true;
     protected GadgetFamily m_gadgetFamily;
-    protected List<GadgetAbilitie> m_abilities;
+    protected List<GadgetAbility> m_abilities;
 
     #endregion 
 
     #region Properties
-
-    public virtual void Start()
-    {
-        m_abilities = new List<GadgetAbilitie>();
-    }
 
     public bool IsReady
 	{
@@ -28,42 +25,39 @@ public class Gadget : MonoBehaviour
 
     #endregion 
 
+    #region Mono Function
+
+    public virtual void Start()
+    {
+        m_abilities = new List<GadgetAbility>();
+    }
+
+    public virtual void Update()
+    {
+    }
+
+    #endregion
+
     #region Virtual Functions
 
     public virtual void Play()
 	{
         GadgetManager.Instance.HasOneGadgetPlaying = true;
+        if (_buttonAnim != null)
+        {
+            _buttonAnim.SetTrigger("Engage");
+        }
 	}
 
 	public virtual void Stop()
 	{
         GadgetManager.Instance.HasOneGadgetPlaying = false;
+        if (_buttonAnim != null)
+        {
+            _buttonAnim.SetTrigger("Engage");
+        }
     }
 
     #endregion
 
-}
-
-public enum GadgetFamily
-{
-    Light,
-    Contact,
-    Distance
-}
-
-public enum GadgetAbilitie
-{
-    Light,
-    Noise,
-    Slice,
-    Destruction,
-    HeavyProjection,
-    LightProjection,
-    Weather,
-    SpeedBoost,
-    Jump,
-    Hover,
-    Slow,
-    Useless,
-    Combo
 }

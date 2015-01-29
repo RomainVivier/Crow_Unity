@@ -8,13 +8,13 @@ public abstract class Obstacle : MonoBehaviour
     #region members
 
     public GameObject _prefab;
-    protected List<GadgetAbilitie> m_weaknesses;
+    protected List<GadgetAbility> m_weaknesses;
 
     #endregion
 
     public virtual void Start()
     {
-        m_weaknesses = new List<GadgetAbilitie>();
+        m_weaknesses = new List<GadgetAbility>();
     }
 
     public virtual void Behaviour()

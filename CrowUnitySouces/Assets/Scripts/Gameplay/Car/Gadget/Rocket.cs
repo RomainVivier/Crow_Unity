@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Rocket : ButtonGadget {
+public class Rocket : Gadget {
 
 
     #region Members
