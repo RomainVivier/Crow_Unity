@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Laser : ButtonGadget
+public class Laser : Gadget
 {
     #region constants
     const float COOLDOWN_TIME=10f;
