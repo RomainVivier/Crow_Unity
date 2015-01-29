@@ -6,29 +6,37 @@ public class TouchManager : MonoBehaviour
 
     #region Delegates
 
-    public delegate void SwipeLeft();
-    public delegate void SwipeRight();
+    public delegate void SwipeDelegate();
+    public delegate void TouchDelegate(SwipeInfos si);
 
-    public delegate void TouchStart();
-    public delegate void TouchStay();
-    public delegate void TouchEnd();
+    public SwipeDelegate _swipeLeft;
+    public SwipeDelegate _swipeRight;
 
-
-    public SwipeLeft _swipeLeft;
-    public SwipeLeft _swipeRight;
-
-    public SwipeLeft _touchStart;
-    public SwipeLeft _touchStay;
-    public SwipeLeft _touchEnd;
+    public TouchDelegate _touchStart;
+    public TouchDelegate _touchStay;
+    public TouchDelegate _touchEnd;
 
     #endregion Delegates
 
+    public struct SwipeInfos
+    {
+        public Vector2 swipeStart;
+        public Vector2 swipeEnd;
+        public bool inSwipe;
+    };
+    private struct TouchInfos
+    {
+        public enum State{UNHELD,BEGIN,HELD,END};
+        public State state;
+        public Vector2 pos;
+    }
+    private SwipeInfos[] m_swipeInfos;
+
     private static TouchManager m_instance;
-    private Vector2 m_swipeStart;
-    private Vector2 m_swipeEnd;
+
     private Vector2 m_wheelCenter;
     private float m_wheelRadius;
-    private bool m_inSwipe=false;
+
     #region Singleton
 
     public static TouchManager Instance
@@ -66,10 +74,13 @@ public class TouchManager : MonoBehaviour
 
     private void Init()
     {
+        m_swipeInfos=new SwipeInfos[11];
+        for (int i = 0; i < 11; i++) m_swipeInfos[i].inSwipe = false;
+
         _touchEnd += Swipe;
         m_wheelCenter.x = -0.43f * Screen.height + Screen.width / 2;
         m_wheelCenter.y = 0.062f;
-        m_wheelRadius = 0.155f * Screen.height;
+        m_wheelRadius = 0.2f * Screen.height;//0.155f
     }
 
     #endregion
@@ -82,87 +93,79 @@ public class TouchManager : MonoBehaviour
     #region TouchFunctions
 
     public void Touch()
+    
     {
-#if UNITY_STANDALONE
-        if (Input.GetMouseButtonDown(0))
+        TouchInfos t=new TouchInfos();
+        t.state = TouchInfos.State.UNHELD; ;
+        if (Input.GetMouseButtonDown(0)) t.state = TouchInfos.State.BEGIN;
+        else if (Input.GetMouseButton(0)) t.state = TouchInfos.State.HELD;
+        else if (Input.GetMouseButtonUp(0)) t.state = TouchInfos.State.END;
+        t.pos = new Vector2(Input.mousePosition.x,Input.mousePosition.y);
+        handleTouch(t,ref m_swipeInfos[0]);
+
+        Debug.Log(Input.touchCount);
+        for (int i = 0; i < Input.touchCount; i++)
         {
-            Vector2 mousePos = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
-            if((mousePos-m_wheelCenter).magnitude<m_wheelRadius)
+            switch(Input.touches[i].phase)
             {
-                m_inSwipe = true;
-                m_swipeStart = mousePos;
+                case TouchPhase.Began:
+                    t.state = TouchInfos.State.BEGIN;
+                    break;
+                case TouchPhase.Moved:
+                    t.state = TouchInfos.State.HELD;
+                    break;
+                case TouchPhase.Ended:
+                    t.state = TouchInfos.State.END;
+                    break;
+                default:
+                    t.state = TouchInfos.State.UNHELD;
+                    break;
+            }
+            handleTouch(t, ref m_swipeInfos[i + 1]);
+        }
+    }
+
+    private void handleTouch(TouchInfos ti, ref SwipeInfos si)
+    {
+        if (ti.state==TouchInfos.State.BEGIN)
+        {
+            if((ti.pos-m_wheelCenter).magnitude<m_wheelRadius)
+            {
+                si.inSwipe = true;
+                si.swipeStart = ti.pos;
                 if (_touchStart != null)
                 {
-                    _touchStart(); 
+                    _touchStart(si); 
                 }
             }
         }
         bool endSwipe = false;
-        if (Input.GetMouseButton(0))
+        if (ti.state==TouchInfos.State.HELD)
         {
-            Vector2 mousePos = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
-            if ((mousePos - m_wheelCenter).magnitude > m_wheelRadius && m_inSwipe) endSwipe = true;
+            if ((ti.pos - m_wheelCenter).magnitude > m_wheelRadius && si.inSwipe) endSwipe = true;
             if (_touchStay != null)
             {
-                _touchStay();
+                _touchStay(si);
             }
         }
 
-        if (Input.GetMouseButtonUp(0) && m_inSwipe ) endSwipe = true;
+        if (ti.state==TouchInfos.State.END && si.inSwipe ) endSwipe = true;
 
         if(endSwipe)
         {
-            m_inSwipe = false;
-            m_swipeEnd = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+            si.inSwipe=false;
+            si.swipeEnd = ti.pos;
             if(_touchEnd != null)
             {
-                _touchEnd();
+                _touchEnd(si);
             }
             
         }
-
-#elif UNITY_ANDROID
-		if(Input.touchCount > 0)
-		{
-			if(Input.GetTouch(0).phase == TouchPhase.Began)
-			{
-				m_swipeStart = new Vector2(Input.touches[0].position.x, Input.touches[0].position.y);
-                if (_touchStart != null)
-                {
-                    _touchStart(); 
-                }
-			}
-			if(Input.GetTouch(0).phase == TouchPhase.Moved)
-			{
-                if (_touchStay != null)
-                {
-                    _touchStay();
-                }
-			}
-			if(Input.GetTouch(0).phase == TouchPhase.Ended)
-			{
-                if(Input.touchCount > 0)
-                {
-                    m_swipeEnd = new Vector2(Input.touches[0].position.x, Input.touches[0].position.y);
-                }
-                else
-                {
-                    m_swipeEnd = new Vector2(Mathf.Infinity, Mathf.Infinity);
-                }
-
-                if(_touchEnd != null)
-                {
-                    _touchEnd();
-                }
-			}
-		}
-#endif
-
     }
 
-    public void Swipe()
+    public void Swipe(SwipeInfos si)
     {
-        Vector2 swipeVector = m_swipeStart - m_swipeEnd;
+        Vector2 swipeVector = si.swipeStart - si.swipeEnd;
         if(swipeVector.magnitude > m_wheelRadius/4)//(Screen.width / 6) )
         {
             if(swipeVector.x > 0)
