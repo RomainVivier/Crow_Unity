@@ -105,7 +105,6 @@ public class TouchManager : MonoBehaviour
         t.pos = new Vector2(Input.mousePosition.x,Input.mousePosition.y);
         handleTouch(t,ref m_swipeInfos[0]);
 
-        Debug.Log(Input.touchCount);
         for (int i = 0; i < Input.touchCount; i++)
         {
             switch(Input.touches[i].phase)
