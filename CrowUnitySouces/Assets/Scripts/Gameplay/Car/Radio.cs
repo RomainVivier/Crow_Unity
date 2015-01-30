@@ -48,15 +48,6 @@ public class Radio : MonoBehaviour {
 	
 	void Update()
     {
-        if(Input.GetKeyDown(KeyCode.A))
-        {
-            SwitchFrequencyDown();
-        }
-
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            SwitchFrequencyUp();
-        }
 
         if (Input.GetKeyDown(KeyCode.Return))
         {
@@ -100,7 +91,7 @@ public class Radio : MonoBehaviour {
         m_fmodRadioFreq.setValue(m_currentFrequency);
 	}
 
-    void SwitchFrequencyUp()
+    public void SwitchFrequencyUp()
     {
         if(!m_timer.IsElapsedLoop)
         {
@@ -121,7 +112,7 @@ public class Radio : MonoBehaviour {
         }
     }
 
-    void SwitchFrequencyDown()
+    public void SwitchFrequencyDown()
     {
         if (!m_timer.IsElapsedLoop)
         {
