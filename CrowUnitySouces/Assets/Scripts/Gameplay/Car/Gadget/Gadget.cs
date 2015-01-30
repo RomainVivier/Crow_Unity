@@ -55,7 +55,9 @@ public class Gadget : MonoBehaviour
         GadgetManager.Instance.HasOneGadgetPlaying = true;
         if (_buttonAnim != null)
         {
-            _buttonAnim.SetTrigger("Engage");
+            _buttonAnim.speed = 10;
+            _buttonAnim.SetBool("Engage", true);
+            //_buttonAnim.SetTrigger("Engage");
         }
 	}
 
@@ -64,7 +66,9 @@ public class Gadget : MonoBehaviour
         GadgetManager.Instance.HasOneGadgetPlaying = false;
         if (_buttonAnim != null)
         {
-            _buttonAnim.SetTrigger("Engage");
+            _buttonAnim.speed = 10;
+            _buttonAnim.SetBool("Engage", false);
+            //_buttonAnim.SetTrigger("Engage");
         }
     }
 
