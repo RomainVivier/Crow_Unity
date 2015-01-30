@@ -5,44 +5,44 @@ using System.Collections.Generic;
 public class Dashboard : MonoBehaviour
 {
 
-
     #region Members
+    public Transform _spawnPoint;
 
-    private List<GadgetAbility> m_possessedAbilities;
-    private List<Panel> m_panels;
+    private List<GadgetAbility> m_abilities;
+    private GameObject m_dashboard;
+    private Panel[] m_panels;
 
     #endregion
 
     #region Mono Function
 
-    void Start () {
-	
+    void Start ()
+    {
+        // define instanciate path
+        //m_dashboard = GameObject.Instantiate(Resources.Load(""), _spawnPoint.position, Quaternion.identity)  as GameObject;
+
+        m_panels = gameObject.GetComponentsInChildren<Panel>();
+
+        for (int i = 0; i < m_panels.Length; i++)
+        {
+            m_panels[i].Init();
+            m_abilities.AddRange(m_panels[i].AddAbilities());
+        }
 	}
 	
 	// Update is called once per frame
-	void Update () {
-
+	void Update ()
+    {
+        UpdatePanels();
     }
 
     #endregion 
 
-    #region Dashboard functions
-
-    /// <summary>
-    /// Here we generate the dashboard based on panels presets
-    /// </summary>
-    public void Generate()
-    {
-        //TODO get a random panels preset and generate each of them, add GadgetAbility depending on gadget link to the buttons
-    }
-
     /// <summary>
     /// Update panel to make the change if any change is required
     /// </summary>
-    public void UpdatePanels()
+    private void UpdatePanels()
     {
-        //TODO update each panel of the dashboard
+        //TODO update each panel of the dashboard verify if the distance to unlock has been reached and add the abilities
     }
-
-    #endregion
 }

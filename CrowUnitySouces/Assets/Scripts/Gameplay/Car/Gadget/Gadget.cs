@@ -8,12 +8,13 @@ public class Gadget : MonoBehaviour
     #region Members
 
     public Animator _buttonAnim;
+    public GadgetAbility[] _abilities;
+    public bool _isAssign = false;
 
     private bool m_isReady = true;
     protected string m_playSound = "";
     protected string m_cantPlaySound = "";
     protected GadgetFamily m_gadgetFamily;
-    protected List<GadgetAbility> m_abilities;
 
     #endregion 
 
@@ -39,7 +40,6 @@ public class Gadget : MonoBehaviour
 
     public virtual void Start()
     {
-        m_abilities = new List<GadgetAbility>();
     }
 
     public virtual void Update()

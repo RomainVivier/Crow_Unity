@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 public class GadgetManager : MonoBehaviour {
 
@@ -11,6 +12,7 @@ public class GadgetManager : MonoBehaviour {
 	/// value = gadget
 	/// </summary>
 	private  Dictionary<string, Gadget> m_gadgets;
+    private List<string> m_assignGadgets;
 	private static GadgetManager m_instance;
     private string m_lastGadget;
     private bool m_hasOneGadgetPlaying;
@@ -99,6 +101,30 @@ public class GadgetManager : MonoBehaviour {
 		}
 	}
 
+    public string RandomUnassignGadget()
+    {
+        string gadgetID = m_gadgets.Where(g => g.Value._isAssign == false).FirstOrDefault().Key;
+
+        if (m_gadgets.ContainsKey(gadgetID))
+        {
+            m_gadgets[gadgetID]._isAssign = true;
+        }
+
+        return gadgetID;
+    }
+
+    public GadgetAbility[] GadgetAbilities(string id)
+    {
+        if(!m_gadgets.ContainsKey(id))
+        {
+            return null;
+        }
+
+        return m_gadgets[id]._abilities;
+    }
+
 	#endregion
+
+
 
 }
