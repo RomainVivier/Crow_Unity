@@ -6,27 +6,38 @@ public class TouchManager : MonoBehaviour
 
     #region Delegates
 
-    public delegate void SwipeLeft();
-    public delegate void SwipeRight();
+    public delegate void SwipeDelegate();
+    public delegate void TouchDelegate(SwipeInfos si);
 
-    public delegate void TouchStart();
-    public delegate void TouchStay();
-    public delegate void TouchEnd();
+    public SwipeDelegate _swipeLeft;
+    public SwipeDelegate _swipeRight;
 
-
-    public SwipeLeft _swipeLeft;
-    public SwipeLeft _swipeRight;
-
-    public SwipeLeft _touchStart;
-    public SwipeLeft _touchStay;
-    public SwipeLeft _touchEnd;
+    public TouchDelegate _touchStart;
+    public TouchDelegate _touchStay;
+    public TouchDelegate _touchEnd;
+    public TouchDelegate _touchEndZone;
 
     #endregion Delegates
 
-    private static TouchManager m_instance;
-    private Vector2 m_swipeStart;
-    private Vector2 m_swipeEnd;
+    public struct SwipeInfos
+    {
+        public Vector2 swipeStart;
+        public Vector2 swipeEnd;
+        public bool inSwipe;
+        public bool inZoneSwipe;
+    };
+    private struct TouchInfos
+    {
+        public enum State{UNHELD,BEGIN,HELD,END};
+        public State state;
+        public Vector2 pos;
+    }
+    private SwipeInfos[] m_swipeInfos;
 
+    private static TouchManager m_instance;
+
+    private Vector2 m_wheelCenter;
+    private float m_wheelRadius;
 
     #region Singleton
 
@@ -65,7 +76,14 @@ public class TouchManager : MonoBehaviour
 
     private void Init()
     {
+        m_swipeInfos=new SwipeInfos[11];
+        for (int i = 0; i < 11; i++) m_swipeInfos[i].inSwipe = false;
+
         _touchEnd += Swipe;
+        _touchEndZone += SwipeZone;
+        m_wheelCenter.x = -0.44f * Screen.height + Screen.width / 2;
+        m_wheelCenter.y = 0.062f;
+        m_wheelRadius = 0.2f * Screen.height;//0.155f
     }
 
     #endregion
@@ -79,79 +97,108 @@ public class TouchManager : MonoBehaviour
 
     public void Touch()
     {
+        TouchInfos t=new TouchInfos();
+        t.state = TouchInfos.State.UNHELD; ;
+        if (Input.GetMouseButtonDown(0)) t.state = TouchInfos.State.BEGIN;
+        else if (Input.GetMouseButton(0)) t.state = TouchInfos.State.HELD;
+        else if (Input.GetMouseButtonUp(0)) t.state = TouchInfos.State.END;
+        t.pos = new Vector2(Input.mousePosition.x,Input.mousePosition.y);
+        handleTouch(t,ref m_swipeInfos[0]);
 
-#if UNITY_STANDALONE
-        if (Input.GetMouseButtonDown(0))
+        for (int i = 0; i < Input.touchCount; i++)
         {
-            m_swipeStart = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
-            if (_touchStart != null)
+            switch(Input.touches[i].phase)
             {
-                _touchStart(); 
+                case TouchPhase.Began:
+                    t.state = TouchInfos.State.BEGIN;
+                    break;
+                case TouchPhase.Moved:
+                    t.state = TouchInfos.State.HELD;
+                    break;
+                case TouchPhase.Ended:
+                    t.state = TouchInfos.State.END;
+                    break;
+                default:
+                    t.state = TouchInfos.State.UNHELD;
+                    break;
             }
+            handleTouch(t, ref m_swipeInfos[i + 1]);
         }
-
-        if (Input.GetMouseButton(0))
-        {
-            if (_touchStay != null)
-            {
-                _touchStay();
-            }
-        }
-
-        if (Input.GetMouseButtonUp(0))
-        {
-            m_swipeEnd = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
-            if(_touchEnd != null)
-            {
-                _touchEnd();
-            }
-            
-        }
-
-#elif UNITY_ANDROID
-		if(Input.touchCount > 0)
-		{
-			if(Input.GetTouch(0).phase == TouchPhase.Began)
-			{
-				m_swipeStart = new Vector2(Input.touches[0].position.x, Input.touches[0].position.y);
-                if (_touchStart != null)
-                {
-                    _touchStart(); 
-                }
-			}
-			if(Input.GetTouch(0).phase == TouchPhase.Moved)
-			{
-                if (_touchStay != null)
-                {
-                    _touchStay();
-                }
-			}
-			if(Input.GetTouch(0).phase == TouchPhase.Ended)
-			{
-                if(Input.touchCount > 0)
-                {
-                    m_swipeEnd = new Vector2(Input.touches[0].position.x, Input.touches[0].position.y);
-                }
-                else
-                {
-                    m_swipeEnd = new Vector2(Mathf.Infinity, Mathf.Infinity);
-                }
-
-                if(_touchEnd != null)
-                {
-                    _touchEnd();
-                }
-			}
-		}
-#endif
-
     }
 
-    public void Swipe()
+    private void handleTouch(TouchInfos ti, ref SwipeInfos si)
     {
-        Vector2 swipeVector = m_swipeStart - m_swipeEnd;
+        if (ti.state==TouchInfos.State.BEGIN)
+        {
+            if ((ti.pos - m_wheelCenter).magnitude < m_wheelRadius) si.inZoneSwipe = true;
+            si.inSwipe = true;
+            si.swipeStart = ti.pos;
+            if (_touchStart != null)
+            {
+                _touchStart(si); 
+            }
+    }
+        bool endSwipe = false;
+        bool endZoneSwipe = false;
+        if (ti.state==TouchInfos.State.HELD)
+        {
+            if ((ti.pos - m_wheelCenter).magnitude > m_wheelRadius && si.inZoneSwipe) endZoneSwipe = true;
+            if (_touchStay != null)
+            {
+                _touchStay(si);
+            }
+        }
 
+        if (ti.state==TouchInfos.State.END && si.inSwipe ) endSwipe = true;
+        if (ti.state==TouchInfos.State.END && si.inZoneSwipe ) endZoneSwipe = true;
+
+        if(endSwipe)
+        {
+            si.inSwipe=false;
+            si.swipeEnd = ti.pos;
+            if(_touchEnd != null)
+            {
+                _touchEnd(si);
+            }
+        }
+
+        if(endZoneSwipe)
+        {
+            si.inZoneSwipe = false;
+            si.swipeEnd = ti.pos;
+            if(_touchEndZone != null)
+            {
+                _touchEndZone(si);
+            }
+        }
+    }
+
+    public void Swipe(SwipeInfos si)
+    {
+        Vector2 swipeVector = si.swipeStart - si.swipeEnd;
         if(swipeVector.magnitude > (Screen.width / 6) )
+        {
+            if(swipeVector.x > 0)
+            {
+                if (_swipeRight != null)
+                {
+                    _swipeRight();
+                }
+            }
+            else
+            {
+                if (_swipeLeft != null)
+                {
+                    _swipeLeft();
+                }
+            }
+        }
+    }
+
+    public void SwipeZone(SwipeInfos si)
+    {
+        Vector2 swipeVector = si.swipeStart - si.swipeEnd;
+        if(swipeVector.magnitude > m_wheelRadius/4)//(Screen.width / 6) )
         {
             if(swipeVector.x > 0)
             {

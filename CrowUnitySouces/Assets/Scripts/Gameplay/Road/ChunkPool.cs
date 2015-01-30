@@ -8,7 +8,14 @@ public class ChunkPool : MonoBehaviour {
     #region members
 
     private List<RoadChunk> m_chunks = new List<RoadChunk>();
-    //	private int m_index = 0;
+    private int[] m_history;
+
+    public List<string> _usedChunks = new List<string>();
+    public bool _historyRandomizer=false;
+    public int _historySize = 6;
+    public int _nbRetries = 6;
+
+    private const int POOL_SIZE = 10;
 
     #endregion
 
@@ -16,17 +23,26 @@ public class ChunkPool : MonoBehaviour {
 
     void Awake()
     {
-        AllocateObjects();
+        m_history = new int[_historySize];
+        for (int i = 0; i < _historySize; i++) m_history[i] = Random.Range(0, _usedChunks.Count - 1);
+        allocateObjects();
     }
 
+    private void allocateObjects()
+    {
+        if (_usedChunks.Count == 0) AllocateDefaultObjects(); else allocateSetChunks(_usedChunks);
+    }
     #endregion
 
     #region PoolFunction
 
-    void AllocateObjects()
+    void AllocateDefaultObjects()
     {
-        Object[] objects = Resources.LoadAll("Chunks");
-
+        allocateObjects(Resources.LoadAll("Chunks"));
+    }
+    
+    private void allocateObjects(Object[] objects)
+    {
         if (objects.Length == 0)
         {
             Debug.LogError("there is no chunk to load !");
@@ -44,6 +60,47 @@ public class ChunkPool : MonoBehaviour {
         }
     }
 
+    private void unloadChunks()
+    {
+        foreach(RoadChunk rc in m_chunks)
+        {
+            GameObject tempObject = rc.gameObject;
+            GameObject.Destroy(tempObject);
+        }
+        m_chunks.Clear();
+        Resources.UnloadUnusedAssets();
+    }
+
+    private void allocateSetChunks(List<string> newChunks)
+    {
+        List<Object> objects=new List<Object>();
+        if(_historyRandomizer)
+        {
+            for(int i=0;i<POOL_SIZE;i++)
+            {
+                int nbTries = 0;
+                int nextChunk=0;
+                do
+                {
+                    nextChunk = Random.Range(0, newChunks.Count);
+                } while (nbTries < _nbRetries && m_history.Contains(nextChunk));
+                for (int j = 0; j < _historySize - 1; j++) m_history[j] = m_history[j + 1];
+                m_history[_historySize - 1] = nextChunk;
+                objects.Add(Resources.Load("Chunks/"+newChunks[nextChunk]));
+            }
+        }
+        else foreach(string s in  newChunks)
+        {
+            objects.Add(Resources.Load("Chunks/"+s));
+        }
+        allocateObjects(objects.ToArray());
+    }
+    public void SetChunckList(List<string> newChunks)
+    {
+        unloadChunks();
+        allocateSetChunks(newChunks);
+    }
+
     public GameObject GetUnusedChunk()
     {
         RoadChunk tempChunk = m_chunks.Where(po => po.IsUnused == true).FirstOrDefault();
@@ -55,12 +112,11 @@ public class ChunkPool : MonoBehaviour {
         }
         else
         {
-            AllocateObjects();
+            allocateObjects();
             tempChunk = m_chunks.Where(po => po.IsUnused == true).FirstOrDefault();
             tempChunk.IsUnused = false;
             return tempChunk.gameObject;
         }
-
     }
 
     #endregion
