@@ -66,6 +66,10 @@ public class Panel : MonoBehaviour
     void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireCube(transform.position, transform.localScale);
+        BoxCollider bc = collider as BoxCollider;
+        Matrix4x4 temp = Gizmos.matrix;
+        Gizmos.matrix = Matrix4x4.TRS(transform.position, transform.rotation, Vector3.one);
+        Gizmos.DrawWireCube(Vector3.Scale(bc.center, transform.localScale), Vector3.Scale(transform.localScale, bc.size));
+        Gizmos.matrix = temp;
     }
 }
