@@ -12,7 +12,7 @@ public class PrefabSpawner : MonoBehaviour
     #region methods
     void Start ()
     {
-        m_pos = new Vector3(float.NaN, float.NaN, float.NaN);
+        m_pos = new Vector3(float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity);
 	}
 	
 	void Update ()
