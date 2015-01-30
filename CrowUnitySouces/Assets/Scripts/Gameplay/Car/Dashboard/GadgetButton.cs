@@ -30,7 +30,13 @@ public class GadgetButton : MonoBehaviour
 
     void OnDrawGizmos()
     {
+
+        BoxCollider bc = collider as BoxCollider;
         Gizmos.color = Color.cyan;
-        Gizmos.DrawWireCube(transform.position, transform.localScale);
+        Matrix4x4 temp = Gizmos.matrix;
+        Gizmos.matrix = Matrix4x4.TRS(transform.position, transform.rotation, Vector3.one);
+        Gizmos.DrawWireCube(Vector3.Scale(bc.center, transform.localScale), Vector3.Scale(transform.localScale, bc.size));
+        Gizmos.matrix = temp;
+
     }
 }
