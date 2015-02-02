@@ -6,8 +6,6 @@ public class Dashboard : MonoBehaviour
 {
 
     #region Members
-    public Transform _spawnPoint;
-
     private List<GadgetAbility> m_abilities;
     private GameObject m_dashboard;
     private Panel[] m_panels;
@@ -18,8 +16,10 @@ public class Dashboard : MonoBehaviour
 
     void Start ()
     {
-        // define instanciate path
-        //m_dashboard = GameObject.Instantiate(Resources.Load(""), _spawnPoint.position, Quaternion.identity)  as GameObject;
+        string dashboard = "Dashboard_" + Random.Range(1, 2);
+
+        m_dashboard = GameObject.Instantiate(Resources.Load(dashboard), transform.position, Quaternion.AngleAxis(-90, Vector3.up))  as GameObject;
+        m_dashboard.transform.parent = this.transform;
 
         m_panels = gameObject.GetComponentsInChildren<Panel>();
 
