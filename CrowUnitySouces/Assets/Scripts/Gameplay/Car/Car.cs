@@ -125,7 +125,7 @@ public class Car : MonoBehaviour
 		}
         Quaternion newRotation = wheelQuaternion;
         newRotation *= Quaternion.Euler(new Vector3(0, -wheelRotation*inputs.steering, 0));
-        wheelObject.transform.localRotation = newRotation;
+        //wheelObject.transform.localRotation = newRotation;
 		
 		// Aerodynamic drag & downforce
 		float force=forwardVelocity*forwardVelocity*dragCoef;
