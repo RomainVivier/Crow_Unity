@@ -37,7 +37,10 @@ public class Dash : Gadget
         base.Play();
         Debug.Log("dashing bitch !");
         _rc.setSpeedKmh *= _speedCoeff;
-        _car.InstantSetSpeedKmh(_rc.setSpeedKmh);
+        //_car.InstantSetSpeedKmh(_rc.setSpeedKmh);
+        _car.gameObject.GetComponent<PolynomialEngine>().maxPowerKw *= 1000;
+        _car.gameObject.GetComponent<PolynomialEngine>().powerMinRpmKw*= 1000;
+        _car.updateValues();
         m_timer.Reset(1f);
         IsReady = false;
     }
@@ -47,6 +50,9 @@ public class Dash : Gadget
         base.Stop();
 
         _rc.setSpeedKmh /= _speedCoeff;
+        _car.gameObject.GetComponent<PolynomialEngine>().maxPowerKw /= 1000;
+        _car.gameObject.GetComponent<PolynomialEngine>().powerMinRpmKw/= 1000;
+        _car.updateValues();
         IsReady = true;
     }
 }

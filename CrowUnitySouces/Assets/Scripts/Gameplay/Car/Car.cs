@@ -197,8 +197,7 @@ public class Car : MonoBehaviour
         if(Application.isPlaying) updateValues ();
     }
 		
-	// Private methods
-	void updateValues()
+	public void updateValues()
 	{
 		// Get components
 		engine = gameObject.GetComponent<Engine> ();
@@ -247,6 +246,7 @@ public class Car : MonoBehaviour
 		body.centerOfMass=centerOfMass;
 	}
 
+	// Private methods
     private bool isOnGround()
     {
         bool ret = false;
