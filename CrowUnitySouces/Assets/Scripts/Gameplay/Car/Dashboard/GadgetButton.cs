@@ -35,7 +35,7 @@ public class GadgetButton : MonoBehaviour
         Gizmos.color = Color.cyan;
         Matrix4x4 temp = Gizmos.matrix;
         Gizmos.matrix = Matrix4x4.TRS(transform.position, transform.rotation, Vector3.one);
-        Gizmos.DrawWireCube(Vector3.Scale(bc.center, transform.localScale), Vector3.Scale(transform.localScale, bc.size));
+        Gizmos.DrawWireCube(Vector3.Scale(bc.center, transform.lossyScale), Vector3.Scale(transform.lossyScale, bc.size));
         Gizmos.matrix = temp;
 
     }
