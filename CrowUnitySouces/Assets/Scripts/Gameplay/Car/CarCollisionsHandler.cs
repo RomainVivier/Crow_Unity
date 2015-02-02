@@ -31,7 +31,7 @@ public class CarCollisionsHandler : MonoBehaviour
     void OnCollisionEnter(Collision collision)
     {
         GameObject oth = collision.gameObject;
-        if (oth.name == "Body")
+        if (oth.name == "Obstacle_Car(Clone)")
         {
             if (cooldownTimer.IsElapsedLoop)
             {

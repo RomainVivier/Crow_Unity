@@ -11,7 +11,6 @@ public class Spoonbill : Gadget
     public Animator _handleAnimator;
     public Animator _spoonbillAnimator;
 
-
     private Timer m_attackTimer;
     private Timer m_engageTimer;
 
@@ -88,6 +87,7 @@ public class Spoonbill : Gadget
     public override void Play ()
 	{
 		base.Play ();
+        _invertGesture = true;
 
         switch (m_state)
         {
@@ -116,6 +116,7 @@ public class Spoonbill : Gadget
         m_engageTimer.Reset(1f);
         _spoonbillAnimator.SetTrigger("Disengage");
         _handleAnimator.SetBool("Engage", false);
+        _invertGesture = false;
     }
 
     public override void Stop()

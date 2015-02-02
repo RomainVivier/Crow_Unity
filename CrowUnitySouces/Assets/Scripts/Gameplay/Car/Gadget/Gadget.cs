@@ -10,7 +10,8 @@ public class Gadget : MonoBehaviour
     public Animator _buttonAnim;
     public GadgetAbility[] _abilities;
     public bool _isAssign = false;
-
+    public bool _invertGesture = false;
+    
     private bool m_isReady = true;
     protected string m_playSound = "";
     protected string m_cantPlaySound = "";

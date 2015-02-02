@@ -100,6 +100,15 @@ public class GadgetManager : MonoBehaviour {
 			Debug.Log("no gadget has been registered to this name or gadget is not ready !");
 		}
 	}
+    
+    public Gadget GetGadget(string id)
+    {
+        if(!m_gadgets.ContainsKey(id))
+        {
+            return null;
+        }
+        else return m_gadgets[id];
+    }
 
     public string RandomUnassignGadget()
     {
