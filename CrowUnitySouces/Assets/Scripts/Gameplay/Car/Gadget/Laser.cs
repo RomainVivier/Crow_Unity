@@ -48,7 +48,7 @@ public class Laser : Gadget
     #endregion
 
     #region methods
-    void Start () {
+    public override void Awake () {
         // Init timers
         m_cooldownTimer = new Timer(0.01f);
         m_stateTimer = new Timer();
@@ -75,10 +75,10 @@ public class Laser : Gadget
         Vector3 rightLightPos = m_lasers[1].lightTransform.position;
         Vector3 lightPosCenter = (leftLightPos + rightLightPos) / 2;
         m_lightsYOffset = (valvesPivotTransform.position - lightPosCenter).magnitude * 2;
-        base.Start();
+        base.Awake();
 	}
 	
-	void Update () {
+	public override void Update () {
         switch(m_state)
         {
             case State.READY:

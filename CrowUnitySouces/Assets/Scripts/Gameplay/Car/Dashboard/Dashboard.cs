@@ -22,7 +22,6 @@ public class Dashboard : MonoBehaviour
         m_dashboard.transform.parent = this.transform;
 
         m_panels = gameObject.GetComponentsInChildren<Panel>();
-        Debug.Log("panel count = " + m_panels.Length);
 
         for (int i = 0; i < m_panels.Length; i++)
         {
@@ -44,6 +43,14 @@ public class Dashboard : MonoBehaviour
     /// </summary>
     private void UpdatePanels()
     {
+        //for (int i = 0; i < m_panels.Length; i++)
+        //{
+        //    if(m_panels[i]._distanceToUnlock > )
+        //    {
+
+        //    }
+        //}
+        
         //TODO update each panel of the dashboard verify if the distance to unlock has been reached and add the abilities
     }
 }

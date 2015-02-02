@@ -39,7 +39,7 @@ public class Gadget : MonoBehaviour
 
     #region Mono Function
 
-    public virtual void Start()
+    public virtual void Awake()
     {
     }
 

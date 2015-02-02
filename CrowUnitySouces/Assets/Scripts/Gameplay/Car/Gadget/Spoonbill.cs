@@ -30,7 +30,7 @@ public class Spoonbill : Gadget
 
     #region MonoBehaviour
 
-    void Start()
+    public override void Awake()
     {
         GadgetManager.Instance.Register("Spoonbill", this);
         m_attackTimer = new Timer();
@@ -40,7 +40,7 @@ public class Spoonbill : Gadget
         m_state = State.Disengaged;
     }
 
-    void Update()
+    public override void Update()
     {
         if(m_target != null && m_state == State.Attacking && m_attackTimer.CurrentNormalized < 0.5)
         {

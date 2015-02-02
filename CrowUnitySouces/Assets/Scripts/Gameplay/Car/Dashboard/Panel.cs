@@ -38,12 +38,21 @@ public class Panel : MonoBehaviour
     public void Init()
     {
         string panel = "PanelModel/"+ _panelModelName + "_" + Random.Range(1, 2);
-        Debug.Log(panel);
 
         m_panel = GameObject.Instantiate(Resources.Load(panel), transform.position, Quaternion.AngleAxis(-90, Vector3.up)) as GameObject;
         m_panel.transform.parent = this.transform;
         m_panel.transform.localScale = Vector3.one;
 
+        if(_distanceToUnlock > 0f)
+        {
+            return;
+        }
+
+        InitButtons();
+    }
+
+    public void InitButtons()
+    {
         m_buttons = gameObject.GetComponentsInChildren<GadgetButton>();
 
         for (int i = 0; i < m_buttons.Length; i++)

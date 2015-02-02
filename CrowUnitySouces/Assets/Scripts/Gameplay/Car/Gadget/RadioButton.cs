@@ -6,7 +6,7 @@ public class RadioButton : Gadget {
 	public Radio _radio;
     public bool _switchUp;
 
-    public override void Start()
+    public override void Awake()
     {
         if(_switchUp)
         {
