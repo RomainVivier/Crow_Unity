@@ -16,17 +16,18 @@ public class Dashboard : MonoBehaviour
 
     void Start ()
     {
-        string dashboard = "Dashboard_" + Random.Range(1, 2);
+        string dashboard = "DashboardModel/Dashboard_" + Random.Range(1, 2);
 
         m_dashboard = GameObject.Instantiate(Resources.Load(dashboard), transform.position, Quaternion.AngleAxis(-90, Vector3.up))  as GameObject;
         m_dashboard.transform.parent = this.transform;
 
         m_panels = gameObject.GetComponentsInChildren<Panel>();
+        Debug.Log("panel count = " + m_panels.Length);
 
         for (int i = 0; i < m_panels.Length; i++)
         {
             m_panels[i].Init();
-            m_abilities.AddRange(m_panels[i].AddAbilities());
+            //m_abilities.AddRange(m_panels[i].AddAbilities());
         }
 	}
 	
