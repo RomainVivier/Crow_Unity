@@ -71,8 +71,8 @@ public class Car : MonoBehaviour
         tiresSound.getParameter("Speed", out tiresSpeed);
         tiresSound.getParameter("Ground", out tiresGround);
         tiresSound.start();
-        wheelObject = transform.FindChild("Body/CarModel/volant").gameObject;
-        wheelQuaternion = wheelObject.transform.localRotation;
+        //wheelObject = transform.FindChild("Body/CarModel/volant").gameObject;
+        //wheelQuaternion = wheelObject.transform.localRotation;
 	}
 
     void FixedUpdate ()

@@ -24,6 +24,11 @@ public class GadgetButton : MonoBehaviour
     public void Init()
     {
         _gadgetID = GadgetManager.Instance.RandomUnassignGadget();
+        var gadget = GadgetManager.Instance.getGadgetById(_gadgetID);
+        if(gadget != null)
+        {
+            gadget._buttonAnim = GetComponent<Animator>();
+        }
         _abilities = GadgetManager.Instance.GadgetAbilities(_gadgetID);
     }
 

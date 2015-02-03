@@ -16,6 +16,8 @@ public class Dashboard : MonoBehaviour
 
     void Start ()
     {
+        Random.seed = System.DateTime.Now.Second;
+
         string dashboard = "DashboardModel/Dashboard_" + Random.Range(1, 2);
 
         m_dashboard = GameObject.Instantiate(Resources.Load(dashboard), transform.position, Quaternion.AngleAxis(-90, Vector3.up))  as GameObject;

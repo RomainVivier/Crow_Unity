@@ -8,6 +8,7 @@ public class Panel : MonoBehaviour
     #region Members
     public string _panelModelName;
     public float _distanceToUnlock;
+    public Animator _anim;
 
     private GameObject m_panel;
     private GadgetButton[] m_buttons;
@@ -22,9 +23,13 @@ public class Panel : MonoBehaviour
         get { return m_isVisible; }
         set
         {
-            if(value)
+            if (value)
             {
-                //TODO lancé l'anim pour afficher le panel
+                _anim.SetTrigger("Open");
+            }
+            else
+            {
+                _anim.SetTrigger("Close");
             }
 
             m_isVisible = value;
@@ -43,9 +48,13 @@ public class Panel : MonoBehaviour
         m_panel.transform.parent = this.transform;
         m_panel.transform.localScale = Vector3.one;
 
-        if(_distanceToUnlock > 0f)
+        if (_distanceToUnlock > 0f)
         {
             return;
+        }
+        else
+        {
+            IsVisible = true;
         }
 
         InitButtons();
