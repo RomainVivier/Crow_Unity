@@ -18,11 +18,16 @@ public class Rails : MonoBehaviour
 	public Vector3[] positions;
 	public Vector3[] deltas;
     public float[] speedOverrides;
+    public float Dist
+    {
+        get { return dist; }
+    }
 
 	private int nbComputedPositions;
 	private Vector3[] computedPositions;
 	private bool needToComputePositions=true;
-	
+    private float dist=0;
+
 	[SerializeField, HideInInspector]	
 	private int oldNbPoints=0;
 	[SerializeField, HideInInspector]	
@@ -71,7 +76,20 @@ public class Rails : MonoBehaviour
             swapArrays(railsIndex);
             sortRails = false;
         }
+        updateDist();
 	}
+
+    void updateDist()
+    {
+        Vector3 prevPoint=getPoint(0,0);
+        dist = 0;
+        for(float i=0.01f;i<=1;i+=0.01f)
+        {
+            Vector3 point = getPoint(0, i);
+            dist += (point - prevPoint).magnitude;
+            prevPoint=point;
+        }
+    }
 
     void mergeSortRails(int first, int last,ref int[] railsIndex, ref float[] railsPos)
     {
