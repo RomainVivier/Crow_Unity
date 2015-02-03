@@ -14,11 +14,11 @@ public class Dash : Gadget
 
     #region MonoBehaviour
 
-    public override void Start()
+    public override void Awake()
     {
         GadgetManager.Instance.Register("Dash", this);
         m_timer = new Timer();
-        base.Start();
+        base.Awake();
     }
 
     public override void Update()

@@ -6,7 +6,7 @@ public class Panel : MonoBehaviour
 {
 
     #region Members
-    public Transform _spawnPoint;
+    public string _panelModelName;
     public float _distanceToUnlock;
 
     private GameObject m_panel;
@@ -37,9 +37,22 @@ public class Panel : MonoBehaviour
 
     public void Init()
     {
-        // define instanciate path
-        //m_panel = GameObject.Instantiate(Resources.Load(""), _spawnPoint.position, Quaternion.identity)  as GameObject;
+        string panel = "PanelModel/"+ _panelModelName + "_" + Random.Range(1, 2);
 
+        m_panel = GameObject.Instantiate(Resources.Load(panel), transform.position, Quaternion.AngleAxis(-90, Vector3.up)) as GameObject;
+        m_panel.transform.parent = this.transform;
+        m_panel.transform.localScale = Vector3.one;
+
+        if(_distanceToUnlock > 0f)
+        {
+            return;
+        }
+
+        InitButtons();
+    }
+
+    public void InitButtons()
+    {
         m_buttons = gameObject.GetComponentsInChildren<GadgetButton>();
 
         for (int i = 0; i < m_buttons.Length; i++)
@@ -63,13 +76,4 @@ public class Panel : MonoBehaviour
 
     #endregion
 
-    void OnDrawGizmos()
-    {
-        Gizmos.color = Color.yellow;
-        BoxCollider bc = collider as BoxCollider;
-        Matrix4x4 temp = Gizmos.matrix;
-        Gizmos.matrix = Matrix4x4.TRS(transform.position, transform.rotation, Vector3.one);
-        Gizmos.DrawWireCube(Vector3.Scale(bc.center, transform.localScale), Vector3.Scale(transform.localScale, bc.size));
-        Gizmos.matrix = temp;
-    }
 }

@@ -8,10 +8,10 @@ public class DirectionButton : Gadget
 
     #region MonoBehaviour
 
-    public override void Start()
+    public override void Awake()
     {
         GadgetManager.Instance.Register(_dirValue > 0 ? "Right" : "Left", this);
-        base.Start();
+        base.Awake();
     }
 
     #endregion

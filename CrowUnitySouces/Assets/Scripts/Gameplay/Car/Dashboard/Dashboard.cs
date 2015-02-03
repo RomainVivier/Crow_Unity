@@ -16,7 +16,7 @@ public class Dashboard : MonoBehaviour
 
     void Start ()
     {
-        string dashboard = "Dashboard_" + Random.Range(1, 2);
+        string dashboard = "DashboardModel/Dashboard_" + Random.Range(1, 2);
 
         m_dashboard = GameObject.Instantiate(Resources.Load(dashboard), transform.position, Quaternion.AngleAxis(-90, Vector3.up))  as GameObject;
         m_dashboard.transform.parent = this.transform;
@@ -26,7 +26,7 @@ public class Dashboard : MonoBehaviour
         for (int i = 0; i < m_panels.Length; i++)
         {
             m_panels[i].Init();
-            m_abilities.AddRange(m_panels[i].AddAbilities());
+            //m_abilities.AddRange(m_panels[i].AddAbilities());
         }
 	}
 	
@@ -43,6 +43,14 @@ public class Dashboard : MonoBehaviour
     /// </summary>
     private void UpdatePanels()
     {
+        //for (int i = 0; i < m_panels.Length; i++)
+        //{
+        //    if(m_panels[i]._distanceToUnlock > )
+        //    {
+
+        //    }
+        //}
+        
         //TODO update each panel of the dashboard verify if the distance to unlock has been reached and add the abilities
     }
 }

@@ -8,11 +8,11 @@ public class Duck : Gadget
     private float currentCooldown = 0;
     private const int COOLDOWN = 2;
 
-	public override void Start ()
+	public override void Awake ()
     {
         duckSound=FMOD_StudioSystem.instance.GetEvent("event:/SFX/Gadgets/Duck/gadgetDuckExecute");
         GadgetManager.Instance.Register("Duck", this);
-        base.Start();
+        base.Awake();
     }
 	
 	public override void Update ()
