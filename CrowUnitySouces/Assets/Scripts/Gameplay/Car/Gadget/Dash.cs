@@ -35,7 +35,6 @@ public class Dash : Gadget
     public override void Play()
     {
         base.Play();
-        Debug.Log("dashing bitch !");
         _rc.setSpeedKmh *= _speedCoeff;
         _car.InstantSetSpeedKmh(_rc.setSpeedKmh);
         m_timer.Reset(1f);
