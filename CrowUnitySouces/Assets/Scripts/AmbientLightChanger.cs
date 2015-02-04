@@ -23,9 +23,11 @@ public class AmbientLightChanger : MonoBehaviour
 	
 	}
 	
-	void Update ()
+#if UNITY_EDITOR
+    void OnValidate()
     {
-
+        RenderSettings.ambientLight = c;
     }
+#endif
     #endregion
 }
