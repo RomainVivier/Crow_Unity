@@ -4,10 +4,8 @@ using System.Collections.Generic;
 
 public abstract class Obstacle : MonoBehaviour
 {
-
     #region members
 
-    public GameObject _prefab;
     protected List<GadgetAbility> m_weaknesses;
 
     #endregion
@@ -20,4 +18,5 @@ public abstract class Obstacle : MonoBehaviour
     public virtual void Behaviour()
     {
     }
+
 }
