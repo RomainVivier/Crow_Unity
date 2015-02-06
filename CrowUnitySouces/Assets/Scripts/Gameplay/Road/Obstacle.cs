@@ -19,4 +19,13 @@ public abstract class Obstacle : MonoBehaviour
     {
     }
 
+    void OnTriggerExit(Collider other)
+    {
+        //Debug.Log("No longer in contact with " + other.transform.name);
+
+        if (other.collider.CompareTag("ChunkDelimiter"))
+        {
+            Destroy(this);
+        }
+    }
 }
