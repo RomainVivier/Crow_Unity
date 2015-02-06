@@ -112,7 +112,11 @@ public class GadgetManager : MonoBehaviour {
 
     public string RandomUnassignGadget()
     {
-        string gadgetID = m_gadgets.Where(g => g.Value._isAssign == false).FirstOrDefault().Key;
+        string gadgetID;
+
+        var gadgets = m_gadgets.Where(g => g.Value._isAssign == false).Select(g => g.Key).ToList();
+
+        gadgetID = gadgets[Random.Range(0, gadgets.Count)];
 
         if (m_gadgets.ContainsKey(gadgetID))
         {
@@ -120,6 +124,11 @@ public class GadgetManager : MonoBehaviour {
         }
 
         return gadgetID;
+    }
+
+    public Gadget getGadgetById(string id)
+    {
+        return m_gadgets[id];
     }
 
     public GadgetAbility[] GadgetAbilities(string id)
