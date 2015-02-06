@@ -235,7 +235,8 @@ public class Rails : MonoBehaviour
 		if(nextRail>=nbRails) nextRail=nbRails-1;
 		railPos=rail-prevRail;
 		if(railPos>1) railPos=1;
-		
+        if (railPos < 0) railPos = 0;
+
 		// Compute the interpolation between the points
 		float pointProgress=progress*(nbPoints-1);
 		prevPP=Mathf.FloorToInt(pointProgress);
