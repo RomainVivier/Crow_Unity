@@ -4,10 +4,8 @@ using System.Collections.Generic;
 
 public abstract class Obstacle : MonoBehaviour
 {
-
     #region members
 
-    public GameObject _prefab;
     protected List<GadgetAbility> m_weaknesses;
 
     #endregion
@@ -19,5 +17,15 @@ public abstract class Obstacle : MonoBehaviour
 
     public virtual void Behaviour()
     {
+    }
+
+    void OnTriggerExit(Collider other)
+    {
+        //Debug.Log("No longer in contact with " + other.transform.name);
+
+        if (other.collider.CompareTag("ChunkDelimiter"))
+        {
+            Destroy(this);
+        }
     }
 }

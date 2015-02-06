@@ -10,7 +10,7 @@ public class RoadChunk : MonoBehaviour {
 
     public GameObject[] _environmentPoint;
     public Rails _rails;
-    public Obstacle[] _obstacles;
+    public PrefabSpawner[] _spawners;
 
 	private RoadChunk m_nextChunk = null;
     private bool m_isUnused = false;
@@ -66,16 +66,20 @@ public class RoadChunk : MonoBehaviour {
 
     #region Functions
 
-    void Generate()
+    public void Generate()
     {
+        //TODO take a look at function comment
+
         // instanciate piece of chunk
 
         // get environments / obstacles
 
         // generate environments
 
-        // generate obstacles
-
+        for (int i = 0; i < _spawners.Length; i++)
+        {
+            _spawners[i].spawnPrefab();
+        }
     }
 
     void Generate(Theme theme)
