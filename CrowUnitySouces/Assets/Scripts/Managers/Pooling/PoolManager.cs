@@ -120,7 +120,6 @@ public class PoolManager : MonoBehaviour {
         else
         {
             return AllocateObjectsByID(poolType.Key).gameObject;
-
         }
 
     }

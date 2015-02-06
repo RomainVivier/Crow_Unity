@@ -9,9 +9,11 @@ public class PolynomialEngine : Engine {
 	public float powerMinRpmKw=50;
 	public float maxRpm=7000;
 	public float engineBrake=0.01f;
-	
+
 	// Power curve=ax^3+bx^2+cx
 	private float curveA=0,curveB=0,curveC=0;
+    private float overRev = 0;
+    private bool curOverRev = false;
 
 	public override float getMaxPower()
 	{
@@ -44,17 +46,25 @@ public class PolynomialEngine : Engine {
 		curveB=(maxPowerKw-(curveA*v))/w;
 		curveC=(-curveA*3)*maxPowerRpm*maxPowerRpm+(-curveB*2)*maxPowerRpm;
 	}
-	
+
+
 	public override float getPower(float rpm, float throttle)
 	{
-		if(rpm<minRpm) return getPower (minRpm,throttle);
-		else if(rpm>maxRpm) return getPower (maxRpm,0);
-		else
-		{
-			float low=-engineBrake*rpm;
-			float high=curveA*rpm*rpm*rpm+curveB*rpm*rpm+curveC*rpm;
-			return Mathf.Lerp(low,high,throttle)*1000;
-		}
+        if (rpm < minRpm)
+        {
+            return getPower(minRpm, throttle);
+        }
+        else if (rpm > maxRpm)
+        {
+            return getPower(maxRpm, 0);
+        }
+        else
+        {
+
+            float low = -engineBrake * rpm;
+            float high = curveA * rpm * rpm * rpm + curveB * rpm * rpm + curveC * rpm;
+            return Mathf.Lerp(low, high, throttle) * 1000;
+        }
 	}
 	
 	public override float getMaxPowerRpm()
