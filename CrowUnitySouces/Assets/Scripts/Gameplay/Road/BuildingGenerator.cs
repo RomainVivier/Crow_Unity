@@ -27,7 +27,7 @@ public class BuildingGenerator : MonoBehaviour {
             if(i==0) building = PoolManager.Instance.GetUnusedObject(rb.baseObject.name);
             else if(i==height-1) building=PoolManager.Instance.GetUnusedObject(rb.topObject.name);
             else building=PoolManager.Instance.GetUnusedObject(rb.middleObject.name);
-            building.GetComponent<MeshRenderer>().material = rb.material;
+            if(rb.material!=null) building.GetComponent<MeshRenderer>().material = rb.material;
             building.SetActive(true);
             building.transform.position = transform.position + Vector3.up * 30 * i * transform.localScale.y;
             building.transform.rotation = Quaternion.Euler(new Vector3(-90, 90 + transform.rotation.eulerAngles.y, 0));

@@ -27,7 +27,7 @@ public class BuildingGeneratorParameters : MonoBehaviour{
             baseObject = bi.baseObject;
             middleObject = bi.middleObject;
             topObject = bi.topObject;
-            material = bi.materials[Random.Range(0, bi.materials.Length)];
+            material = bi.materials.Length != 0 ? bi.materials[Random.Range(0, bi.materials.Length)] : null;
         }
     }
     public BuildingInfos[] _buildingInfos;

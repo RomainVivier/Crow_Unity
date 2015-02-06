@@ -59,17 +59,17 @@ public class AutomaticGearbox : CarControl {
 		if(transmission.canUpshift())
 		{
 			float nextPower=engine.getPower (transmission.getNextSpeed2Rpm()*velocity,1)*sensitivity;
-			if(nextPower>curPower) wantUpshift=true;
+			//if(nextPower>curPower) wantUpshift=true;
 			if(curRpm>=upshiftRpm) wantUpshift=true;
 			
 		}
 		if(transmission.canDownshift())
 		{
 			float prevPower=engine.getPower (transmission.getPreviousSpeed2Rpm()*velocity,1)*sensitivity;
-			if(prevPower>curPower) wantDownshift=true;
+			//if(prevPower>curPower) wantDownshift=true;
 			if(curRpm<=downshiftRpm) wantDownshift=true;
 		}
-		
+        //Debug.Log(wantUpshift + " "+ wantDownshift + " " + waitingTime + "," + waiting + ";" + curRpm + " " +downshiftRpm);
 		if(wantUpshift != wantDownshift)
 		{
 			if(waiting)
