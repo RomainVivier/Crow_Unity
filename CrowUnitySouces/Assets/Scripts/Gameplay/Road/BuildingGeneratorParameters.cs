@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-public class BuildingGeneratorParameters {
+public class BuildingGeneratorParameters : MonoBehaviour{
 
     [System.Serializable]
     public class BuildingInfos
@@ -34,14 +34,15 @@ public class BuildingGeneratorParameters {
 
     public RandomBuilding getRandomBuilding(int height=0)
     {
-        IEnumerable<BuildingInfos> okInfos=_buildingInfos.Where(b => height == 0 || b.maxHeight == 0 || b.maxHeight >= height);
+        List<BuildingInfos> okInfos = _buildingInfos.Where(b => height == 0 || b.maxHeight == 0 || b.maxHeight >= height).ToList();
         float totalWeight = okInfos.Aggregate(0f, (val, b) => val + b.weight);
         float rndVal = Random.Range(0, totalWeight);
-        BuildingInfos bi = okInfos.Single(b =>
+
+        while(okInfos.First().weight<=rndVal)
         {
-            if (b.weight <= rndVal) return true;
-            else { rndVal -= b.weight; return false; }
-        });
-        return new RandomBuilding(bi);
+            rndVal -= okInfos.First().weight;
+            okInfos.RemoveAt(0);
+        }
+        return new RandomBuilding(okInfos.First());
     }
 }
