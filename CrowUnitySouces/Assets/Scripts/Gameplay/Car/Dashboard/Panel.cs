@@ -44,7 +44,7 @@ public class Panel : MonoBehaviour
     {
         string panel = "PanelModel/"+ _panelModelName + "_" + Random.Range(1, 2);
 
-        m_panel = GameObject.Instantiate(Resources.Load(panel), transform.position, Quaternion.AngleAxis(-90, Vector3.up)) as GameObject;
+        m_panel = GameObject.Instantiate(Resources.Load(panel), transform.position, Quaternion.Euler(new Vector3(-10f, -90f, 0f))) as GameObject;
         m_panel.transform.parent = this.transform;
         m_panel.transform.localScale = Vector3.one;
 
