@@ -135,7 +135,7 @@ public class RoadManager : MonoBehaviour
                 m_car.GetComponent<RailsControl>().chunk = rc;
             }
 
-			rc.Generate();
+
             m_chunks.Add(rc);
         }
 
@@ -166,6 +166,7 @@ public class RoadManager : MonoBehaviour
         //add new chunk
         rc = chunk.GetComponent<RoadChunk>();
         m_chunks.Add(rc);
+
 
         // position it and assign it as last chunk
         m_lastChunk.NextChunk=rc;
@@ -224,6 +225,7 @@ public class RoadManager : MonoBehaviour
         {
             chunk = GameObject.Instantiate(Resources.Load("Chunks/" + path)) as GameObject;
             chunk.name = path;
+			chunk.GetComponent<RoadChunk>().Generate();
             return chunk;
         }
         else
