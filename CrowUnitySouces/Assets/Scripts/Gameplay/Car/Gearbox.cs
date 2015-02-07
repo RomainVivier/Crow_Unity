@@ -7,7 +7,9 @@ public class Gearbox : Transmission
 	public float topGearRatio=1.25f; // [1;∞[ 1=highest top speed possible
 	public float firstToSecondRatio=0.5f;
 	public float nthToTopGearRatio=0.8f;
-	public float shiftTime=0.2f;
+    public float declutchTime = 0.1f;
+    public float clutchTime = 0.1f;
+    public float shiftTime = 0.3f;
 	
 	private int currentGear=0;
 	private float[] ratios;
@@ -15,7 +17,8 @@ public class Gearbox : Transmission
 	private Engine engine;
 	private bool disengaged=false;
 	private float timeToReengage=0;
-	
+    private int lockedGear = -1;
+
 	public override float getSpeed2Rpm()
 	{
 		return ratios[currentGear];
@@ -51,9 +54,15 @@ public class Gearbox : Transmission
 		}
 	}
 	
-	public override bool isDisengaged()
+	public override float isEngaged()
 	{
-		return disengaged;
+        if (disengaged)
+        {
+            if (timeToReengage < clutchTime) return 1 - (timeToReengage / clutchTime);
+            if (shiftTime - timeToReengage < declutchTime) return (shiftTime - timeToReengage) / clutchTime;
+            return 0;
+        }
+        else return 1;
 	}
 	
 	public override void upshift()
@@ -68,7 +77,7 @@ public class Gearbox : Transmission
 	
 	public override void downshift()
 	{
-		if(currentGear>0)
+		if(currentGear>0 && lockedGear==-1)
 		{
 			currentGear--;
 			disengaged=true;
@@ -113,5 +122,16 @@ public class Gearbox : Transmission
         }
         newFakeGear = gear;
         return rpm;
+    }
+
+	public override int getCurrentGear()
+	{
+		return currentGear;
+	}
+
+    public override void lockGear(int gear)
+    {
+        lockedGear = gear;
+        if(gear!=-1) currentGear = gear;
     }
 }

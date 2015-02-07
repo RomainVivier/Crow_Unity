@@ -21,6 +21,7 @@ public class Car : MonoBehaviour
     public float fakeSoundBrakes = 0.7f;
     public float fakeSoundBrakesSpeedFriction = 0.2f;
     public float fakeSoundInstantThresholdKmh = 2f;
+    public float overRevPeriod = 0.01f;
 
 	// Components
 	private Engine engine;
@@ -49,7 +50,7 @@ public class Car : MonoBehaviour
     private FMOD.Studio.EventInstance engineSound;
     private FMOD.Studio.ParameterInstance engineRPM;
     private FMOD.Studio.ParameterInstance engineSpeed;
-    private const int ENGINE_SOUND_MAX_RPM = 6000;
+    private const int ENGINE_SOUND_MAX_RPM = 7000;
     private FMOD.Studio.EventInstance tiresSound;
     private FMOD.Studio.ParameterInstance tiresFriction;
     private FMOD.Studio.ParameterInstance tiresSpeed;
@@ -57,6 +58,7 @@ public class Car : MonoBehaviour
 
     private float fakeSoundSpeed=0; // 0=0m/s, 1=max speed
     private int fakeGear = 0;
+    private float overRevTime = 0;
 
      // MonoBehaviour methods
 	void Start ()
@@ -84,8 +86,16 @@ public class Car : MonoBehaviour
 		nbUpdates=(nbUpdates+1)%freq;
 		
 		// Update transmission
-		if(inputs.upshift && !oldInputs.upshift) transmission.upshift();
-		if(inputs.downshift && !oldInputs.downshift) transmission.downshift();
+        if (inputs.upshift && !oldInputs.upshift)
+        {
+            transmission.upshift();
+            FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Car Mechanics/carGearUp", transform.position);
+        }
+        if (inputs.downshift && !oldInputs.downshift)
+        {
+            transmission.downshift();
+            FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Car Mechanics/carGearDown", transform.position);
+        }
 				
 		// Compute forward torque
 		Vector3 velocity=body.GetRelativePointVelocity(new Vector3(0,0,0));
@@ -103,7 +113,7 @@ public class Car : MonoBehaviour
 			float accelMult= i<2 ? fwd : 1-fwd;
 			float brakeMult= i<2 ? brakesRepartition : 1-brakesRepartition;
 			wheels[i].brakeTorque=inputs.brake*brakeTorque*brakeMult;
-			if(!transmission.isDisengaged()) wheels[i].motorTorque=torque*accelMult/2;
+			if(transmission.isEngaged()==1) wheels[i].motorTorque=torque*accelMult/2;
 				else wheels[i].motorTorque=0;
 		}		
 		
@@ -155,7 +165,7 @@ public class Car : MonoBehaviour
 		oldInputs=inputs;
 		
         // Update fake speed
-        float frictionSound = Mathf.Abs(inputs.steering);
+        /*
         float tgtFakeSpeed = forwardVelocity / (railsControl ? railsControl.setSpeedKmh/3.6f : maxSpeed);
         if (tgtFakeSpeed < fakeSoundSpeed - fakeSoundInstantThresholdKmh / 3.6)
             fakeSoundSpeed = tgtFakeSpeed;
@@ -170,26 +180,41 @@ public class Car : MonoBehaviour
         if(newFakeGear>fakeGear)
         {
             fakeGear = newFakeGear;
-            FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Car Mechanics/carGearUp", transform.position);
+            //FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Car Mechanics/carGearUp", transform.position);
         }
         if(newFakeGear<fakeGear)
         {
             fakeGear = newFakeGear;
-            FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Car Mechanics/carGearDown", transform.position);
+            //FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Car Mechanics/carGearDown", transform.position);
+        }*/
+        float fakeRPM = Mathf.Lerp(engine.getMaxRpm(),rpm,transmission.isEngaged());
+
+
+        // Update overRev
+        //fakeRPM = rpm;
+        if(rpm>engine.getMaxRpm()*0.97 && transmission.getCurrentGear()==0)
+        {
+            fakeRPM=Mathf.Lerp(engine.getMaxRpm(),engine.getMaxRpm()*0.8f,(Mathf.Sin(overRevTime*2*Mathf.PI/overRevPeriod)+1)/2);
+            overRevTime += Time.fixedDeltaTime;
         }
+        else overRevTime=0;
+        //Debug.Log(overRevTime);
 
         // Update sounds
+        float frictionSound = Mathf.Abs(inputs.steering);
+        if (fakeRPM < engine.getMinRpm()) fakeRPM = engine.getMinRpm();
         float soundRpm=fakeRPM*ENGINE_SOUND_MAX_RPM/engine.getMaxRpm();
+        //float soundRpm = rpm * ENGINE_SOUND_MAX_RPM / engine.getMaxRpm();
         engineRPM.setValue(soundRpm);
         tiresGround.setValue(isOnGround() ? 1 : 0);
         tiresFriction.setValue(frictionSound);
         tiresSpeed.setValue(forwardVelocity / maxSpeed);
         engineSpeed.setValue(fakeSoundSpeed);
 		// Debug print
-		/*if(nbUpdates%10==0)
+		if(nbUpdates%10==0)
 		{
-			Debug.Log((int)forwardVelocity*3.6+" "+(int)rpm);
-		}*/
+			Debug.Log((int)forwardVelocity*3.6+" "+(int)rpm+" "+transmission.getCurrentGear());
+		}
 	}
 
     void OnValidate()
@@ -197,8 +222,7 @@ public class Car : MonoBehaviour
         if(Application.isPlaying) updateValues ();
     }
 		
-	// Private methods
-	void updateValues()
+	public void updateValues()
 	{
 		// Get components
 		engine = gameObject.GetComponent<Engine> ();
@@ -238,6 +262,7 @@ public class Car : MonoBehaviour
 		wheelRadius=wheels[0].radius;
 		wheelRadius*=transform.FindChild("Body").FindChild("WheelFR").transform.lossyScale.y;
 		engine.updateValues ();
+        transmission.updateValues();
 		acceleration2Torque=mass*wheelRadius;
 		brakeTorque=brakeDecceleration*acceleration2Torque/2;
 		wheelBase=body.transform.localScale.z;
@@ -247,6 +272,7 @@ public class Car : MonoBehaviour
 		body.centerOfMass=centerOfMass;
 	}
 
+	// Private methods
     private bool isOnGround()
     {
         bool ret = false;
