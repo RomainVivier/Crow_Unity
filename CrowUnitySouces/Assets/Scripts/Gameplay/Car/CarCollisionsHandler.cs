@@ -1,8 +1,17 @@
 ﻿using UnityEngine;
+using UnityEditor;
 using System.Collections;
 
 public class CarCollisionsHandler : MonoBehaviour
 {
+    #region public parameters
+    public float _maxAngleHDeg = 45;
+    public float _maxAngleVDeg = 45;
+
+    public float _minMomentum = 1000;// In Kg.m/s (or N.s)
+    public float _maxMomentum = 3000;
+
+    #endregion
 
     #region private members
     private FMOD.Studio.EventInstance m_impactVehicleSound;
@@ -38,6 +47,15 @@ public class CarCollisionsHandler : MonoBehaviour
                 playSound(collision, m_impactVehicleSound, m_impactVehicleSpeed);
                 cooldownTimer.Reset(2f);
             }
+            float hAngle = Random.Range(-_maxAngleHDeg, _maxAngleHDeg) * Mathf.Deg2Rad;
+            Vector3 forward = m_car.getForwardVector();
+            Vector3 right = m_car.getRightVector();
+            Vector3 hVector = forward * Mathf.Cos(hAngle) + right * Mathf.Sin(hAngle);
+            float vAngle = Random.Range(0, _maxAngleVDeg) * Mathf.Deg2Rad;
+            Vector3 up = m_car.getUpVector();
+            Vector3 direc = hVector * Mathf.Cos(vAngle) + up * Mathf.Sin(vAngle);
+            float momentum=Mathf.Lerp(_minMomentum,_maxMomentum,m_car.getForwardVelocityKmh()/m_car.maxSpeedKmh);
+            oth.rigidbody.AddForce(direc * momentum);
         }
         else if (!collision.collider.isTrigger)
         {
