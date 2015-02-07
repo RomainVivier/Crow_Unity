@@ -11,7 +11,7 @@ public class DiscoBall : Gadget
     const float DISACTIVAION_LEVER_COOLDOWN = 3f;
     #endregion
 
-<<<<<<< HEAD
+
     #region members
     private enum State
     {
@@ -21,7 +21,7 @@ public class DiscoBall : Gadget
         DISACTIVATING,
         COOLDOWN
     };
-    
+
     private Timer m_cooldownTimer;
     private Timer m_stateTimer;
     private State m_state;
@@ -29,7 +29,7 @@ public class DiscoBall : Gadget
     #endregion
 
     #region methods
-    void Start ()
+    void Start()
     {
         m_cooldownTimer = new Timer(0.01f);
         m_stateTimer = new Timer(0.01f);
@@ -37,15 +37,15 @@ public class DiscoBall : Gadget
         m_animator = transform.FindChild("Ball").GetComponent<Animator>();
         m_animator.SetBool("activated", false);
     }
-	
-	void Update ()
+
+    void Update()
     {
-	    switch(m_state)
+        switch (m_state)
         {
             case State.READY:
                 break;
             case State.ACTIVATING:
-                if(m_stateTimer.IsElapsedOnce)
+                if (m_stateTimer.IsElapsedOnce)
                 {
                     m_state = State.ACTIVE;
                 }
@@ -54,11 +54,11 @@ public class DiscoBall : Gadget
 
                 break;
         }
-	}
+    }
 
     public override void Play()
     {
-        if(m_state!=State.READY)
+        if (m_state != State.READY)
         {
             Debug.LogError("Error : gadget discoball is not ready");
         }
@@ -73,15 +73,5 @@ public class DiscoBall : Gadget
         base.Play();
     }
     #endregion
-=======
-    void Start ()
-    {
-	
-	}
-	
-	void Update ()
-    {
-	
-	}
->>>>>>> Gadgets
+
 }
