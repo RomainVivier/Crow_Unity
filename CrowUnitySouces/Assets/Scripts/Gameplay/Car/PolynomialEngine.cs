@@ -76,4 +76,9 @@ public class PolynomialEngine : Engine {
     {
         return maxRpm;
     }
+
+    public override float getMinRpm()
+    {
+        return minRpm;
+    }
 }

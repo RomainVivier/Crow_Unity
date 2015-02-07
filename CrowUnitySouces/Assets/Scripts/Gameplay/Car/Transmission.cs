@@ -14,6 +14,8 @@ public abstract class Transmission : MonoBehaviour
 	public virtual void updateValues() {}
     public abstract float getMaxPossibleRPM(float speed, float maxRPM, out int newFakeGear);
     public virtual int getCurrentGear() { return 0; }
+    public virtual void lockGear(int gear) { } // -1=unlock
+
 	void Start()
 	{
 		updateValues ();
