@@ -11,6 +11,7 @@ public class DiscoBall : Gadget
     const float DISACTIVAION_LEVER_COOLDOWN = 3f;
     #endregion
 
+<<<<<<< HEAD
     #region members
     private enum State
     {
@@ -72,4 +73,15 @@ public class DiscoBall : Gadget
         base.Play();
     }
     #endregion
+=======
+    void Start ()
+    {
+	
+	}
+	
+	void Update ()
+    {
+	
+	}
+>>>>>>> Gadgets
 }
