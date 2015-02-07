@@ -117,6 +117,7 @@ public class RoadManager : MonoBehaviour
                 return;
             }
 
+
             Light light = chunk.transform.FindChild("Point light").GetComponent<Light>();
             if(light!=null)
             {
@@ -134,6 +135,7 @@ public class RoadManager : MonoBehaviour
                 m_car.GetComponent<RailsControl>().chunk = rc;
             }
 
+			rc.Generate();
             m_chunks.Add(rc);
         }
 
@@ -222,7 +224,6 @@ public class RoadManager : MonoBehaviour
         {
             chunk = GameObject.Instantiate(Resources.Load("Chunks/" + path)) as GameObject;
             chunk.name = path;
-
             return chunk;
         }
         else

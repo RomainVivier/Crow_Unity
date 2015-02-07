@@ -18,8 +18,10 @@ public class PrefabSpawner : MonoBehaviour
 
     public void spawnPrefab()
     {
-        if (m_spawnedObject != null) GameObject.Destroy(m_spawnedObject);
-        m_spawnedObject=(GameObject) GameObject.Instantiate(prefab, transform.position, transform.rotation);
+        if (m_spawnedObject != null) 
+			GameObject.Destroy(m_spawnedObject);
+		m_spawnedObject=(GameObject) GameObject.Instantiate(prefab, transform.position, transform.rotation);
+		Debug.Log("Spawned Object at " + m_spawnedObject.transform.position.ToString());
     }
     
     void OnDrawGizmos()
