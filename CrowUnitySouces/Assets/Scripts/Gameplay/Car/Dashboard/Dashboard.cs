@@ -20,7 +20,7 @@ public class Dashboard : MonoBehaviour
 
         string dashboard = "DashboardModel/Dashboard_" + Random.Range(1, 2);
 
-        m_dashboard = GameObject.Instantiate(Resources.Load(dashboard), transform.position, Quaternion.AngleAxis(-90, Vector3.up))  as GameObject;
+        m_dashboard = GameObject.Instantiate(Resources.Load(dashboard), transform.position, Quaternion.Euler(new Vector3(-10f, -90f, 0f)))  as GameObject;
         m_dashboard.transform.parent = this.transform;
 
         m_panels = gameObject.GetComponentsInChildren<Panel>();
