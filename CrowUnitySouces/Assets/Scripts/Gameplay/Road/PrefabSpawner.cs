@@ -5,6 +5,7 @@ public class PrefabSpawner : MonoBehaviour
 {
     #region members
     public GameObject prefab;
+    public Vector3 _offset;
     public Rails _rail;
     public float _railIndex;
     public float _railProggress;
@@ -19,7 +20,7 @@ public class PrefabSpawner : MonoBehaviour
     public void spawnPrefab()
     {
         if (m_spawnedObject != null) GameObject.Destroy(m_spawnedObject);
-        m_spawnedObject=(GameObject) GameObject.Instantiate(prefab, transform.position, transform.rotation);
+        m_spawnedObject=(GameObject) GameObject.Instantiate(prefab, transform.position + _offset, transform.rotation);
     }
     
     void OnDrawGizmos()
