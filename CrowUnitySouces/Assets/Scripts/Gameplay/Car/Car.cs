@@ -50,6 +50,7 @@ public class Car : MonoBehaviour
     private FMOD.Studio.EventInstance engineSound;
     private FMOD.Studio.ParameterInstance engineRPM;
     private FMOD.Studio.ParameterInstance engineSpeed;
+    private FMOD.Studio.ParameterInstance engineLoad;
     private const int ENGINE_SOUND_MAX_RPM = 7000;
     private FMOD.Studio.EventInstance tiresSound;
     private FMOD.Studio.ParameterInstance tiresFriction;
@@ -68,6 +69,7 @@ public class Car : MonoBehaviour
         engineSound.start();
         engineSound.getParameter("RPM", out engineRPM);
         engineSound.getParameter("Speed", out engineSpeed);
+        engineSound.getParameter("Load", out engineLoad);
         tiresSound = FMOD_StudioSystem.instance.GetEvent("event:/SFX/Car Mechanics/carTyres");
         tiresSound.getParameter("Friction", out tiresFriction);
         tiresSound.getParameter("Speed", out tiresSpeed);
@@ -210,11 +212,12 @@ public class Car : MonoBehaviour
         tiresFriction.setValue(frictionSound);
         tiresSpeed.setValue(forwardVelocity / maxSpeed);
         engineSpeed.setValue(fakeSoundSpeed);
-		// Debug print
-		if(nbUpdates%10==0)
+        engineLoad.setValue(inputs.throttle>0.5 ? 1 : 0);
+        // Debug print
+		/*if(nbUpdates%10==0)
 		{
 			Debug.Log((int)forwardVelocity*3.6+" "+(int)rpm+" "+transmission.getCurrentGear());
-		}
+		}*/
 	}
 
     void OnValidate()
