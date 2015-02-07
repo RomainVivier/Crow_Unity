@@ -36,7 +36,7 @@ public class Dash : Gadget
     {
         base.Play();
         Debug.Log("dashing bitch !");
-		//FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Gadgets/Boost/gadgetBoostExecute",transform.position);
+		FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Gadgets/Boost/gadgetBoostExecute",transform.position);
         _rc.setSpeedKmh *= _speedCoeff;
         //_car.InstantSetSpeedKmh(_rc.setSpeedKmh);
         _car.gameObject.GetComponent<PolynomialEngine>().maxPowerKw *= 50;
