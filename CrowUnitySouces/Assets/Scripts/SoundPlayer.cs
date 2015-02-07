@@ -13,6 +13,7 @@ public class SoundPlayer : MonoBehaviour
     public float proba = 1;
     public float minSpeedKmh = 80;
     public int forcePan = 0;
+    public bool useTrigger = true;
 
     private FMOD.Studio.EventInstance m_fmodEvent;
     private bool m_alreadyPlayed;
@@ -25,11 +26,26 @@ public class SoundPlayer : MonoBehaviour
         m_fmodEvent=FMOD_StudioSystem.instance.GetEvent("event:/"+_soundName);
         m_alreadyPlayed = false;
     }
+
+    void Update()
+    {
+        if (useTrigger) return;
+        FMOD.Studio.PLAYBACK_STATE state;
+        m_fmodEvent.getPlaybackState(out state);
+        if (state == FMOD.Studio.PLAYBACK_STATE.STOPPED) m_fmodEvent.start();
+        _3D_ATTRIBUTES threeDeeAttr = new _3D_ATTRIBUTES();
+        threeDeeAttr.position = UnityUtil.toFMODVector(transform.position);
+        threeDeeAttr.up = UnityUtil.toFMODVector(transform.up);
+        threeDeeAttr.forward = UnityUtil.toFMODVector(transform.forward);
+        threeDeeAttr.velocity = UnityUtil.toFMODVector(-GameObject.FindObjectOfType<Car>().gameObject.transform.Find("Body").rigidbody.velocity);
+        m_fmodEvent.set3DAttributes(threeDeeAttr);
+    }
     #endregion
 
     #region Collider
     void OnTriggerEnter(Collider other)
     {
+        if (!useTrigger) return;
         if(other.gameObject.name=="Body" && other.gameObject.transform.parent.GetComponent<Car>()!=null
             && (!_onlyOnce || !m_alreadyPlayed))
         {
