@@ -57,6 +57,7 @@ public class CarCollisionsHandler : MonoBehaviour
             Vector3 direc = hVector * Mathf.Cos(vAngle) + up * Mathf.Sin(vAngle);
             float momentum=Mathf.Lerp(_minMomentum,_maxMomentum,m_car.getForwardVelocityKmh()/m_car.maxSpeedKmh);
             oth.rigidbody.AddForce(direc * momentum,ForceMode.Impulse);
+            oth.AddComponent<ObstacleDestroyer>();
         }
     }
 
