@@ -3,6 +3,8 @@ using System.Collections;
 
 public class Laser : Gadget
 {
+
+
     #region constants
     const float COOLDOWN_TIME=10f;
     const float VALVE_OPENING_TIME = 0.2f;
@@ -45,10 +47,14 @@ public class Laser : Gadget
     };
 
     State m_state=State.READY;
+
+
+
     #endregion
 
     #region methods
-    void Start () {
+    public override void Awake () {
+
         // Init timers
         m_cooldownTimer = new Timer(0.01f);
         m_stateTimer = new Timer();
@@ -75,10 +81,12 @@ public class Laser : Gadget
         Vector3 rightLightPos = m_lasers[1].lightTransform.position;
         Vector3 lightPosCenter = (leftLightPos + rightLightPos) / 2;
         m_lightsYOffset = (valvesPivotTransform.position - lightPosCenter).magnitude * 2;
-        base.Start();
+        base.Awake();
+
+
 	}
 	
-	void Update () {
+	public override void Update () {
         switch(m_state)
         {
             case State.READY:
@@ -180,6 +188,8 @@ public class Laser : Gadget
         }
         else
         {
+			FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Gadgets/Laser/gadgetLaserExecute",transform.position);
+		
             IsReady = false;
             m_cooldownTimer.Reset(COOLDOWN_TIME);
             m_state = State.VALVE_OPENING;

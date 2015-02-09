@@ -32,7 +32,7 @@ public class Rocket : Gadget {
 
     #region MonoBehaviour
 
-    public override void Start()
+    public override void Awake()
     {
         m_offsetWithParent = transform.localPosition;
         m_rocketUI= FMOD_StudioSystem.instance.GetEvent("event:/SFX/Gadgets/Rocket/gadgetRocketUI");
@@ -49,7 +49,7 @@ public class Rocket : Gadget {
         _explosionParticles = GameObject.Find("RocketExplosion");
 
         m_carTransform = transform.parent.parent;
-        base.Start();
+        base.Awake();
     }
 
     public override void Update()

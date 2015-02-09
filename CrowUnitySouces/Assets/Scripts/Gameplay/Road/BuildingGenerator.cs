@@ -5,73 +5,51 @@ public class BuildingGenerator : MonoBehaviour {
 
     public int _minHeight;
     public int _maxHeight;
-    public string _theme;
+
+    public string _enviro;
 
 	void Start()
     {
-	    if(_minHeight < 1 || (_maxHeight < 1 || _maxHeight < _minHeight) || _theme == "")
+	    if(_minHeight < 1 || (_maxHeight < 1 || _maxHeight < _minHeight) || _enviro=="")
         {
             Debug.Log("Some parameters are wrong. Correct it and try again.");
             return;
         }
-
-
-        int randColor = Random.Range(0, 3);
         int height = Random.Range(_minHeight, _maxHeight);
+        BuildingGeneratorParameters.RandomBuilding rb = GameObject.Find(_enviro)//(Resources.Load("Enviros/"+_enviro) as GameObject)
+                    .GetComponent<BuildingGeneratorParameters>()
+                    .getRandomBuilding(height);
+
         GameObject building;
-        bool useWholePiece=false;
 
-        if(height==1)
+        for (int i = 0; i < height ; i++)
         {
-            building = PoolManager.Instance.GetUnusedObject(_theme + "_Whole_" + 0);//randColor);
-            if(building)
+            if(i==0) building = PoolManager.Instance.GetUnusedObject(rb.baseObject.name);
+            else if(i==height-1) building=PoolManager.Instance.GetUnusedObject(rb.topObject.name);
+            else building=PoolManager.Instance.GetUnusedObject(rb.middleObject.name);
+            if(rb.material!=null) building.GetComponent<MeshRenderer>().material = rb.material;
+            building.SetActive(true);
+            building.transform.position = transform.position + Vector3.up * 30 * i * transform.localScale.y;
+            building.transform.rotation = Quaternion.Euler(new Vector3(-90, 90 + transform.rotation.eulerAngles.y, 0));
+            building.transform.localScale = Vector3.Scale(building.transform.localScale, transform.localScale);
+            building.transform.parent = transform;
+            if(i==0)
             {
-                useWholePiece = true;
-                building.SetActive(true);
-                building.transform.position = transform.position;
-                building.transform.rotation = Quaternion.Euler(new Vector3(-90, 90 + transform.rotation.eulerAngles.y, 0));
-                building.transform.localScale = Vector3.Scale(building.transform.localScale, transform.localScale);
-
-                building.transform.parent = transform;
-            }
-        }
-        if(!useWholePiece)
-        {
-            if (height != 1)
-            {
-                building = PoolManager.Instance.GetUnusedObject(_theme + "_Base_" + randColor);
-                building.SetActive(true);
-                building.transform.position = transform.position;
-                building.transform.rotation = Quaternion.Euler(new Vector3(-90, 90 + transform.rotation.eulerAngles.y, 0));
-                //building = GameObject.Instantiate(Resources.Load("Buildings/" + _theme + "_Base"), transform.position, Quaternion.Euler(new Vector3(-90, 90 + transform.rotation.eulerAngles.y, 0))) as GameObject;
-                //building.renderer.materials[1] = _matPool.GetRandomMaterial(building.renderer.materials[1].name, randColor);
-                building.transform.localScale = Vector3.Scale(building.transform.localScale, transform.localScale);
-
-                building.transform.parent = transform;
-            }
-
-            for (int i = 1; i < (height - 1); i++)
-            {
-                building = PoolManager.Instance.GetUnusedObject(_theme + "_Middle_" + randColor);
-                building.SetActive(true);
-                building.transform.position = transform.position + Vector3.up * 30 * i * transform.localScale.y;
-                building.transform.rotation = Quaternion.Euler(new Vector3(-90, 90 + transform.rotation.eulerAngles.y, 0));
-                //building = GameObject.Instantiate(Resources.Load("Buildings/" + _theme + "_Middle"), transform.position + Vector3.up * 30 * i * transform.localScale.y, Quaternion.Euler(new Vector3(-90, 90 + transform.rotation.eulerAngles.y, 0))) as GameObject;
-                //building.renderer.materials[1] = _matPool.GetRandomMaterial(building.renderer.materials[1].name, randColor);
-                building.transform.localScale = Vector3.Scale(building.transform.localScale, transform.localScale);
-                building.transform.parent = transform;
-            }
-
-            if (height >= 1)
-            {
-                building = PoolManager.Instance.GetUnusedObject(_theme + "_Top_" + randColor);
-                building.SetActive(true);
-                building.transform.position = transform.position + Vector3.up * 30 * (height - 1) * transform.localScale.y;
-                building.transform.rotation = Quaternion.Euler(new Vector3(-90, 90 + transform.rotation.eulerAngles.y, 0));
-                //building = GameObject.Instantiate(Resources.Load("Buildings/" + _theme + "_Top"), transform.position + Vector3.up * 30 * (height - 1) * transform.localScale.y, Quaternion.Euler(new Vector3(-90, 90 + transform.rotation.eulerAngles.y, 0))) as GameObject;
-                //building.renderer.materials[1] = _matPool.GetRandomMaterial(building.renderer.materials[1].name, randColor);
-                building.transform.localScale = Vector3.Scale(building.transform.localScale, transform.localScale);
-                building.transform.parent = transform;
+                GameObject go = new GameObject();
+                go.transform.parent = building.transform;
+                go.transform.localPosition = Vector3.zero;
+                go.transform.localEulerAngles = Vector3.zero;
+                BoxCollider bc=go.AddComponent<BoxCollider>();
+                bc.isTrigger = true;
+                bc.center = new Vector3(0, -10, 2);
+                bc.size = new Vector3(11, 20, 5);
+                SoundPlayer sp = go.AddComponent<SoundPlayer>();
+                sp._is3D = false;
+                sp._onlyOnce = false;
+                sp._soundName = "SFX/Env Objects/EnvSwooshBuildingEnterLeft";
+                sp._soundNameRight="SFX/Env Objects/EnvSwooshBuildingEnterRight";
+                sp._soundNameExit="SFX/Env Objects/EnvSwooshBuildingExitLeft";
+                sp._soundNameExitRight="SFX/Env Objects/EnvSwooshBuildingExitRight";
             }
         }
 	}

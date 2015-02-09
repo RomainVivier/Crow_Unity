@@ -5,44 +5,57 @@ using System.Collections.Generic;
 public class Dashboard : MonoBehaviour
 {
 
-
     #region Members
-
-    private List<GadgetAbility> m_possessedAbilities;
-    private List<Panel> m_panels;
+    private List<GadgetAbility> m_abilities;
+    private GameObject m_dashboard;
+    private Panel[] m_panels;
 
     #endregion
 
     #region Mono Function
 
-    void Start () {
-	
+    void Start ()
+    {
+        Random.seed = System.DateTime.Now.Second;
+
+        string dashboard = "DashboardModel/Dashboard_" + Random.Range(1, 2);
+
+        m_dashboard = GameObject.Instantiate(Resources.Load(dashboard), transform.position, Quaternion.Euler(new Vector3(-10f, -90f, 0f)))  as GameObject;
+        m_dashboard.transform.parent = this.transform;
+
+        m_panels = gameObject.GetComponentsInChildren<Panel>();
+
+        for (int i = 0; i < m_panels.Length; i++)
+        {
+            m_panels[i].Init();
+            //m_abilities.AddRange(m_panels[i].AddAbilities());
+        }
 	}
 	
 	// Update is called once per frame
-	void Update () {
-
+	void Update ()
+    {
+        UpdatePanels();
     }
 
     #endregion 
 
-    #region Dashboard functions
-
-    /// <summary>
-    /// Here we generate the dashboard based on panels presets
-    /// </summary>
-    public void Generate()
-    {
-        //TODO get a random panels preset and generate each of them, add GadgetAbility depending on gadget link to the buttons
-    }
-
     /// <summary>
     /// Update panel to make the change if any change is required
     /// </summary>
-    public void UpdatePanels()
+    private void UpdatePanels()
     {
-        //TODO update each panel of the dashboard
-    }
+        float dist = Score.Instance.DistanceTravaled;
 
-    #endregion
+        for (int i = 0; i < m_panels.Length; i++)
+        {
+            if(m_panels[i]._distanceToUnlock < dist && !m_panels[i].IsVisible)
+            {
+                m_panels[i].IsVisible = true;
+                m_panels[i].InitButtons();
+            }
+        }
+        
+        //TODO update each panel of the dashboard verify if the distance to unlock has been reached and add the abilities
+    }
 }

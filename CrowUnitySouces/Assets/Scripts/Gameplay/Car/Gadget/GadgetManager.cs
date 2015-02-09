@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 public class GadgetManager : MonoBehaviour {
 
@@ -11,6 +12,7 @@ public class GadgetManager : MonoBehaviour {
 	/// value = gadget
 	/// </summary>
 	private  Dictionary<string, Gadget> m_gadgets;
+    private List<string> m_assignGadgets;
 	private static GadgetManager m_instance;
     private string m_lastGadget;
     private bool m_hasOneGadgetPlaying;
@@ -98,7 +100,49 @@ public class GadgetManager : MonoBehaviour {
 			Debug.Log("no gadget has been registered to this name or gadget is not ready !");
 		}
 	}
+    
+    public Gadget GetGadget(string id)
+    {
+        if(!m_gadgets.ContainsKey(id))
+        {
+            return null;
+        }
+        else return m_gadgets[id];
+    }
+
+    public string RandomUnassignGadget()
+    {
+        string gadgetID;
+
+        var gadgets = m_gadgets.Where(g => g.Value._isAssign == false).Select(g => g.Key).ToList();
+
+        gadgetID = gadgets[Random.Range(0, gadgets.Count)];
+
+        if (m_gadgets.ContainsKey(gadgetID))
+        {
+            m_gadgets[gadgetID]._isAssign = true;
+        }
+
+        return gadgetID;
+    }
+
+    public Gadget getGadgetById(string id)
+    {
+        return m_gadgets[id];
+    }
+
+    public GadgetAbility[] GadgetAbilities(string id)
+    {
+        if(!m_gadgets.ContainsKey(id))
+        {
+            return null;
+        }
+
+        return m_gadgets[id]._abilities;
+    }
 
 	#endregion
+
+
 
 }

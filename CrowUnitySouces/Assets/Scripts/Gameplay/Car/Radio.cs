@@ -10,11 +10,13 @@ public class Radio : MonoBehaviour {
     private float m_currentFrequency;
     private int m_startFrequency;
     private int m_targetFrequency;
+	private float m_currentBoost;
     private Timer m_timer;
 
     private FMOD.Studio.EventInstance m_radio;
     private FMOD.Studio.ParameterInstance m_fmodRadioFreq;
     private FMOD.Studio.ParameterInstance m_fmodRadioState;
+	private FMOD.Studio.ParameterInstance m_fmodRadioBoost;
     //private FMOD.Studio.ParameterInstance m_fmodRadioPickup;
 
     public FMOD_StudioEventEmitter _emitter;
@@ -42,21 +44,13 @@ public class Radio : MonoBehaviour {
         m_radio.getParameter("radioFrequency", out m_fmodRadioFreq);
         //m_radio.getParameter("radioPickup", out m_fmodRadioPickup);
         m_radio.getParameter("radioState", out m_fmodRadioState);
+		m_radio.getParameter("Boost", out m_fmodRadioBoost);
 
         RadioState = 0;
 	}
 	
 	void Update()
     {
-        if(Input.GetKeyDown(KeyCode.A))
-        {
-            SwitchFrequencyDown();
-        }
-
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            SwitchFrequencyUp();
-        }
 
         if (Input.GetKeyDown(KeyCode.Return))
         {
@@ -98,9 +92,10 @@ public class Radio : MonoBehaviour {
 
         //Debug.Log("start = " + m_startFrequency + " :: target = " + m_targetFrequency + " :: current value = " + m_currentFrequency);
         m_fmodRadioFreq.setValue(m_currentFrequency);
+		m_fmodRadioBoost.setValue(m_currentBoost);
 	}
 
-    void SwitchFrequencyUp()
+    public void SwitchFrequencyUp()
     {
         if(!m_timer.IsElapsedLoop)
         {
@@ -121,7 +116,7 @@ public class Radio : MonoBehaviour {
         }
     }
 
-    void SwitchFrequencyDown()
+    public void SwitchFrequencyDown()
     {
         if (!m_timer.IsElapsedLoop)
         {
@@ -141,4 +136,14 @@ public class Radio : MonoBehaviour {
             m_timer.Reset(_switchDuration);
         }
     }
+
+	public void SwitchPitchUp()
+	{
+		m_currentBoost = 1;
+	}
+
+	public void SwitchPitchDown()
+	{
+		m_currentBoost = 0;
+	}
 }
