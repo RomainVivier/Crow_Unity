@@ -86,7 +86,7 @@ public class Car : MonoBehaviour
 		float dt=Time.fixedDeltaTime;
 		int freq=(int) (1.0f/dt);
 		nbUpdates=(nbUpdates+1)%freq;
-		
+
 		// Update transmission
         if (inputs.upshift && !oldInputs.upshift)
         {

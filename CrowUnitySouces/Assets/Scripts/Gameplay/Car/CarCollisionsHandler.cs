@@ -64,6 +64,7 @@ public class CarCollisionsHandler : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
+        if (_dontCollide) return;
         GameObject oth = collision.gameObject;
         if (!collision.collider.isTrigger)
         {
