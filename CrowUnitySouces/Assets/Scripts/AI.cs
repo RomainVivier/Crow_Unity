@@ -75,9 +75,13 @@ public class AI : MonoBehaviour
 
     void updateButtonsArray()
     {
-		Transform carBody=GameObject.Find("Car(Clone)").transform.Find("Body/CarModel");
+		buttons = new List<GameObject>();
+		GameObject car = GameObject.Find("CarFOV(Clone)");
+		if(car == null)
+			return;
+		Transform carBody= car.transform.Find("Body/CarModel");
         int nbChildren=carBody.childCount;
-        buttons = new List<GameObject>();
+        
         for(int i=0;i<nbChildren;i++)
         {
             GameObject g = carBody.GetChild(i).gameObject;

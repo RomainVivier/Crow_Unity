@@ -21,6 +21,7 @@ public class PrefabSpawner : MonoBehaviour
     {
         if (m_spawnedObject != null) GameObject.Destroy(m_spawnedObject);
         m_spawnedObject=(GameObject) GameObject.Instantiate(prefab, transform.position + _offset, transform.rotation);
+		m_spawnedObject.transform.parent = transform;
     }
     
     void OnDrawGizmos()

@@ -9,6 +9,10 @@ public class Panel : MonoBehaviour
     public string _panelModelName;
     public float _distanceToUnlock;
     public Animator _anim;
+	public bool _randomizeGadgets = true;
+	public bool _randomIndex = true;
+	public int _forcedIndex;
+
 
     private GameObject m_panel;
     private GadgetButton[] m_buttons;
@@ -42,7 +46,12 @@ public class Panel : MonoBehaviour
 
     public void Init()
     {
-        string panel = "PanelModel/"+ _panelModelName + "_" + Random.Range(1, 2);
+		int panelIndex;
+		if(_randomIndex)
+			panelIndex = Random.Range(1, 2);
+		else
+			panelIndex = _forcedIndex;
+		string panel = "PanelModel/"+ _panelModelName + "_" + panelIndex;
 
         m_panel = GameObject.Instantiate(Resources.Load(panel), transform.position, Quaternion.Euler(new Vector3(-10f, -90f, 0f))) as GameObject;
         m_panel.transform.parent = this.transform;
@@ -67,6 +76,8 @@ public class Panel : MonoBehaviour
 
         for (int i = 0; i < m_buttons.Length; i++)
         {
+			if(_randomizeGadgets)
+				m_buttons[i].AssignRandom();
             m_buttons[i].Init();
         }
     }
