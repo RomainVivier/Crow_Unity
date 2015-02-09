@@ -214,10 +214,10 @@ public class Car : MonoBehaviour
         engineSpeed.setValue(forwardVelocity*3.6f);
         engineLoad.setValue(inputs.throttle>0.5 ? 1 : 0);
         //Debug print
-		if(nbUpdates%10==0)
+		/*if(nbUpdates%10==0)
 		{
 			Debug.Log((int)forwardVelocity*3.6+" "+(int)rpm+" "+transmission.getCurrentGear());
-		}
+		}*/
 	}
 
     void OnValidate()

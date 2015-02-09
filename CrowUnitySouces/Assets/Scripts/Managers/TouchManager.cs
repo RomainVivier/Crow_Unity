@@ -144,7 +144,7 @@ public class TouchManager : MonoBehaviour
         if (ti.state==TouchInfos.State.HELD)
         {
             //if ((ti.pos - m_wheelCenter).magnitude > m_wheelRadius && si.inZoneSwipe) endZoneSwipe = true;
-            if (ti.pos.y > Screen.height/2) endZoneSwipe = true;
+            if (ti.pos.y < Screen.height/2 && si.inZoneSwipe) endZoneSwipe = true;
             if (_touchStay != null)
             {
                 _touchStay(si);
