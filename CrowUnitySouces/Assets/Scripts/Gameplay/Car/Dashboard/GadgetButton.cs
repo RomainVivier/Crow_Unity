@@ -17,6 +17,7 @@ public class GadgetButton : MonoBehaviour
     private Gadget m_gadget;
 
     private const int SWIPE_TOLERANCE_DEG = 45;
+    private Animator m_anim;
     #endregion 
     
     #region GagdetButton Functions
@@ -28,6 +29,7 @@ public class GadgetButton : MonoBehaviour
         if(gadget != null)
         {
             gadget._buttonAnim = GetComponent<Animator>();
+            gadget._buttonAnim.SetTrigger("Activate");
         }
         _abilities = GadgetManager.Instance.GadgetAbilities(_gadgetID);
     }
