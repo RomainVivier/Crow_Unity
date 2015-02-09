@@ -8,7 +8,6 @@ public class Spoonbill : Gadget
 
 	public GameObject _spoonbill;
     public float _spoonbillForce;
-    public Animator _handleAnimator;
     public Animator _spoonbillAnimator;
 
     private Timer m_attackTimer;
@@ -99,7 +98,7 @@ public class Spoonbill : Gadget
                 //transform.FindChild("Vignette").GetComponent<Vignette>().pop(1f);
 
                 _spoonbillAnimator.SetTrigger("Engage");
-                _handleAnimator.SetBool("Engage", true);
+                _buttonAnim.SetBool("Engage", true);
                 break;
 
             case State.Engaged :
@@ -115,7 +114,7 @@ public class Spoonbill : Gadget
         m_state = State.Disengaging;
         m_engageTimer.Reset(1f);
         _spoonbillAnimator.SetTrigger("Disengage");
-        _handleAnimator.SetBool("Engage", false);
+        _buttonAnim.SetBool("Engage", false);
         _invertGesture = false;
     }
 
@@ -123,7 +122,7 @@ public class Spoonbill : Gadget
     {
         base.Stop();
         gameObject.SetActive(false);
-        _handleAnimator.SetBool("Engage", false);
+        _buttonAnim.SetBool("Engage", false);
     }
 
     #endregion

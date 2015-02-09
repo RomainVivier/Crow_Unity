@@ -50,6 +50,7 @@ public class Car : MonoBehaviour
     private FMOD.Studio.EventInstance engineSound;
     private FMOD.Studio.ParameterInstance engineRPM;
     private FMOD.Studio.ParameterInstance engineSpeed;
+    private FMOD.Studio.ParameterInstance engineLoad;
     private const int ENGINE_SOUND_MAX_RPM = 7000;
     private FMOD.Studio.EventInstance tiresSound;
     private FMOD.Studio.ParameterInstance tiresFriction;
@@ -68,6 +69,7 @@ public class Car : MonoBehaviour
         engineSound.start();
         engineSound.getParameter("RPM", out engineRPM);
         engineSound.getParameter("Speed", out engineSpeed);
+        engineSound.getParameter("Load", out engineLoad);
         tiresSound = FMOD_StudioSystem.instance.GetEvent("event:/SFX/Car Mechanics/carTyres");
         tiresSound.getParameter("Friction", out tiresFriction);
         tiresSound.getParameter("Speed", out tiresSpeed);
@@ -194,7 +196,7 @@ public class Car : MonoBehaviour
         //fakeRPM = rpm;
         if(rpm>engine.getMaxRpm()*0.97 && transmission.getCurrentGear()==0)
         {
-            fakeRPM=Mathf.Lerp(engine.getMaxRpm(),engine.getMaxRpm()*1.2f,(Mathf.Sin(overRevTime*2*Mathf.PI/overRevPeriod)+1)/2);
+            fakeRPM=Mathf.Lerp(engine.getMaxRpm(),engine.getMaxRpm()*0.8f,(Mathf.Sin(overRevTime*2*Mathf.PI/overRevPeriod)+1)/2);
             overRevTime += Time.fixedDeltaTime;
         }
         else overRevTime=0;
@@ -202,6 +204,7 @@ public class Car : MonoBehaviour
 
         // Update sounds
         float frictionSound = Mathf.Abs(inputs.steering);
+        if (fakeRPM < engine.getMinRpm()) fakeRPM = engine.getMinRpm();
         float soundRpm=fakeRPM*ENGINE_SOUND_MAX_RPM/engine.getMaxRpm();
         //float soundRpm = rpm * ENGINE_SOUND_MAX_RPM / engine.getMaxRpm();
         engineRPM.setValue(soundRpm);
@@ -209,7 +212,8 @@ public class Car : MonoBehaviour
         tiresFriction.setValue(frictionSound);
         tiresSpeed.setValue(forwardVelocity / maxSpeed);
         engineSpeed.setValue(fakeSoundSpeed);
-		// Debug print
+        engineLoad.setValue(inputs.throttle>0.5 ? 1 : 0);
+        // Debug print
 		/*if(nbUpdates%10==0)
 		{
 			Debug.Log((int)forwardVelocity*3.6+" "+(int)rpm+" "+transmission.getCurrentGear());
@@ -221,8 +225,7 @@ public class Car : MonoBehaviour
         if(Application.isPlaying) updateValues ();
     }
 		
-	// Private methods
-	void updateValues()
+	public void updateValues()
 	{
 		// Get components
 		engine = gameObject.GetComponent<Engine> ();
@@ -262,6 +265,7 @@ public class Car : MonoBehaviour
 		wheelRadius=wheels[0].radius;
 		wheelRadius*=transform.FindChild("Body").FindChild("WheelFR").transform.lossyScale.y;
 		engine.updateValues ();
+        transmission.updateValues();
 		acceleration2Torque=mass*wheelRadius;
 		brakeTorque=brakeDecceleration*acceleration2Torque/2;
 		wheelBase=body.transform.localScale.z;
@@ -271,6 +275,7 @@ public class Car : MonoBehaviour
 		body.centerOfMass=centerOfMass;
 	}
 
+	// Private methods
     private bool isOnGround()
     {
         bool ret = false;

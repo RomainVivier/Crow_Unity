@@ -21,15 +21,18 @@ public class GadgetButton : MonoBehaviour
     
     #region GagdetButton Functions
 
-    public void Init()
+	public void Init()
+	{
+		var gadget = GadgetManager.Instance.getGadgetById(_gadgetID);
+		if(gadget != null)
+		{
+			gadget._buttonAnim = GetComponent<Animator>();
+		}
+		_abilities = GadgetManager.Instance.GadgetAbilities(_gadgetID);
+	}
+    public void AssignRandom()
     {
         _gadgetID = GadgetManager.Instance.RandomUnassignGadget();
-        var gadget = GadgetManager.Instance.getGadgetById(_gadgetID);
-        if(gadget != null)
-        {
-            gadget._buttonAnim = GetComponent<Animator>();
-        }
-        _abilities = GadgetManager.Instance.GadgetAbilities(_gadgetID);
     }
 
     public void Start()
