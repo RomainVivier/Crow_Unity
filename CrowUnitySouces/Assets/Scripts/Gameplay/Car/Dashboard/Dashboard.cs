@@ -45,13 +45,15 @@ public class Dashboard : MonoBehaviour
     /// </summary>
     private void UpdatePanels()
     {
-        //for (int i = 0; i < m_panels.Length; i++)
-        //{
-        //    if(m_panels[i]._distanceToUnlock > )
-        //    {
+        float dist = Score.Instance.DistanceTravaled;
 
-        //    }
-        //}
+        for (int i = 0; i < m_panels.Length; i++)
+        {
+            if(m_panels[i]._distanceToUnlock < dist)
+            {
+                m_panels[i]._anim.SetTrigger("Open");
+            }
+        }
         
         //TODO update each panel of the dashboard verify if the distance to unlock has been reached and add the abilities
     }

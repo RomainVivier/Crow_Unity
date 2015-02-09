@@ -37,6 +37,11 @@ public class RailsControl : CarControl
         set { m_steering = value; }
     }
 
+    public float Progress
+    {
+        get { return chunkProgress; }
+    }
+
 	void Start ()
 	{
 		car = gameObject.GetComponent<Car> ();
@@ -223,6 +228,8 @@ public class RailsControl : CarControl
 		if(chunk.NextChunk!=null)
 		{
 			int oldNbRails=rails.nbRails;
+            //TODO incrémenté la distance parcourue
+            Score.Instance.DistanceTravaled += chunk._rails.Dist;
 			chunk=chunk.NextChunk;
 			rails=chunk._rails;
 			int newNbRails=rails.nbRails;
