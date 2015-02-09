@@ -27,7 +27,9 @@ public class RailsControl : CarControl
 	private float oldSteeringInput=0;
 	private int targetRail=0;
 	private int nbUpdates=0;
-
+    private FMOD.Studio.EventInstance playerPosEvent;
+    private FMOD.Studio.ParameterInstance playerPosParameter;
+    
     //Keybinding
     private float m_steering;
     private float m_brake;
@@ -44,7 +46,12 @@ public class RailsControl : CarControl
 
 	void Start ()
 	{
-		car = gameObject.GetComponent<Car> ();
+        // FMOD
+        playerPosEvent = FMOD_StudioSystem.instance.GetEvent("event:/Meta/playerPos");
+        playerPosEvent.start();
+        playerPosEvent.getParameter("playerPos", out playerPosParameter);
+
+        car = gameObject.GetComponent<Car> ();
 		if (car == null)
 		{
 			Debug.LogError ("AutomaticGearbox : no car attached");
@@ -163,6 +170,8 @@ public class RailsControl : CarControl
 		
 		oldSteeringInput=curSteeringInput;
 		
+        //FMOD
+        playerPosParameter.setValue(currentRail + 1);
 		// Debug print
 		/*if(nbUpdates%10==0)
 		{

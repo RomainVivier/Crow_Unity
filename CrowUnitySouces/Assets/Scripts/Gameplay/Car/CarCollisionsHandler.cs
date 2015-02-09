@@ -9,6 +9,7 @@ public class CarCollisionsHandler : MonoBehaviour
 
     public float _minMomentum = 10000;// In Kg.m/s (or N.s)
     public float _maxMomentum = 30000;
+    public static bool _dontCollide = false;
 
     #endregion
 
@@ -42,6 +43,7 @@ public class CarCollisionsHandler : MonoBehaviour
         GameObject oth = other.gameObject;
         if (oth.name == "Obstacle_Car(Clone)")
         {
+            if (_dontCollide) return;
             if (cooldownTimer.IsElapsedLoop)
             {
                 playSound(null, oth, m_impactVehicleSound, m_impactVehicleSpeed);
