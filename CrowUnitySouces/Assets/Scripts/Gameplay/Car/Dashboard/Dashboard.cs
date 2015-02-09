@@ -49,9 +49,10 @@ public class Dashboard : MonoBehaviour
 
         for (int i = 0; i < m_panels.Length; i++)
         {
-            if(m_panels[i]._distanceToUnlock < dist)
+            if(m_panels[i]._distanceToUnlock < dist && !m_panels[i].IsVisible)
             {
-                m_panels[i]._anim.SetTrigger("Open");
+                m_panels[i].IsVisible = true;
+                m_panels[i].InitButtons();
             }
         }
         
