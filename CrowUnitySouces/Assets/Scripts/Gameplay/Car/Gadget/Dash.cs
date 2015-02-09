@@ -35,7 +35,6 @@ public class Dash : Gadget
     public override void Play()
     {
         base.Play();
-        Debug.Log("dashing bitch !");
 		FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Gadgets/Boost/gadgetBoostExecute",transform.position);
         _rc.setSpeedKmh *= _speedCoeff;
         //_car.InstantSetSpeedKmh(_rc.setSpeedKmh);

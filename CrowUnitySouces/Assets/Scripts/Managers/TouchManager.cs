@@ -98,7 +98,7 @@ public class TouchManager : MonoBehaviour
     public void Touch()
     {
         TouchInfos t=new TouchInfos();
-        t.state = TouchInfos.State.UNHELD; ;
+        t.state = TouchInfos.State.UNHELD;
         if (Input.GetMouseButtonDown(0)) t.state = TouchInfos.State.BEGIN;
         else if (Input.GetMouseButton(0)) t.state = TouchInfos.State.HELD;
         else if (Input.GetMouseButtonUp(0)) t.state = TouchInfos.State.END;

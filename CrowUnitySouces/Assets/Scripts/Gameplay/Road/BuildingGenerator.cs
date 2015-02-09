@@ -46,10 +46,10 @@ public class BuildingGenerator : MonoBehaviour {
                 SoundPlayer sp = go.AddComponent<SoundPlayer>();
                 sp._is3D = false;
                 sp._onlyOnce = false;
-                sp._soundName = "SFX/Env Objects/EnvSwooshBuildingEnterLeft";
-                sp._soundNameRight="SFX/Env Objects/EnvSwooshBuildingEnterRight";
-                sp._soundNameExit="SFX/Env Objects/EnvSwooshBuildingExitLeft";
-                sp._soundNameExitRight="SFX/Env Objects/EnvSwooshBuildingExitRight";
+                sp._soundName = "SFX/Env Objects/envSwooshBuildingEnterLeft";
+                sp._soundNameRight="SFX/Env Objects/envSwooshBuildingEnterRight";
+                sp._soundNameExit="SFX/Env Objects/envSwooshBuildingExitLeft";
+                sp._soundNameExitRight="SFX/Env Objects/envSwooshBuildingExitRight";
             }
         }
 	}

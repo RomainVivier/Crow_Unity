@@ -71,13 +71,10 @@ public class Panel : MonoBehaviour
 
     public void InitButtons()
     {
-        Debug.Log("init button " + name);
         m_buttons = gameObject.GetComponentsInChildren<GadgetButton>();
 
         for (int i = 0; i < m_buttons.Length; i++)
         {
-			if(_randomizeGadgets)
-				m_buttons[i].AssignRandom();
             m_buttons[i].Init();
         }
     }

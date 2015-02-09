@@ -9,6 +9,7 @@ public class CarCollisionsHandler : MonoBehaviour
 
     public float _minMomentum = 10000;// In Kg.m/s (or N.s)
     public float _maxMomentum = 30000;
+    public float _ownMomentum = 10000;
     public static bool _dontCollide = false;
 
     #endregion
@@ -59,11 +60,13 @@ public class CarCollisionsHandler : MonoBehaviour
             float momentum=Mathf.Lerp(_minMomentum,_maxMomentum,m_car.getForwardVelocityKmh()/m_car.maxSpeedKmh);
             oth.rigidbody.AddForce(direc * momentum,ForceMode.Impulse);
             oth.AddComponent<ObstacleDestroyer>();
+            rigidbody.AddForce(-forward * _ownMomentum, ForceMode.Impulse);
         }
     }
 
     void OnCollisionEnter(Collision collision)
     {
+        if (_dontCollide) return;
         GameObject oth = collision.gameObject;
         if (!collision.collider.isTrigger)
         {

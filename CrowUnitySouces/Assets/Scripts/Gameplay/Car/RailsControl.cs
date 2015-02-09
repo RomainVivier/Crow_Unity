@@ -238,7 +238,7 @@ public class RailsControl : CarControl
 		{
 			int oldNbRails=rails.nbRails;
             //TODO incrémenté la distance parcourue
-            Score.Instance.DistanceTravaled += chunk._rails.Dist;
+            if(Score.Instance!=null) Score.Instance.DistanceTravaled += chunk._rails.Dist;
 			chunk=chunk.NextChunk;
 			rails=chunk._rails;
 			int newNbRails=rails.nbRails;
