@@ -211,7 +211,7 @@ public class Car : MonoBehaviour
         tiresGround.setValue(isOnGround() ? 1 : 0);
         tiresFriction.setValue(frictionSound);
         tiresSpeed.setValue(forwardVelocity / maxSpeed);
-        engineSpeed.setValue(fakeSoundSpeed);
+        engineSpeed.setValue(forwardVelocity*3.6f);
         engineLoad.setValue(inputs.throttle>0.5 ? 1 : 0);
         // Debug print
 		/*if(nbUpdates%10==0)

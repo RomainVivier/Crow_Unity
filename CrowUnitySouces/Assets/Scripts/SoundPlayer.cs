@@ -8,6 +8,7 @@ public class SoundPlayer : MonoBehaviour
     #region Members
 
     public string _soundName;
+    public string _soundNameRight;
     public bool _is3D=false;
     public bool _onlyOnce = true;
     public float proba = 1;
@@ -16,6 +17,7 @@ public class SoundPlayer : MonoBehaviour
     public bool useTrigger = true;
 
     private FMOD.Studio.EventInstance m_fmodEvent;
+    private FMOD.Studio.EventInstance m_fmodEventRight=null;
     private bool m_alreadyPlayed;
     #endregion
 
@@ -24,6 +26,7 @@ public class SoundPlayer : MonoBehaviour
     void Start()
     {
         m_fmodEvent=FMOD_StudioSystem.instance.GetEvent("event:/"+_soundName);
+        if(_soundNameRight!="") m_fmodEventRight=FMOD_StudioSystem.instance.GetEvent("event:/"+_soundNameRight);
         m_alreadyPlayed = false;
     }
 
@@ -55,23 +58,30 @@ public class SoundPlayer : MonoBehaviour
                 float speedKmh = other.gameObject.transform.parent.GetComponent<Car>().getForwardVelocity() * 3.6f;
                 if (speedKmh >= minSpeedKmh)
                 {
-                    m_fmodEvent.start();
                     if (!_is3D)
                     {
-                        FMOD.Studio.ParameterInstance param;
-                        m_fmodEvent.getParameter("Pan", out param);
-                        if (forcePan == 0)
+                        Vector3 dpos = transform.position - other.transform.position;
+                        dpos.Normalize();
+                        Vector3 right = other.transform.right;
+                        float diff = Vector3.Dot(dpos, right);
+                        if(m_fmodEventRight!=null)
                         {
-                            Vector3 dpos = transform.position - other.transform.position;
-                            dpos.Normalize();
-                            Vector3 right = other.transform.right;
-                            float diff = Vector3.Dot(dpos, right);
-                            param.setValue(diff > 0 ? 1 : 0);
+                            if (diff > 0) m_fmodEventRight.start();
+                            else m_fmodEvent.start();
                         }
-                        else param.setValue(forcePan > 0 ? 1 : 0);
+                        else
+                        {
+                            m_fmodEvent.start();
+                            FMOD.Studio.ParameterInstance param;
+                            m_fmodEvent.getParameter("Pan", out param);
+                            if (forcePan == 0) param.setValue(diff > 0 ? 1 : 0);
+                            else param.setValue(forcePan > 0 ? 1 : 0);
+                        }
+                        
                     }
                     else
                     {
+                        m_fmodEvent.start();
                         _3D_ATTRIBUTES threeDeeAttr = new _3D_ATTRIBUTES();
                         threeDeeAttr.position = UnityUtil.toFMODVector(transform.position);
                         threeDeeAttr.up = UnityUtil.toFMODVector(transform.up);
