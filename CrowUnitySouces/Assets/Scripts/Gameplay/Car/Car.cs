@@ -86,7 +86,7 @@ public class Car : MonoBehaviour
 		float dt=Time.fixedDeltaTime;
 		int freq=(int) (1.0f/dt);
 		nbUpdates=(nbUpdates+1)%freq;
-		
+
 		// Update transmission
         if (inputs.upshift && !oldInputs.upshift)
         {
@@ -213,7 +213,7 @@ public class Car : MonoBehaviour
         tiresSpeed.setValue(forwardVelocity / maxSpeed);
         engineSpeed.setValue(forwardVelocity*3.6f);
         engineLoad.setValue(inputs.throttle>0.5 ? 1 : 0);
-        // Debug print
+        //Debug print
 		/*if(nbUpdates%10==0)
 		{
 			Debug.Log((int)forwardVelocity*3.6+" "+(int)rpm+" "+transmission.getCurrentGear());

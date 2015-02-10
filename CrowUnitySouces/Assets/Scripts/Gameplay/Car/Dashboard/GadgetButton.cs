@@ -17,22 +17,25 @@ public class GadgetButton : MonoBehaviour
     private Gadget m_gadget;
 
     private const int SWIPE_TOLERANCE_DEG = 45;
+    private Animator m_anim;
     #endregion 
     
     #region GagdetButton Functions
 
-	public void Init()
+	public void AssignRandomGadget()
 	{
-		var gadget = GadgetManager.Instance.getGadgetById(_gadgetID);
-		if(gadget != null)
-		{
-			gadget._buttonAnim = GetComponent<Animator>();
-		}
-		_abilities = GadgetManager.Instance.GadgetAbilities(_gadgetID);
+		_gadgetID = GadgetManager.Instance.RandomUnassignGadget();
 	}
-    public void AssignRandom()
+
+    public void Init()
     {
-        _gadgetID = GadgetManager.Instance.RandomUnassignGadget();
+        var gadget = GadgetManager.Instance.getGadgetById(_gadgetID);
+        if(gadget != null)
+        {
+            gadget._buttonAnim = GetComponent<Animator>();
+            gadget._buttonAnim.SetTrigger("Activate");
+        }
+        _abilities = GadgetManager.Instance.GadgetAbilities(_gadgetID);
     }
 
     public void Start()

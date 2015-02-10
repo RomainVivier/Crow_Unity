@@ -6,7 +6,7 @@ public class Timer
 
     bool _once = true;
     float _duration = 1.0f;
-    float _startTime = Time.timeSinceLevelLoad;
+    float _startTime = Time.time;
 
     public Timer() : this(0f, false)
     {
@@ -21,7 +21,7 @@ public class Timer
     {
         _duration = duration;
         if (forceStartTime)
-            _startTime = Time.timeSinceLevelLoad;
+            _startTime = Time.time;
     }
 
     /*
@@ -31,7 +31,7 @@ public class Timer
      */
     public float Current
     {
-        get { return _duration - (Time.timeSinceLevelLoad - _startTime); }
+        get { return _duration - (Time.time - _startTime); }
     }
 
     /*
@@ -62,7 +62,7 @@ public class Timer
             }
             else
             {
-                _isElapsedLoop = (Time.timeSinceLevelLoad - _startTime > _duration);
+                _isElapsedLoop = (Time.time - _startTime > _duration);
                 return _isElapsedLoop;
             }
         }
@@ -98,7 +98,7 @@ public class Timer
     {
         if (newDuration > 0.0f)
             _duration = newDuration;
-        _startTime = Time.timeSinceLevelLoad;
+        _startTime = Time.time;
         _isElapsedLoop = false;
         _once = true;
     }
