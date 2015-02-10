@@ -35,6 +35,7 @@ public class Rails : MonoBehaviour
 
 	void Start ()
 	{
+        updateDist();
 	}
 	
 	void Update ()

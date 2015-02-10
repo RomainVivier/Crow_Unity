@@ -75,8 +75,6 @@ public class Panel : MonoBehaviour
 
         for (int i = 0; i < m_buttons.Length; i++)
         {
-			if(_randomizeGadgets)
-				m_buttons[i].AssignRandom();
             m_buttons[i].Init();
         }
     }
