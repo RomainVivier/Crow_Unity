@@ -51,6 +51,7 @@ public class Dashboard : MonoBehaviour
         {
             if(m_panels[i]._distanceToUnlock < dist && !m_panels[i].IsVisible)
             {
+                FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Buttons/Panels/panelOpen",transform.position);
                 m_panels[i].IsVisible = true;
                 m_panels[i].InitButtons();
             }

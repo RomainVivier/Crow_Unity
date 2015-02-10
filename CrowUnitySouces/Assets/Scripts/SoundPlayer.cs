@@ -18,10 +18,10 @@ public class SoundPlayer : MonoBehaviour
     public int forcePan = 0;
     public bool useTrigger = true;
 
-    /*private FMOD.Studio.EventInstance m_fmodEvent;
+    private FMOD.Studio.EventInstance m_fmodEvent;
     private FMOD.Studio.EventInstance m_fmodEventRight=null;
     private FMOD.Studio.EventInstance m_fmodEventExit = null;
-    private FMOD.Studio.EventInstance m_fmodEventExitRight = null;*/
+    private FMOD.Studio.EventInstance m_fmodEventExitRight = null;
 
     private bool m_alreadyPlayed;
     #endregion
@@ -31,10 +31,13 @@ public class SoundPlayer : MonoBehaviour
     void Start()
     {
         // Init fmod events
-        /*m_fmodEvent=FMOD_StudioSystem.instance.GetEvent("event:/"+_soundName);
-        if(_soundNameRight!="") m_fmodEventRight=FMOD_StudioSystem.instance.GetEvent("event:/"+_soundNameRight);
-        if(_soundNameExit!="") m_fmodEventRight=FMOD_StudioSystem.instance.GetEvent("event:/"+_soundNameExit);
-        if(_soundNameExitRight!="") m_fmodEventRight=FMOD_StudioSystem.instance.GetEvent("event:/"+_soundNameExitRight);*/
+        if(_is3D)
+        {
+            m_fmodEvent=FMOD_StudioSystem.instance.GetEvent("event:/"+_soundName);
+            if(_soundNameRight!="") m_fmodEventRight=FMOD_StudioSystem.instance.GetEvent("event:/"+_soundNameRight);
+            if(_soundNameExit!="") m_fmodEventRight=FMOD_StudioSystem.instance.GetEvent("event:/"+_soundNameExit);
+            if(_soundNameExitRight!="") m_fmodEventRight=FMOD_StudioSystem.instance.GetEvent("event:/"+_soundNameExitRight);
+        }
         
         m_alreadyPlayed = false;
     }
@@ -106,7 +109,7 @@ public class SoundPlayer : MonoBehaviour
                     }
                     else
                     {
-                        /*soundLeft.start();
+                        m_fmodEvent.start();
 
                         // Set 3D attributes
                         _3D_ATTRIBUTES threeDeeAttr = new _3D_ATTRIBUTES();
@@ -114,7 +117,7 @@ public class SoundPlayer : MonoBehaviour
                         threeDeeAttr.up = UnityUtil.toFMODVector(transform.up);
                         threeDeeAttr.forward = UnityUtil.toFMODVector(transform.forward);
                         threeDeeAttr.velocity = UnityUtil.toFMODVector(-other.gameObject.rigidbody.velocity);
-                        m_fmodEvent.set3DAttributes(threeDeeAttr);*/
+                        m_fmodEvent.set3DAttributes(threeDeeAttr);
                     }
                 }
             }
