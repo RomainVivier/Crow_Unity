@@ -15,7 +15,7 @@ public class FMOD_Listener : MonoBehaviour
         // List plugin libraries here
     };
 	
-	static FMOD_Listener sListener = null;
+	public static FMOD_Listener sListener = null;
 	Rigidbody cachedRigidBody;
 	
 	void OnEnable()

@@ -8,12 +8,14 @@ public class Gadget : MonoBehaviour
     #region Members
 
     public Animator _buttonAnim;
-
+    public GadgetAbility[] _abilities;
+    public bool _isAssign = false;
+    public bool _invertGesture = false;
+    
     private bool m_isReady = true;
     protected string m_playSound = "";
     protected string m_cantPlaySound = "";
     protected GadgetFamily m_gadgetFamily;
-    protected List<GadgetAbility> m_abilities;
 
     #endregion 
 
@@ -37,9 +39,8 @@ public class Gadget : MonoBehaviour
 
     #region Mono Function
 
-    public virtual void Start()
+    public virtual void Awake()
     {
-        m_abilities = new List<GadgetAbility>();
     }
 
     public virtual void Update()
@@ -55,7 +56,9 @@ public class Gadget : MonoBehaviour
         GadgetManager.Instance.HasOneGadgetPlaying = true;
         if (_buttonAnim != null)
         {
-            _buttonAnim.SetTrigger("Engage");
+            _buttonAnim.speed = 10;
+            _buttonAnim.SetBool("Engage", true);
+            //_buttonAnim.SetTrigger("Engage");
         }
 	}
 
@@ -64,7 +67,9 @@ public class Gadget : MonoBehaviour
         GadgetManager.Instance.HasOneGadgetPlaying = false;
         if (_buttonAnim != null)
         {
-            _buttonAnim.SetTrigger("Engage");
+            _buttonAnim.speed = 10;
+            _buttonAnim.SetBool("Engage", false);
+            //_buttonAnim.SetTrigger("Engage");
         }
     }
 

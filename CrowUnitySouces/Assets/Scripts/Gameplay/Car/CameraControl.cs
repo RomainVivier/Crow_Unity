@@ -7,6 +7,8 @@ public class CameraControl : MonoBehaviour {
     public float _rotateSpeed;
     public Camera _camera;
 
+    private GadgetButton m_clickedGadgetButton = null;
+
 	void Start ()
     {
         if(_camera == null)
@@ -15,7 +17,7 @@ public class CameraControl : MonoBehaviour {
             return;
         }
 
-        KeyBinder.Instance.DefineActions("MouseLeftClick", new KeyActionConfig(KeyType.Action, 0, OnClick, null));
+        KeyBinder.Instance.DefineActions("MouseLeftClick", new KeyActionConfig(KeyType.Action, 0, OnLeftClickPress, OnLeftClickRelease));
         //TouchManager.Instance._touchStart += OnClick;
 	}
 	
@@ -61,21 +63,24 @@ public class CameraControl : MonoBehaviour {
 			GadgetManager.Instance.PlayGadget("Spoonbill");
     }
 
-    void OnClick()
+    void OnLeftClickPress()
     {
         Ray ray = _camera.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit, Mathf.Infinity, ~(1 << LayerMask.NameToLayer("Player"))))
         {
+			Debug.Log(hit.collider.name);
             //Debug.Log(hit.collider.name);
 
             if (hit.collider.CompareTag("Clickable"))
             {
+
                 GadgetButton gt = hit.collider.GetComponent<GadgetButton>(); 
 
                 if(gt)
                 {
-                    gt.PlayGadget();
+                    m_clickedGadgetButton = gt;
+                    gt.OnLeftClickPress();
                 }
 				else
 				{
@@ -84,6 +89,15 @@ public class CameraControl : MonoBehaviour {
 						StartCoroutine("AutoPress", anim);
 				}
             }
+        }
+    }
+
+    void OnLeftClickRelease()
+    {
+        if(m_clickedGadgetButton)
+        {
+            m_clickedGadgetButton.OnLeftClickRelease();
+            m_clickedGadgetButton = null;
         }
     }
 

@@ -8,9 +8,7 @@ public class Spoonbill : Gadget
 
 	public GameObject _spoonbill;
     public float _spoonbillForce;
-    public Animator _handleAnimator;
     public Animator _spoonbillAnimator;
-
 
     private Timer m_attackTimer;
     private Timer m_engageTimer;
@@ -31,7 +29,7 @@ public class Spoonbill : Gadget
 
     #region MonoBehaviour
 
-    void Start()
+    public override void Awake()
     {
         GadgetManager.Instance.Register("Spoonbill", this);
         m_attackTimer = new Timer();
@@ -41,7 +39,7 @@ public class Spoonbill : Gadget
         m_state = State.Disengaged;
     }
 
-    void Update()
+    public override void Update()
     {
         if(m_target != null && m_state == State.Attacking && m_attackTimer.CurrentNormalized < 0.5)
         {
@@ -88,6 +86,7 @@ public class Spoonbill : Gadget
     public override void Play ()
 	{
 		base.Play ();
+        _invertGesture = true;
 
         switch (m_state)
         {
@@ -99,7 +98,7 @@ public class Spoonbill : Gadget
                 //transform.FindChild("Vignette").GetComponent<Vignette>().pop(1f);
 
                 _spoonbillAnimator.SetTrigger("Engage");
-                _handleAnimator.SetBool("Engage", true);
+                _buttonAnim.SetBool("Engage", true);
                 break;
 
             case State.Engaged :
@@ -115,14 +114,15 @@ public class Spoonbill : Gadget
         m_state = State.Disengaging;
         m_engageTimer.Reset(1f);
         _spoonbillAnimator.SetTrigger("Disengage");
-        _handleAnimator.SetBool("Engage", false);
+        _buttonAnim.SetBool("Engage", false);
+        _invertGesture = false;
     }
 
     public override void Stop()
     {
         base.Stop();
         gameObject.SetActive(false);
-        _handleAnimator.SetBool("Engage", false);
+        _buttonAnim.SetBool("Engage", false);
     }
 
     #endregion

@@ -8,6 +8,7 @@ public abstract class Engine : MonoBehaviour
 	public virtual float getMaxPowerRpm() { return 0;}
 	public abstract float getPower(float rpm, float throttle);
     public virtual float getMaxRpm() { return 1; }
+    public virtual float getMinRpm() { return 0; }
 
 	void Start()
 	{

@@ -14,11 +14,11 @@ public class SlapMachine : Gadget {
 
     #region MonoBehaviour
 
-    public override void Start()
+    public override void Awake()
     {
         GadgetManager.Instance.Register("SlapMachine", this);
         m_timer = new Timer();
-        base.Start();
+        base.Awake();
     }
 
     public override void Update()
@@ -44,6 +44,8 @@ public class SlapMachine : Gadget {
         int value = Random.Range(4,5);
         _cameraAnimator.SetTrigger("Slap_"+value);
 
+		//Juste pour la démo, tue-moi
+		transform.GetChild (0).GetComponent<Animator>().SetTrigger("Slap");
     }
 
     public override void Stop()

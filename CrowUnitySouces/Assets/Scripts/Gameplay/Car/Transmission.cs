@@ -3,7 +3,7 @@ using System.Collections;
 
 public abstract class Transmission : MonoBehaviour
 {
-	public virtual bool isDisengaged() {return false;}
+	public virtual float isEngaged() {return 0;}
 	public abstract float getSpeed2Rpm();
 	public virtual void upshift() {}
 	public virtual bool canUpshift() { return false;}
@@ -13,6 +13,8 @@ public abstract class Transmission : MonoBehaviour
 	public virtual void downshift() {}
 	public virtual void updateValues() {}
     public abstract float getMaxPossibleRPM(float speed, float maxRPM, out int newFakeGear);
+    public virtual int getCurrentGear() { return 0; }
+    public virtual void lockGear(int gear) { } // -1=unlock
 
 	void Start()
 	{
