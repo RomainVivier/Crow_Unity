@@ -8,7 +8,7 @@ public class Score : MonoBehaviour
 
     public Text _text;
 
-    private float m_distanceTraveled = 0f;
+    public float m_distanceTraveled = 0f;
     private float m_score;
     private float m_speed;
     private int m_combo = 0;
