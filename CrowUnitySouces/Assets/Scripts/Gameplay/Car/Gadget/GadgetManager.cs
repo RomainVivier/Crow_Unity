@@ -18,6 +18,7 @@ public class GadgetManager : MonoBehaviour {
     private bool m_hasOneGadgetPlaying;
     private Timer m_timer;
 
+    private CardPopup m_cardPopup;
 	#endregion
 
     #region Properties
@@ -28,6 +29,10 @@ public class GadgetManager : MonoBehaviour {
         set { m_hasOneGadgetPlaying = value; }
     }
 
+    public CardPopup CardPopup
+    {
+        set { m_cardPopup = value; }
+    }
     #endregion 
 
     #region Singleton
@@ -64,6 +69,7 @@ public class GadgetManager : MonoBehaviour {
 		m_gadgets = new Dictionary<string, Gadget>();
         m_hasOneGadgetPlaying = false;
         m_timer = new Timer();
+        m_cardPopup = GameObject.FindObjectOfType<CardPopup>();
 	}
 
 	#endregion
@@ -91,11 +97,12 @@ public class GadgetManager : MonoBehaviour {
 
 		if(m_gadgets.ContainsKey(name) && m_gadgets[name].IsReady)
 		{
+            if(m_gadgets[name]._cardMaterial!=null && !m_gadgets[name]._invertGesture) m_cardPopup.popup(m_gadgets[name]._cardMaterial);
 			m_gadgets[name].Play();
             m_lastGadget = name;
             m_timer.Reset(0.5f);
             if(m_gadgets[name].PlaySound!="") FMOD_StudioSystem.instance.PlayOneShot(m_gadgets[name].PlaySound,transform.position);
-		}else{
+        }else{
             if(m_gadgets[name].CantPlaySound!="") FMOD_StudioSystem.instance.PlayOneShot(m_gadgets[name].CantPlaySound,transform.position);
 			Debug.Log("no gadget has been registered to this name or gadget is not ready !");
 		}

@@ -16,6 +16,7 @@ public class Laser : Gadget
     const float RANGE = 100f;
     const float DISPLAY_RANGE = RANGE;
     const float TARGET_CONTACT_TIME = 0.2f;
+    const float HORIZONTAL_ANGLE_DEG = 3;
     #endregion
 
     #region members
@@ -129,11 +130,13 @@ public class Laser : Gadget
                     float angle = Mathf.Lerp(END_ANGLE_DEG, START_ANGLE_DEG, m_stateTimer.CurrentNormalized)*Mathf.Deg2Rad;
                     Vector3 forward=m_car.getForwardVector();
                     Vector3 up = m_car.getUpVector();
+                    Vector3 right = m_car.getRightVector();
                     for(int i=0;i<2;i++)
                     {
                         Vector3 pos0 = m_lasers[i].lightTransform.position;
                         pos0 -= up * m_lightsYOffset;
-                        Vector3 direc = forward * Mathf.Cos(angle) + up * Mathf.Sin(angle);
+                        Vector3 hori = forward * Mathf.Cos(HORIZONTAL_ANGLE_DEG * Mathf.Deg2Rad) + (i == 0 ? 1 : -1) * right* Mathf.Sin(HORIZONTAL_ANGLE_DEG * Mathf.Deg2Rad);
+                        Vector3 direc = hori * Mathf.Cos(angle) + up * Mathf.Sin(angle);
                         direc.Normalize();
                         Vector3 pos1 = pos0 + direc * DISPLAY_RANGE;
                         m_lasers[i].lineRenderer.SetPosition(0, pos0);

@@ -11,7 +11,8 @@ public class Gadget : MonoBehaviour
     public GadgetAbility[] _abilities;
     public bool _isAssign = false;
     public bool _invertGesture = false;
-    
+    public Material _cardMaterial;
+
     private bool m_isReady = true;
     protected string m_playSound = "";
     protected string m_cantPlaySound = "";
