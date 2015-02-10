@@ -47,7 +47,7 @@ public class GameOverController : MonoBehaviour {
 		string fileName = "PlaytestLog";
 		StreamWriter sr;
 		if (File.Exists(fileName))
-			sr = File.OpenWrite (fileName);
+			sr = File.AppendText (fileName);
 		else
 			sr = System.IO.File.CreateText (fileName);
 	
