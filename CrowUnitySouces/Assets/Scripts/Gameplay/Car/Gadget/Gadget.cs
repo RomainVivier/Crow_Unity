@@ -14,8 +14,8 @@ public class Gadget : MonoBehaviour
     public Material _cardMaterial;
 
     private bool m_isReady = true;
-    protected string m_playSound = "";
-    protected string m_cantPlaySound = "";
+    protected string m_playSound = "event:/SFX/Buttons/ButtonSmall/buttonPushSmallValidated";
+    protected string m_cantPlaySound = "event:/SFX/Buttons/ButtonSmall/buttonPushSmallDenied";
     protected GadgetFamily m_gadgetFamily;
 
     #endregion 
