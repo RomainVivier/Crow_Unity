@@ -7,6 +7,7 @@ public class Dash : Gadget
     public RailsControl _rc;
     public Car _car;
     public float _speedCoeff;
+	public WindshieldController _windshield;
 
     private Timer m_timer;
 
@@ -46,6 +47,8 @@ public class Dash : Gadget
         _car.updateValues();
         m_timer.Reset(1f);
         IsReady = false;
+		GetComponentInChildren<SpriteRenderer> ().enabled = true;
+		_windshield._isInvincible = true;
     }
 
     public override void Stop()
@@ -61,6 +64,13 @@ public class Dash : Gadget
         _car.maxSpeedKmh /= _speedCoeff;
         _car.updateValues();
         IsReady = true;
-	
+		Invoke("StopInvincibility", 0.5f);
     }
+
+
+	void StopInvincibility()
+	{
+		GetComponentInChildren<SpriteRenderer> ().enabled = false;
+		_windshield._isInvincible = false;
+	}
 }

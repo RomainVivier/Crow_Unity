@@ -58,6 +58,7 @@ public class Gadget : MonoBehaviour
         {
             _buttonAnim.speed = 10;
             _buttonAnim.SetBool("Engage", true);
+			Score.Instance._gadgetsUsed++;
             //_buttonAnim.SetTrigger("Engage");
         }
 	}

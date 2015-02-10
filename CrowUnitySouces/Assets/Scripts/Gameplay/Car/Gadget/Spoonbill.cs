@@ -75,6 +75,7 @@ public class Spoonbill : Gadget
             _spoonbillAnimator.SetTrigger("Attack");
             m_attackTimer.Reset(1.5f);
             m_state = State.Attacking;
+			Score.Instance._carsDestroyed++;
         }
         if(!other.isTrigger) FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Gadgets/Spatula/gadgetSpatulaImpact", transform.position);
     }

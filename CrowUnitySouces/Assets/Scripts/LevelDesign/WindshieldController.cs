@@ -5,6 +5,7 @@ public class WindshieldController : MonoBehaviour {
 
 
 	public int _hp = 3;
+	public bool _isInvincible;
 	SpriteRenderer[] m_impacts;
 	Animator m_lightAnimator;
 
@@ -16,6 +17,9 @@ public class WindshieldController : MonoBehaviour {
 
 	public void Hit()
 	{
+		if (_isInvincible)
+			return;
+
 		_hp--;
 
 		if(_hp < 0)

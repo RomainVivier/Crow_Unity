@@ -157,6 +157,7 @@ public class Laser : Gadget
                                     if(m_lasers[i].contactTime>=TARGET_CONTACT_TIME && rh.collider.CompareTag("Obstacle"))
                                     {
                                         rh.collider.gameObject.SetActive(false);
+									Score.Instance._carsDestroyed++;
                                         _laserEffect.transform.position = rh.point;
                                         _laserEffect.GetComponent<ParticleSystem>().Play();
                                     }

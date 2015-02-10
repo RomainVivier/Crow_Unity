@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 
@@ -7,6 +7,9 @@ public class Score : MonoBehaviour
 #region members
 
     public Text _text;
+	public int _carsDestroyed;
+	public int _gadgetsUsed;
+	public float _gameTime;
 
     private float m_distanceTraveled = 0f;
     private float m_score;
@@ -81,11 +84,16 @@ public class Score : MonoBehaviour
 
     private void Init()
     {
+		_carsDestroyed = 0;
+		_gadgetsUsed = 0;
+		_gameTime = 0;
+		m_distanceTraveled = 0;
     }
 
 #endregion
 
     void Update ()
     {
+		_gameTime += Time.deltaTime;
 	}
 }

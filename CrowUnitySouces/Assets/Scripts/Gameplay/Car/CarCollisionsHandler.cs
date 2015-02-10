@@ -101,8 +101,10 @@ public class CarCollisionsHandler : MonoBehaviour
 			oth.AddComponent<ObstacleDestroyer>();
 			oth.layer = 13; //IgnorePlayer
 			oth.collider.isTrigger = true;
-
-			rigidbody.AddForce(-forward * _ownMomentum, ForceMode.Impulse);
+			if(m_windshield._isInvincible)
+				Score.Instance._carsDestroyed++;
+			else
+				rigidbody.AddForce(-forward * _ownMomentum, ForceMode.Impulse);
 			m_windshield.Hit ();
 			m_cameraShaker.DoShake();
 		}

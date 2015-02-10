@@ -1,11 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using System.IO;
 
 public class GameOverController : MonoBehaviour {
 
 	private static GameOverController m_instance;
 	private bool m_showFlag;
+
+	public Text _distance;
+	public Text _time;
+	public Text _carsDestroyed;
+	public Text _gadgetsUsed;
 
 	public static GameOverController Instance
 	{
@@ -32,7 +38,25 @@ public class GameOverController : MonoBehaviour {
 			return;
 
 		gameObject.SetActive(true);
-		gameObject.GetComponentInChildren<Text>().text = "Distance: " + Score.Instance.DistanceTravaled;
+		_distance.text = "Distance: " + Score.Instance.DistanceTravaled;
+		_time.text = "Time: " + Score.Instance._gameTime;
+		_carsDestroyed.text = "Obstacles Cleared: " + Score.Instance._carsDestroyed;
+		_gadgetsUsed.text = "Buttons Pressed: " + Score.Instance._gadgetsUsed;
 		m_showFlag = true;
+		
+		string fileName = "PlaytestLog";
+		StreamWriter sr;
+		if (File.Exists(fileName))
+			sr = File.OpenWrite (fileName);
+		else
+			sr = System.IO.File.CreateText (fileName);
+	
+		sr.WriteLine (_distance.text);
+		sr.WriteLine (_time.text);
+		sr.WriteLine (_carsDestroyed.text);
+		sr.WriteLine (_gadgetsUsed.text);
+		sr.WriteLine ();
+
+		sr.Close ();
 	}
 }
