@@ -19,11 +19,15 @@ public class WindshieldController : MonoBehaviour {
 		_hp--;
 
 		if(_hp < 0)
+		{
+			GameOverController.Instance.Show();
 			return;
+		}
 
 		if(_hp < m_impacts.Length)
 			m_impacts[_hp].enabled = true;
 		if(_hp == 0)
 			m_lightAnimator.SetTrigger("Blink");
+	
 	}
 }

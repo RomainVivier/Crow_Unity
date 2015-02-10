@@ -22,9 +22,13 @@ public class GadgetButton : MonoBehaviour
     
     #region GagdetButton Functions
 
+	public void AssignRandomGadget()
+	{
+		_gadgetID = GadgetManager.Instance.RandomUnassignGadget();
+	}
+
     public void Init()
     {
-        _gadgetID = GadgetManager.Instance.RandomUnassignGadget();
         var gadget = GadgetManager.Instance.getGadgetById(_gadgetID);
         if(gadget != null)
         {
