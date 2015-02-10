@@ -112,18 +112,18 @@ public class Rocket : Gadget {
                 if (go.transform.position.x > transform.position.x && (m_target == Vector3.zero || Vector3.Distance(transform.position, m_target) > Vector3.Distance(transform.position, go.transform.position)))
                 {
                     m_target = go.transform.position;
-                    FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Gadgets/Rocket/gadgetRocketEngage", transform.position);
-                    m_rocketLaunchtimer.Reset(0.6f);
+                    //FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Gadgets/Rocket/gadgetRocketEngage", transform.position);
+                    //m_rocketLaunchtimer.Reset(0.6f);
                 }
             }
         }
-
-        if (obstacles.Length == 0 || m_target == Vector3.zero)
+        if (obstacles.Length == 0 || m_target == Vector3.zero || Vector3.Distance(transform.position, m_target) > 100) 
         {
-            Stop();
+            m_target = transform.position + transform.forward * 100;
+            //Stop();
         }
-
-        
+        m_rocketLaunchtimer.Reset(0.6f);
+        FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Gadgets/Rocket/gadgetRocketEngage", transform.position);
 
     }
 
