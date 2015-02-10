@@ -33,6 +33,24 @@ public class BuildingGenerator : MonoBehaviour {
             building.transform.rotation = Quaternion.Euler(new Vector3(-90, 90 + transform.rotation.eulerAngles.y, 0));
             building.transform.localScale = Vector3.Scale(building.transform.localScale, transform.localScale);
             building.transform.parent = transform;
+            if(i==0)
+            {
+                GameObject go = new GameObject();
+                go.transform.parent = building.transform;
+                go.transform.localPosition = Vector3.zero;
+                go.transform.localEulerAngles = Vector3.zero;
+                BoxCollider bc=go.AddComponent<BoxCollider>();
+                bc.isTrigger = true;
+                bc.center = new Vector3(0, -10, 2);
+                bc.size = new Vector3(11, 20, 5);
+                SoundPlayer sp = go.AddComponent<SoundPlayer>();
+                sp._is3D = false;
+                sp._onlyOnce = false;
+                sp._soundName = "SFX/Env Objects/envSwooshBuildingEnterLeft";
+                sp._soundNameRight="SFX/Env Objects/envSwooshBuildingEnterRight";
+                sp._soundNameExit="SFX/Env Objects/envSwooshBuildingExitLeft";
+                sp._soundNameExitRight="SFX/Env Objects/envSwooshBuildingExitRight";
+            }
         }
 	}
 

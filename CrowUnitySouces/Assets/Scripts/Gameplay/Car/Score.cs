@@ -8,11 +8,12 @@ public class Score : MonoBehaviour
 
     public Text _text;
 
-    private float _distanceTraveled = 0f;
-    private float _score;
-    private float _speed;
-    private int _combo = 0;
+    private float m_distanceTraveled = 0f;
+    private float m_score;
+    private float m_speed;
+    private int m_combo = 0;
     private static Score m_instance;
+    private RailsControl m_rc;
 
 #endregion 
 
@@ -20,20 +21,31 @@ public class Score : MonoBehaviour
 
     public float DistanceTravaled
     {
-        get { return _distanceTraveled; }
-        set { _distanceTraveled = value; }
+        get 
+        {
+            if (m_rc == null)
+            {
+                m_rc = GameObject.FindObjectOfType<RailsControl>();
+                return m_distanceTraveled;
+            }
+            else
+            {
+                return m_distanceTraveled + m_rc.chunk._rails.Dist * m_rc.Progress;
+            }
+        }
+        set { m_distanceTraveled = value; }
     }
 
     public float Speed
     {
-        get { return _speed; }
-        set { _speed = value; }
+        get { return m_speed; }
+        set { m_speed = value; }
     }
 
     public int Combo
     {
-        get { return _combo; }
-        set { _combo = value; }
+        get { return m_combo; }
+        set { m_combo = value; }
     }
 
 #endregion 
@@ -75,6 +87,5 @@ public class Score : MonoBehaviour
 
     void Update ()
     {
-	    
 	}
 }

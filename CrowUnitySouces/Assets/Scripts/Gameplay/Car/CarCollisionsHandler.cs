@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEditor;
 using System.Collections;
 
 public class CarCollisionsHandler : MonoBehaviour
@@ -10,6 +9,7 @@ public class CarCollisionsHandler : MonoBehaviour
 
     public float _minMomentum = 10000;// In Kg.m/s (or N.s)
     public float _maxMomentum = 30000;
+    public float _ownMomentum = 10000;
     public static bool _dontCollide = false;
 
     #endregion
@@ -65,6 +65,7 @@ public class CarCollisionsHandler : MonoBehaviour
             oth.rigidbody.AddForce(direc * momentum,ForceMode.Impulse);
             oth.AddComponent<ObstacleDestroyer>();
 			oth.layer = 13; //IgnorePlayer
+            rigidbody.AddForce(-forward * _ownMomentum, ForceMode.Impulse);
 			m_windshield.Hit ();
 			m_cameraShaker.DoShake();
         }
@@ -72,6 +73,7 @@ public class CarCollisionsHandler : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
+        if (_dontCollide) return;
         GameObject oth = collision.gameObject;
         if (!collision.collider.isTrigger)
         {

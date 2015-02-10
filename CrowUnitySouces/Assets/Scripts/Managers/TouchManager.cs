@@ -79,8 +79,8 @@ public class TouchManager : MonoBehaviour
         m_swipeInfos=new SwipeInfos[11];
         for (int i = 0; i < 11; i++) m_swipeInfos[i].inSwipe = false;
 
-        _touchEnd += Swipe;
-        _touchEndZone += SwipeZone;
+        //_touchEnd += Swipe;
+        _touchEndZone += Swipe;
         m_wheelCenter.x = -0.44f * Screen.height + Screen.width / 2;
         m_wheelCenter.y = 0.062f;
         m_wheelRadius = 0.2f * Screen.height;//0.155f
@@ -98,7 +98,7 @@ public class TouchManager : MonoBehaviour
     public void Touch()
     {
         TouchInfos t=new TouchInfos();
-        t.state = TouchInfos.State.UNHELD; ;
+        t.state = TouchInfos.State.UNHELD;
         if (Input.GetMouseButtonDown(0)) t.state = TouchInfos.State.BEGIN;
         else if (Input.GetMouseButton(0)) t.state = TouchInfos.State.HELD;
         else if (Input.GetMouseButtonUp(0)) t.state = TouchInfos.State.END;
@@ -130,7 +130,8 @@ public class TouchManager : MonoBehaviour
     {
         if (ti.state==TouchInfos.State.BEGIN)
         {
-            if ((ti.pos - m_wheelCenter).magnitude < m_wheelRadius) si.inZoneSwipe = true;
+            //if ((ti.pos - m_wheelCenter).magnitude < m_wheelRadius) si.inZoneSwipe = true;
+            if (ti.pos.y > Screen.height/2) si.inZoneSwipe = true;
             si.inSwipe = true;
             si.swipeStart = ti.pos;
             if (_touchStart != null)
@@ -142,7 +143,8 @@ public class TouchManager : MonoBehaviour
         bool endZoneSwipe = false;
         if (ti.state==TouchInfos.State.HELD)
         {
-            if ((ti.pos - m_wheelCenter).magnitude > m_wheelRadius && si.inZoneSwipe) endZoneSwipe = true;
+            //if ((ti.pos - m_wheelCenter).magnitude > m_wheelRadius && si.inZoneSwipe) endZoneSwipe = true;
+            if (ti.pos.y < Screen.height/2 && si.inZoneSwipe) endZoneSwipe = true;
             if (_touchStay != null)
             {
                 _touchStay(si);
