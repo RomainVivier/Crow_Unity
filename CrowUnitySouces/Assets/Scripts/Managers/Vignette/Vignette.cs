@@ -9,6 +9,7 @@ public class Vignette : MonoBehaviour
     public float _defaultTime = 5;
     public Image _frame;
     public List<int> _railsTaken;
+    public Animator _anim;
     
 
     private VignetteType _type;    
