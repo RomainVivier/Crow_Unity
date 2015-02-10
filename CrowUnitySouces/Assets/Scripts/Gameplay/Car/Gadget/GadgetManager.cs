@@ -123,6 +123,11 @@ public class GadgetManager : MonoBehaviour {
 
         var gadgets = m_gadgets.Where(g => g.Value._isAssign == false).Select(g => g.Key).ToList();
 
+        if (gadgets.Count == 0)
+        {
+            return null;
+        }
+
         gadgetID = gadgets[Random.Range(0, gadgets.Count)];
 
         if (m_gadgets.ContainsKey(gadgetID))
