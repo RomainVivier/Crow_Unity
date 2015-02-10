@@ -13,9 +13,9 @@ public class Laser : Gadget
 
     const float START_ANGLE_DEG = -10f;
     const float END_ANGLE_DEG = 10f;
-    const float RANGE = 100f;
+    const float RANGE = 1000f;
     const float DISPLAY_RANGE = RANGE;
-    const float TARGET_CONTACT_TIME = 0.2f;
+    const float TARGET_CONTACT_TIME = 0.05f;//0.2f;
     const float HORIZONTAL_ANGLE_DEG = 3;
     #endregion
 
@@ -159,8 +159,8 @@ public class Laser : Gadget
                                     m_lasers[i].contactTime += Time.deltaTime;
                                     if(m_lasers[i].contactTime>=TARGET_CONTACT_TIME && rh.collider.CompareTag("Obstacle"))
                                     {
-                                        _laserEffect.transform.position = go.transform.position;//rh.point;
                                         _laserEffect.GetComponent<ParticleSystem>().Play();
+                                        _laserEffect.transform.position = go.transform.position;//rh.point;
                                         rh.collider.gameObject.SetActive(false);
                                     }
                                 }
