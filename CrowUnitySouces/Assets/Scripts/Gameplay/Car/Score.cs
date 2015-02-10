@@ -4,24 +4,29 @@ using System.Collections;
 
 public class Score : MonoBehaviour
 {
-#region members
+    #region members
 
     public Text _text;
+    public float _timeToReset = 5f;
 
-    public float m_distanceTraveled = 0f;
-    private float m_score;
+    private float m_distanceTraveled = 0f;
     private float m_speed;
+    private float m_score;
     private int m_combo = 0;
+    private Timer m_comboTimer;
+    private bool m_hideScore = false;
+
+
     private static Score m_instance;
     private RailsControl m_rc;
 
-#endregion 
+    #endregion
 
-#region Properties
+    #region Properties
 
     public float DistanceTravaled
     {
-        get 
+        get
         {
             if (m_rc == null)
             {
@@ -48,9 +53,22 @@ public class Score : MonoBehaviour
         set { m_combo = value; }
     }
 
-#endregion 
+    public bool HideScore
+    {
+        get { return m_hideScore; }
+        set
+        {
+            if (!value)
+            {
+                _text.text = "";
+            }
+            m_hideScore = value;
+        }
+    }
 
-#region Singleton
+    #endregion
+
+    #region Singleton
 
     public static Score Instance
     {
@@ -81,11 +99,23 @@ public class Score : MonoBehaviour
 
     private void Init()
     {
+        m_comboTimer = new Timer();
     }
 
-#endregion
+    #endregion
 
-    void Update ()
+    void Update()
     {
-	}
+        if (!HideScore)
+        {
+            _text.text = ((int)(DistanceTravaled + m_score)).ToString();
+        }
+    }
+
+    public void AddScore(int value)
+    {
+        m_combo++;
+        m_score += m_combo * value;
+    }
+
 }
