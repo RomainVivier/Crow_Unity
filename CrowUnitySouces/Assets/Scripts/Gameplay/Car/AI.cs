@@ -17,13 +17,14 @@ public class AI : MonoBehaviour
 
 	void Start ()
     {	
-        unlitMat=Resources.Load("ButtonUnlit", typeof(Material)) as Material;
-        litMat=Resources.Load("ButtonLit", typeof(Material)) as Material;
+        //unlitMat=Resources.Load("ButtonUnlit", typeof(Material)) as Material;
+        //litMat=Resources.Load("ButtonLit", typeof(Material)) as Material;
+        playDialog("AI Scripted/AI_Start");
 	}
 	
 	void FixedUpdate ()
     {
-        if (currentSound == null) return;
+        /*if (currentSound == null) return;
         FMOD.Studio.PLAYBACK_STATE state;
         currentSound.getPlaybackState(out state);
         if (state == FMOD.Studio.PLAYBACK_STATE.STOPPED)
@@ -51,7 +52,7 @@ public class AI : MonoBehaviour
                 history.Add(btnIndex);
                 setButtonState(buttons[btnIndex], Random.Range(0, 2) == 1);
             }
-        }
+        }*/
 	}
 
     public void playDialog(string name)
@@ -69,8 +70,8 @@ public class AI : MonoBehaviour
 
     void OnValidate()
     {
-        updateButtonsArray();
-        updateHistory();
+        //updateButtonsArray();
+        //updateHistory();
     }
 
     void updateButtonsArray()
