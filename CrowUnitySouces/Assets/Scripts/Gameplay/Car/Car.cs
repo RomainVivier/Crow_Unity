@@ -141,7 +141,7 @@ public class Car : MonoBehaviour
 			wheels[1].steerAngle=steerAngleOut;			
 		}
         Quaternion newRotation = wheelQuaternion;
-        newRotation *= Quaternion.Euler(new Vector3(0,0,-wheelRotation*inputs.steering));
+        newRotation *= Quaternion.Euler(new Vector3(0,wheelRotation*inputs.steering,0));
         wheelObject.transform.localRotation = newRotation;
 		
 		// Aerodynamic drag & downforce
