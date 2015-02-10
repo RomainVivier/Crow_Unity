@@ -45,13 +45,15 @@ public class CarCollisionsHandler : MonoBehaviour
         if (oth.name == "Obstacle_Car(Clone)")
         {
             if (_dontCollide) return;
+            Vector3 forward = m_car.getForwardVector();
+            Vector3 diff = oth.transform.position - m_car.transform.Find("Body").position;
+            if (Vector3.Dot(diff, forward) < 2) return;
             if (cooldownTimer.IsElapsedLoop)
             {
                 playSound(null, oth, m_impactVehicleSound, m_impactVehicleSpeed);
                 cooldownTimer.Reset(2f);
             }
             float hAngle = Random.Range(-_maxAngleHDeg, _maxAngleHDeg) * Mathf.Deg2Rad;
-            Vector3 forward = m_car.getForwardVector();
             Vector3 right = m_car.getRightVector();
             Vector3 hVector = forward * Mathf.Cos(hAngle) + right * Mathf.Sin(hAngle);
             float vAngle = Random.Range(0, _maxAngleVDeg) * Mathf.Deg2Rad;
