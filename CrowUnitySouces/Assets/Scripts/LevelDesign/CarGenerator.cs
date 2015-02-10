@@ -39,6 +39,8 @@ public class CarGenerator : MonoBehaviour {
 			m_cars.Add(newCar);
 			newCar.transform.parent = selectedSpawnPoint;
 			newCar.transform.localPosition = Vector3.zero;
+			newCar.rigidbody.velocity = Vector3.zero;
+			newCar.rigidbody.angularVelocity = Vector3.zero;
 			spawnPoints.Remove (selectedSpawnPoint);
 		}
 	}

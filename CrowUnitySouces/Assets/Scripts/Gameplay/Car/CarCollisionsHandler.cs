@@ -87,6 +87,8 @@ public class CarCollisionsHandler : MonoBehaviour
 				playSound(null, oth, m_impactVehicleSound, m_impactVehicleSpeed);
 				cooldownTimer.Reset(2f);
 			}
+
+			oth.rigidbody.isKinematic = false;
 			float hAngle = Random.Range(-_maxAngleHDeg, _maxAngleHDeg) * Mathf.Deg2Rad;
 			Vector3 forward = m_car.getForwardVector();
 			Vector3 right = m_car.getRightVector();
@@ -99,6 +101,7 @@ public class CarCollisionsHandler : MonoBehaviour
 			oth.AddComponent<ObstacleDestroyer>();
 			oth.layer = 13; //IgnorePlayer
 			oth.collider.isTrigger = true;
+
 			rigidbody.AddForce(-forward * _ownMomentum, ForceMode.Impulse);
 			m_windshield.Hit ();
 			m_cameraShaker.DoShake();

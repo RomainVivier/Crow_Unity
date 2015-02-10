@@ -18,6 +18,7 @@ public class DifficultyManager : MonoBehaviour
 	public float _difficultyIncrement = 0.1f;
 	public float _difficulty = 1.0f;
 	public float _randomRange = 2.0f;
+	public int _seed = 0;
 
 	public void IncreaseDifficulty()
 	{
@@ -25,6 +26,7 @@ public class DifficultyManager : MonoBehaviour
 	}
 	public int GetRandomizedDifficulty()
 	{
+		//Random.seed = _seed++; 
 		float result = _difficulty - _randomRange * 0.5f + Random.value * _randomRange + 1;
 		return (int)result;
 	}
