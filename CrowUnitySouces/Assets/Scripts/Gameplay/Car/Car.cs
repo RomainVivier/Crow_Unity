@@ -80,8 +80,8 @@ public class Car : MonoBehaviour
         tiresSound.getParameter("Speed", out tiresSpeed);
         tiresSound.getParameter("Ground", out tiresGround);
         tiresSound.start();
-        //wheelObject = transform.FindChild("Body/CarModel/volant").gameObject;
-        //wheelQuaternion = wheelObject.transform.localRotation;
+        wheelObject = transform.FindChild("Body/CarModel/Wheel").gameObject;
+        wheelQuaternion = wheelObject.transform.localRotation;
 	}
 
     void FixedUpdate ()
@@ -141,8 +141,8 @@ public class Car : MonoBehaviour
 			wheels[1].steerAngle=steerAngleOut;			
 		}
         Quaternion newRotation = wheelQuaternion;
-        newRotation *= Quaternion.Euler(new Vector3(0, -wheelRotation*inputs.steering, 0));
-        //wheelObject.transform.localRotation = newRotation;
+        newRotation *= Quaternion.Euler(new Vector3(0,0,-wheelRotation*inputs.steering));
+        wheelObject.transform.localRotation = newRotation;
 		
 		// Aerodynamic drag & downforce
 		float force=forwardVelocity*forwardVelocity*dragCoef;
