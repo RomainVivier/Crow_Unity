@@ -40,9 +40,10 @@ public class CameraShake : MonoBehaviour {
 	
 	public void DoShake()
 	{
-		OriginalPos = transform.localPosition;
-		OriginalRot = transform.localRotation;
-		
+		if (!Shaking) {
+			OriginalPos = transform.localPosition;
+			OriginalRot = transform.localRotation;
+		}
 		ShakeIntensity = 0.07f;
 		ShakeDecay = 0.003f;
 		Shaking = true;

@@ -44,6 +44,8 @@ public class SlapMachine : Gadget {
         int value = Random.Range(4,5);
         _cameraAnimator.SetTrigger("Slap_"+value);
 
+		//Juste pour la démo, tue-moi
+		transform.GetChild (0).GetComponent<Animator>().SetTrigger("Slap");
     }
 
     public override void Stop()
