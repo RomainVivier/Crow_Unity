@@ -37,7 +37,6 @@ public class CardPopup : MonoBehaviour
         if (m_animator.GetCurrentAnimatorStateInfo(0).nameHash == -1783470761)//Animator.StringToHash("Down"))
             popupNow();
         else m_animator.SetBool("isUp", false);
-        Debug.Log(m_animator.GetCurrentAnimatorStateInfo(0).nameHash);
     }
 
     private void popupNow()
