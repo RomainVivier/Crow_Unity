@@ -46,7 +46,12 @@ public class SlapMachine : Gadget {
 
 		//Juste pour la démo, tue-moi
 		transform.GetChild (0).GetComponent<Animator>().SetTrigger("Slap");
+		Invoke ("AddToScore", 0.4f);
     }
+	void AddToScore()
+	{
+		Score.Instance.AddToScore(800);
+	}
 
     public override void Stop()
     {

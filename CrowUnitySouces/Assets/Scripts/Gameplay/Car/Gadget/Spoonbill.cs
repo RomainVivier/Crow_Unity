@@ -79,9 +79,15 @@ public class Spoonbill : Gadget
             m_attackTimer.Reset(1.5f);
             m_state = State.Attacking;
 	Score.Instance._carsDestroyed++;
+			Invoke ("AddToScore", 0.35f);
         }
         if(!other.isTrigger) FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Gadgets/Spatula/gadgetSpatulaImpact", transform.position);
-    }
+
+	}
+	void AddToScore()
+	{
+		Score.Instance.AddToScore(500);
+	}
 
     #endregion
 

@@ -11,6 +11,7 @@ public class Score : MonoBehaviour
 	public int _gadgetsUsed;
 	public float _gameTime;
 
+	private int m_eventPoints;
     private float m_distanceTraveled = 0f;
     private float m_score;
     private float m_speed;
@@ -51,6 +52,12 @@ public class Score : MonoBehaviour
         set { m_combo = value; }
     }
 
+	public int Fuck
+
+	{
+		get { return (int)m_score; }
+	}
+
 #endregion 
 
 #region Singleton
@@ -67,6 +74,12 @@ public class Score : MonoBehaviour
             return m_instance;
         }
     }
+
+	public void AddToScore(int increment)
+	{
+		m_eventPoints += increment;
+		GetComponent<Animator> ().SetTrigger ("ScoreUp");
+	}
 
     void Awake()
     {
@@ -95,5 +108,7 @@ public class Score : MonoBehaviour
     void Update ()
     {
 		_gameTime += Time.deltaTime;
+		m_score = m_distanceTraveled + m_eventPoints;
+		_text.text = ((int)m_score).ToString();
 	}
 }

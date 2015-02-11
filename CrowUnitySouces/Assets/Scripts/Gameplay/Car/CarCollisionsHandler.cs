@@ -44,7 +44,7 @@ private CameraShake m_cameraShake;
     #endregion
 
     #region Collider
-    /*
+    
     void OnTriggerEnter(Collider other)
     {
         GameObject oth = other.gameObject;
@@ -69,15 +69,26 @@ private CameraShake m_cameraShake;
             float momentum=Mathf.Lerp(_minMomentum,_maxMomentum,m_car.getForwardVelocityKmh()/m_car.maxSpeedKmh);
             oth.rigidbody.AddForce(direc * momentum,ForceMode.Impulse);
             oth.AddComponent<ObstacleDestroyer>();
-		oth.layer = 13; //IgnorePlayer
-            rigidbody.AddForce(-forward * _ownMomentum, ForceMode.Impulse);
-			m_windshield.Hit ();
-			m_cameraShaker.DoShake();
+			oth.layer = 13; //IgnorePlayer
+           
+			Vector3 force;
+			if(m_windshield._isInvincible)
+			{
+				force = -forward * _ownMomentum * 0.5f;
+				Score.Instance.AddToScore(500);
+			}
+			else
+			{
+				force = -forward * _ownMomentum;
+				m_windshield.Hit ();
+			}
+			rigidbody.AddForce(force, ForceMode.Impulse);
+			m_cameraShake.DoShake();
         }
     }
-    */
+    
 
-
+/*
     void OnCollisionEnter(Collision collision)
     {
 		if (_dontCollide) return;
@@ -110,7 +121,7 @@ private CameraShake m_cameraShake;
 			else
 				rigidbody.AddForce(-forward * _ownMomentum, ForceMode.Impulse);
 			m_windshield.Hit ();
-			m_cameraShaker.DoShake();
+			m_cameraShake.DoShake();
 		}
         
         if (!collision.collider.isTrigger)
@@ -124,6 +135,7 @@ private CameraShake m_cameraShake;
             if (relDy > -0.7) playSound(collision, oth, m_impactConcreteSound, m_impactConcreteSpeed);
         }
     }
+    */
     #endregion
 
     #region private methods

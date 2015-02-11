@@ -114,6 +114,7 @@ public class Rocket : Gadget {
                     m_target = go.transform.position;
                     FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Gadgets/Rocket/gadgetRocketEngage", transform.position);
                     m_rocketLaunchtimer.Reset(0.6f);
+					Score.Instance.AddToScore(500);
                 }
             }
         }

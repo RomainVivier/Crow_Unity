@@ -48,6 +48,7 @@ public class Dash : Gadget
         m_timer.Reset(1f);
         IsReady = false;
 		GetComponentInChildren<SpriteRenderer> ().enabled = true;
+		GetComponentInChildren<Animator> ().SetTrigger ("HornsOut");
 		_windshield._isInvincible = true;
     }
 
@@ -64,6 +65,7 @@ public class Dash : Gadget
         _car.maxSpeedKmh /= _speedCoeff;
         _car.updateValues();
         IsReady = true;
+
 		Invoke("StopInvincibility", 0.5f);
     }
 
@@ -71,6 +73,7 @@ public class Dash : Gadget
 	void StopInvincibility()
 	{
 		GetComponentInChildren<SpriteRenderer> ().enabled = false;
+		GetComponentInChildren<Animator> ().SetTrigger ("HornsIn");
 		_windshield._isInvincible = false;
 	}
 }

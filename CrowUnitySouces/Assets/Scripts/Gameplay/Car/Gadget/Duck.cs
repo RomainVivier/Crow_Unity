@@ -46,7 +46,8 @@ public class Duck : Gadget
             currentCooldown = COOLDOWN;//float.PositiveInfinity;
             IsReady = false;
             nbUses++;
-            if(nbUses==2) (GameObject.FindObjectOfType<AI>() as AI).playDialog("AI Gadgets/AI_Duck");
+			if(nbUses==2) (GameObject.FindObjectOfType<AI>() as AI).playDialog("AI Gadgets/AI_Duck");
+			Score.Instance.AddToScore(50);
         }
     }
 }
