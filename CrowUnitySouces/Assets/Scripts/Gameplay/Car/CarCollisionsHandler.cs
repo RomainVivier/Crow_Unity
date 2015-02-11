@@ -49,11 +49,11 @@ public class CarCollisionsHandler : MonoBehaviour
         GameObject oth = other.gameObject;
         if (oth.tag == "Obstacle")
         {
-            if (_dontCollide) return;
+            //if (_dontCollide) return;
             Vector3 forward = m_car.getForwardVector();
             Vector3 diff = oth.transform.position - m_car.transform.Find("Body").position;
             float fPos = Vector3.Dot(diff, forward); 
-            if (fPos<2 || fPos>4) return;
+            if (fPos<2 || fPos>5) return;
             if (cooldownTimer.IsElapsedLoop)
             {
                 playSound(null, oth, m_impactVehicleSound, m_impactVehicleSpeed);
