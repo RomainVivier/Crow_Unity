@@ -9,8 +9,9 @@ public class Panel : MonoBehaviour
     public string _panelModelName;
     public float _distanceToUnlock;
     public Animator _anim;
-	public bool _randomIndex = true;
-	public int _forcedIndex;
+public bool _randomizeGadgets = true;
+public bool _randomizeLayout = true;
+public int _forcedIndex;
 
 
     private GameObject m_panel;
@@ -46,7 +47,7 @@ public class Panel : MonoBehaviour
     public void Init()
     {
 		int panelIndex;
-		if(_randomIndex)
+		if(_randomizeLayout)
 			panelIndex = Random.Range(1, 2);
 		else
 			panelIndex = _forcedIndex;
@@ -74,8 +75,8 @@ public class Panel : MonoBehaviour
 
         for (int i = 0; i < m_buttons.Length; i++)
         {
-			if(_randomIndex)
-				m_buttons[i].AssignRandomGadget();
+	if(_randomizeGadgets)
+		m_buttons[i].AssignRandomGadget();
             m_buttons[i].Init();
         }
     }

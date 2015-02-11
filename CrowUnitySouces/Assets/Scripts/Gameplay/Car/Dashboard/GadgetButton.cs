@@ -46,12 +46,23 @@ public class GadgetButton : MonoBehaviour
 
     public void OnLeftClickPress()
     {
+        if(_gadgetID == null)
+        {
+            return;
+        }
+
         if (_swipeVector == Vector2.zero) GadgetManager.Instance.PlayGadget(_gadgetID);
         else m_startPoint = new Vector2(Input.mousePosition.x, Input.mousePosition.y) / Screen.height;
     }
 
     public void OnLeftClickRelease()
     {
+        
+        if(_gadgetID == null)
+        {
+            return;
+        }
+
         if(_swipeVector!=Vector2.zero)
         {
             Vector2 vec = (new Vector2(Input.mousePosition.x, Input.mousePosition.y) / Screen.height)-m_startPoint;

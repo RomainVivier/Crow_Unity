@@ -69,7 +69,6 @@ public class CameraControl : MonoBehaviour {
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit, Mathf.Infinity, ~(1 << LayerMask.NameToLayer("Player"))))
         {
-			Debug.Log(hit.collider.name);
             //Debug.Log(hit.collider.name);
 
             if (hit.collider.CompareTag("Clickable"))

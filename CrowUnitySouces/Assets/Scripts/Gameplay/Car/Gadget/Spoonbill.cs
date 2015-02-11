@@ -24,6 +24,7 @@ public class Spoonbill : Gadget
 
     private State m_state;
     private GameObject m_target;
+    private bool inhibitedCollisions = false;
 
     #endregion 
 
@@ -68,6 +69,8 @@ public class Spoonbill : Gadget
     {
         if (other.collider.CompareTag("Obstacle") && m_state != State.Attacking)
         {
+            //(GameObject.FindObjectOfType<CarCollisionsInhibiter>() as CarCollisionsInhibiter)._nbCol++;
+            inhibitedCollisions = true;
             other.transform.parent = _spoonbill.transform;
             m_target = other.gameObject;
             other.rigidbody.isKinematic = true;
@@ -75,7 +78,7 @@ public class Spoonbill : Gadget
             _spoonbillAnimator.SetTrigger("Attack");
             m_attackTimer.Reset(1.5f);
             m_state = State.Attacking;
-			Score.Instance._carsDestroyed++;
+	Score.Instance._carsDestroyed++;
         }
         if(!other.isTrigger) FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Gadgets/Spatula/gadgetSpatulaImpact", transform.position);
     }
@@ -111,6 +114,11 @@ public class Spoonbill : Gadget
 
     void Disengage()
     {
+        /*if (inhibitedCollisions)
+        {
+            (GameObject.FindObjectOfType<CarCollisionsInhibiter>() as CarCollisionsInhibiter)._nbCol--;
+            inhibitedCollisions = false;
+        }*/
         FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Gadgets/Spatula/gadgetSpatulaDisengage", transform.position);
         m_state = State.Disengaging;
         m_engageTimer.Reset(1f);
@@ -121,6 +129,7 @@ public class Spoonbill : Gadget
 
     public override void Stop()
     {
+        Debug.Log("spoonbill stopped");
         base.Stop();
         gameObject.SetActive(false);
         _buttonAnim.SetBool("Engage", false);

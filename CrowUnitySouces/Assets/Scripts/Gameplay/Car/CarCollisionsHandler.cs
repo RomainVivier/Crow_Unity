@@ -5,7 +5,7 @@ public class CarCollisionsHandler : MonoBehaviour
 {
     #region public parameters
     public float _maxAngleHDeg = 45;
-	public float _minAngleVDeg = 0;
+	public float _minAngleVDeg = 40;
     public float _maxAngleVDeg = 45;
 
     public float _minMomentum = 10000;// In Kg.m/s (or N.s)
@@ -22,8 +22,9 @@ public class CarCollisionsHandler : MonoBehaviour
     private FMOD.Studio.ParameterInstance m_impactConcreteSpeed;
     private Car m_car;
     private Timer cooldownTimer;
-	private WindshieldController m_windshield;
-	private CameraShake m_cameraShaker;
+private WindshieldController m_windshield;
+private CameraShake m_cameraShake;
+
 
     #endregion
 
@@ -35,8 +36,8 @@ public class CarCollisionsHandler : MonoBehaviour
         m_impactConcreteSound=FMOD_StudioSystem.instance.GetEvent("event:/SFX/Impacts/impactConcrete");
         m_impactConcreteSound.getParameter("Speed", out m_impactConcreteSpeed);
         m_car = transform.parent.gameObject.GetComponent<Car>();
-		m_windshield = GetComponentInChildren<WindshieldController>();
-		m_cameraShaker = GetComponentInChildren<CameraShake>();
+	m_windshield = GetComponentInChildren<WindshieldController>();
+	m_cameraShake = GetComponentInChildren<CameraShake>();
         cooldownTimer = new Timer();
         cooldownTimer.Reset(0.01f);
     }
@@ -47,25 +48,28 @@ public class CarCollisionsHandler : MonoBehaviour
     void OnTriggerEnter(Collider other)
     {
         GameObject oth = other.gameObject;
-        if (oth.name == "Obstacle_Car(Clone)")
+        if (oth.tag == "Obstacle")
         {
-            if (_dontCollide) return;
+            //if (_dontCollide) return;
+            Vector3 forward = m_car.getForwardVector();
+            Vector3 diff = oth.transform.position - m_car.transform.Find("Body").position;
+            float fPos = Vector3.Dot(diff, forward); 
+            if (fPos<2 || fPos>5) return;
             if (cooldownTimer.IsElapsedLoop)
             {
                 playSound(null, oth, m_impactVehicleSound, m_impactVehicleSpeed);
                 cooldownTimer.Reset(2f);
             }
             float hAngle = Random.Range(-_maxAngleHDeg, _maxAngleHDeg) * Mathf.Deg2Rad;
-            Vector3 forward = m_car.getForwardVector();
             Vector3 right = m_car.getRightVector();
             Vector3 hVector = forward * Mathf.Cos(hAngle) + right * Mathf.Sin(hAngle);
-            float vAngle = Random.Range(0, _maxAngleVDeg) * Mathf.Deg2Rad;
+			float vAngle = Random.Range(_minAngleVDeg, _maxAngleVDeg) * Mathf.Deg2Rad;
             Vector3 up = m_car.getUpVector();
             Vector3 direc = hVector * Mathf.Cos(vAngle) + up * Mathf.Sin(vAngle);
             float momentum=Mathf.Lerp(_minMomentum,_maxMomentum,m_car.getForwardVelocityKmh()/m_car.maxSpeedKmh);
             oth.rigidbody.AddForce(direc * momentum,ForceMode.Impulse);
             oth.AddComponent<ObstacleDestroyer>();
-			oth.layer = 13; //IgnorePlayer
+		oth.layer = 13; //IgnorePlayer
             rigidbody.AddForce(-forward * _ownMomentum, ForceMode.Impulse);
 			m_windshield.Hit ();
 			m_cameraShaker.DoShake();

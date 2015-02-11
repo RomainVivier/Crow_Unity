@@ -233,7 +233,7 @@ SubstanceImporter:
       textureWidth: 256
       textureHeight: 256
       textureFormat: 0
-      loadingBehavior: 2
+      loadingBehavior: 3
   - serializedVersion: 12
     name: Building_Texture_2
     prototypeName: Building_Texture
@@ -464,6 +464,6 @@ SubstanceImporter:
       textureWidth: 256
       textureHeight: 256
       textureFormat: 0
-      loadingBehavior: 2
+      loadingBehavior: 3
   deletedPrototypes: []
   userData: 
