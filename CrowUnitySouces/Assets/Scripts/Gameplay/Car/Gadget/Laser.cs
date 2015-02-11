@@ -164,6 +164,24 @@ public class Laser : Gadget
                                         _laserEffect.GetComponent<ParticleSystem>().Play();
                                         _laserEffect.transform.position = go.transform.position;//rh.point;
                                         rh.collider.gameObject.SetActive(false);
+                                        Score.Instance.AddScore(500);
+
+                                        // Play sound
+                                        FMOD.Studio.EventInstance blowInstance
+                                            = FMOD_StudioSystem.instance.GetEvent("event:/SFX/Gadgets/Rocket/gadgetRocketSuccess");
+                                        blowInstance.start();
+                                        FMOD.Studio.ParameterInstance param;
+                                        blowInstance.getParameter("Position", out param);
+                                        Vector3 dpos = go.transform.position - transform.position;
+                                        Vector3 fwd = transform.forward;
+                                        float position = Vector3.Dot(dpos, fwd);
+                                        param.setValue(position > 0 ? 0 : 1);
+                                        FMOD.Studio._3D_ATTRIBUTES threeDeeAttr = new FMOD.Studio._3D_ATTRIBUTES();
+                                        threeDeeAttr.position = FMOD.Studio.UnityUtil.toFMODVector(go.transform.position);
+                                        threeDeeAttr.up = FMOD.Studio.UnityUtil.toFMODVector(go.transform.up);
+                                        threeDeeAttr.forward = FMOD.Studio.UnityUtil.toFMODVector(go.transform.forward);
+                                        threeDeeAttr.velocity = FMOD.Studio.UnityUtil.toFMODVector(Vector3.zero);
+                                        blowInstance.set3DAttributes(threeDeeAttr);
                                     }
                                 }
                             }
