@@ -22,6 +22,8 @@ public class CarCollisionsHandler : MonoBehaviour
     private FMOD.Studio.ParameterInstance m_impactConcreteSpeed;
     private Car m_car;
     private Timer cooldownTimer;
+	private WindshieldController m_windshield;
+	private CameraShake m_cameraShake;
 
     #endregion
 
@@ -33,6 +35,8 @@ public class CarCollisionsHandler : MonoBehaviour
         m_impactConcreteSound=FMOD_StudioSystem.instance.GetEvent("event:/SFX/Impacts/impactConcrete");
         m_impactConcreteSound.getParameter("Speed", out m_impactConcreteSpeed);
         m_car = transform.parent.gameObject.GetComponent<Car>();
+		m_windshield = GetComponentInChildren<WindshieldController>();
+		m_cameraShake = GetComponentInChildren<CameraShake>();
         cooldownTimer = new Timer();
         cooldownTimer.Reset(0.01f);
     }
@@ -64,6 +68,9 @@ public class CarCollisionsHandler : MonoBehaviour
             oth.rigidbody.AddForce(direc * momentum,ForceMode.Impulse);
             oth.AddComponent<ObstacleDestroyer>();
             rigidbody.AddForce(-forward * _ownMomentum, ForceMode.Impulse);
+
+			m_windshield.Hit();
+			m_cameraShake.DoShake();
         }
     }
 
