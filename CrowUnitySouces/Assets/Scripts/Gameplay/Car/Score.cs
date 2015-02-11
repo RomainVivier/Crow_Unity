@@ -118,4 +118,9 @@ public class Score : MonoBehaviour
         m_score += m_combo * value;
     }
 
+    public void ResetCombo()
+    {
+        m_combo = 0;
+    }
+
 }

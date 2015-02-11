@@ -187,6 +187,7 @@ public class Rocket : Gadget {
             if (collider.CompareTag("Obstacle"))
             {
                 collider.gameObject.SetActive(false);
+                Score.Instance.AddScore(500);
             }
         }
     }

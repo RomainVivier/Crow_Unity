@@ -72,6 +72,7 @@ public class CarCollisionsHandler : MonoBehaviour
 
 			m_windshield.Hit();
 			m_cameraShake.DoShake();
+            Score.Instance.ResetCombo();
         }
     }
 
