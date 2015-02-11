@@ -58,39 +58,40 @@ public class VignetteManager : MonoBehaviour
     {
         if(Input.GetKeyUp(KeyCode.Alpha1))
         {
-            Pop(VignetteType.Front, new List<int>() {0});
+            Pop(VignetteType.Front, new List<int>() {0}, "");
         }
 
         if (Input.GetKeyUp(KeyCode.Alpha2))
         {
-            Pop(VignetteType.Front, new List<int>() { 1 });
+            Pop(VignetteType.Front, new List<int>() { 1 }, "");
         }
 
         if (Input.GetKeyUp(KeyCode.Alpha3))
         {
-            Pop(VignetteType.Front, new List<int>() { 2 });
+            Pop(VignetteType.Front, new List<int>() { 2 }, "");
         }
 
         if (Input.GetKeyUp(KeyCode.Alpha4))
         {
-            Pop(VignetteType.Front, new List<int>() { 0, 1 });
+            Pop(VignetteType.Front, new List<int>() { 0, 1 }, "");
         }
 
         if (Input.GetKeyUp(KeyCode.Alpha5))
         {
-            Pop(VignetteType.Front, new List<int>() { 1, 2 });
+            Pop(VignetteType.Front, new List<int>() { 1, 2 }, "");
         }
 
         if (Input.GetKeyUp(KeyCode.Alpha6))
         {
-            Pop(VignetteType.Front, new List<int>() { 0, 1, 2 });
+            Pop(VignetteType.Front, new List<int>() { 0, 1, 2 }, "Cops");
+
         }
     }
 
 
     #region Vignette Functions
 
-    public void Pop(VignetteType type, List<int> rails)
+    public void Pop(VignetteType type, List<int> rails, string obs)
     {
         Vignette vignetteToPop;
 
@@ -117,6 +118,8 @@ public class VignetteManager : MonoBehaviour
         }
 
         vignetteToPop.Pop(type, rails);
+        if(obs != "") 
+            vignetteToPop._anim.SetTrigger(obs);
         m_vignetteUsed.Enqueue(vignetteToPop);
 
     }

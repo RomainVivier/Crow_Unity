@@ -44,7 +44,7 @@ public class Duck : Gadget
             duckSound.start();
             currentCooldown = COOLDOWN;//float.PositiveInfinity;
             IsReady = false;
-            
+            (GameObject.FindObjectOfType<AI>() as AI).playDialog("AI Gadgets/AI_Duck");
         }
     }
 }

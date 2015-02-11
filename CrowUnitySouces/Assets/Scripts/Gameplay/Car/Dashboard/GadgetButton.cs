@@ -22,9 +22,14 @@ public class GadgetButton : MonoBehaviour
     
     #region GagdetButton Functions
 
+	public void AssignRandomGadget()
+	{
+		_gadgetID = GadgetManager.Instance.RandomUnassignGadget();
+	}
+
     public void Init()
     {
-        _gadgetID = GadgetManager.Instance.RandomUnassignGadget();
+        
         var gadget = GadgetManager.Instance.getGadgetById(_gadgetID);
         if(gadget != null)
         {
@@ -42,12 +47,23 @@ public class GadgetButton : MonoBehaviour
 
     public void OnLeftClickPress()
     {
+        if(_gadgetID == null)
+        {
+            return;
+        }
+
         if (_swipeVector == Vector2.zero) GadgetManager.Instance.PlayGadget(_gadgetID);
         else m_startPoint = new Vector2(Input.mousePosition.x, Input.mousePosition.y) / Screen.height;
     }
 
     public void OnLeftClickRelease()
     {
+        
+        if(_gadgetID == null)
+        {
+            return;
+        }
+
         if(_swipeVector!=Vector2.zero)
         {
             Vector2 vec = (new Vector2(Input.mousePosition.x, Input.mousePosition.y) / Screen.height)-m_startPoint;

@@ -39,6 +39,7 @@ public class BuildingGenerator : MonoBehaviour {
                 go.transform.parent = building.transform;
                 go.transform.localPosition = Vector3.zero;
                 go.transform.localEulerAngles = Vector3.zero;
+				go.layer = 2; //Ignore Raycast
                 BoxCollider bc=go.AddComponent<BoxCollider>();
                 bc.isTrigger = true;
                 bc.center = new Vector3(0, -10, 2);

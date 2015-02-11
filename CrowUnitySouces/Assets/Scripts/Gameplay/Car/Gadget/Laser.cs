@@ -6,16 +6,17 @@ public class Laser : Gadget
 
 
     #region constants
-    const float COOLDOWN_TIME=10f;
+    const float COOLDOWN_TIME=0;//10f;
     const float VALVE_OPENING_TIME = 0.2f;
     const float FIRING_TIME = 1.5f;
     const float VALVE_CLOSING_TIME = 0.2f;
 
     const float START_ANGLE_DEG = -10f;
     const float END_ANGLE_DEG = 10f;
-    const float RANGE = 100f;
+    const float RANGE = 1000f;
     const float DISPLAY_RANGE = RANGE;
-    const float TARGET_CONTACT_TIME = 0.2f;
+    const float TARGET_CONTACT_TIME = 0.05f;//0.2f;
+    const float HORIZONTAL_ANGLE_DEG = 3;
     #endregion
 
     #region members
@@ -74,7 +75,7 @@ public class Laser : Gadget
         m_lasers[1].particles = transform.FindChild("ParticlesR").GetComponent<ParticleSystem>();
         m_lasers[0].particlesTransform = transform.FindChild("ParticlesL");
         m_lasers[1].particlesTransform = transform.FindChild("ParticlesR");
-        _laserEffect=GameObject.Find("LaserEffect");
+        //_laserEffect=GameObject.Find("LaserEffect");
 
         // Compute lightsYOffset
         Vector3 leftLightPos = m_lasers[0].lightTransform.position;
@@ -129,11 +130,13 @@ public class Laser : Gadget
                     float angle = Mathf.Lerp(END_ANGLE_DEG, START_ANGLE_DEG, m_stateTimer.CurrentNormalized)*Mathf.Deg2Rad;
                     Vector3 forward=m_car.getForwardVector();
                     Vector3 up = m_car.getUpVector();
+                    Vector3 right = m_car.getRightVector();
                     for(int i=0;i<2;i++)
                     {
                         Vector3 pos0 = m_lasers[i].lightTransform.position;
                         pos0 -= up * m_lightsYOffset;
-                        Vector3 direc = forward * Mathf.Cos(angle) + up * Mathf.Sin(angle);
+                        Vector3 hori = forward * Mathf.Cos(HORIZONTAL_ANGLE_DEG * Mathf.Deg2Rad) + (i == 0 ? 1 : -1) * right* Mathf.Sin(HORIZONTAL_ANGLE_DEG * Mathf.Deg2Rad);
+                        Vector3 direc = hori * Mathf.Cos(angle) + up * Mathf.Sin(angle);
                         direc.Normalize();
                         Vector3 pos1 = pos0 + direc * DISPLAY_RANGE;
                         m_lasers[i].lineRenderer.SetPosition(0, pos0);
@@ -156,9 +159,9 @@ public class Laser : Gadget
                                     m_lasers[i].contactTime += Time.deltaTime;
                                     if(m_lasers[i].contactTime>=TARGET_CONTACT_TIME && rh.collider.CompareTag("Obstacle"))
                                     {
-                                        rh.collider.gameObject.SetActive(false);
-                                        _laserEffect.transform.position = rh.point;
                                         _laserEffect.GetComponent<ParticleSystem>().Play();
+                                        _laserEffect.transform.position = go.transform.position;//rh.point;
+                                        rh.collider.gameObject.SetActive(false);
                                     }
                                 }
                             }
@@ -189,7 +192,7 @@ public class Laser : Gadget
         else
         {
 			FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Gadgets/Laser/gadgetLaserExecute",transform.position);
-		
+		    _laserEffect.GetComponent<ParticleSystem>().Stop();
             IsReady = false;
             m_cooldownTimer.Reset(COOLDOWN_TIME);
             m_state = State.VALVE_OPENING;

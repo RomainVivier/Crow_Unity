@@ -7,6 +7,7 @@ public class Suppository : Gadget
     #region Members
 
     public Animator _anim;
+	public float _delay = 1.0f;
 
     private Timer m_timer;
 
@@ -41,9 +42,14 @@ public class Suppository : Gadget
 
         m_timer.Reset(2f);
         //TODO Play sound here
-        _anim.SetTrigger("Engage");
-
+		Invoke ("Insert", _delay);
+		FinalScreenController.Instance.Show();
     }
+
+	void Insert()
+	{
+		_anim.SetTrigger("Suppository");
+	}
 
     public override void Stop()
     {
