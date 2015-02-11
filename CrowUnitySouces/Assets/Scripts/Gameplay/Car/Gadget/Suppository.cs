@@ -7,7 +7,7 @@ public class Suppository : Gadget
     #region Members
 
     public Animator _anim;
-	public float _delay = 1.0f;
+	//public float _delay = 2.7f;
 
     private Timer m_timer;
 
@@ -42,14 +42,20 @@ public class Suppository : Gadget
 
         m_timer.Reset(2f);
         //TODO Play sound here
-		Invoke ("Insert", _delay);
-		FinalScreenController.Instance.Show();
+		Invoke ("Insert", 3.3f);
+        Invoke("End", 2.7f);
+        FMOD_StudioSystem.instance.PlayOneShot("event:/Dialog/IA/AI Gadgets/AI_Suppo", transform.position);
     }
 
 	void Insert()
 	{
 		_anim.SetTrigger("Suppository");
 	}
+
+    void End()
+    {
+		FinalScreenController.Instance.Show();
+    }
 
     public override void Stop()
     {
