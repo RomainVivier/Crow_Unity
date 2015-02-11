@@ -6,7 +6,7 @@ public class Laser : Gadget
 
 
     #region constants
-    const float COOLDOWN_TIME=0;//10f;
+    const float COOLDOWN_TIME=10f;
     const float VALVE_OPENING_TIME = 0.2f;
     const float FIRING_TIME = 1.5f;
     const float VALVE_CLOSING_TIME = 0.2f;
@@ -84,6 +84,8 @@ public class Laser : Gadget
         m_lightsYOffset = (valvesPivotTransform.position - lightPosCenter).magnitude * 2;
         base.Awake();
 
+        // Stop explosion
+        _laserEffect.GetComponent<ParticleSystem>().Stop();
 
 	}
 	
