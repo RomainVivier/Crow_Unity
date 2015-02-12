@@ -17,6 +17,9 @@ public class TouchManager : MonoBehaviour
     public TouchDelegate _touchEnd;
     public TouchDelegate _touchEndZone;
 
+	public float _topBorderRatio = 0.6f;
+	public float _leftBorderRatio = 0.55f;
+
     #endregion Delegates
 
     public struct SwipeInfos
@@ -131,7 +134,8 @@ public class TouchManager : MonoBehaviour
         if (ti.state==TouchInfos.State.BEGIN)
         {
             //if ((ti.pos - m_wheelCenter).magnitude < m_wheelRadius) si.inZoneSwipe = true;
-            if (ti.pos.y > Screen.height/2) si.inZoneSwipe = true;
+            if (ti.pos.y > Screen.height * (1 - _topBorderRatio) || ti.pos.x < Screen.width * _leftBorderRatio) 
+				si.inZoneSwipe = true;
             si.inSwipe = true;
             si.swipeStart = ti.pos;
             if (_touchStart != null)
@@ -144,7 +148,7 @@ public class TouchManager : MonoBehaviour
         if (ti.state==TouchInfos.State.HELD)
         {
             //if ((ti.pos - m_wheelCenter).magnitude > m_wheelRadius && si.inZoneSwipe) endZoneSwipe = true;
-            if (ti.pos.y < Screen.height/2 && si.inZoneSwipe) endZoneSwipe = true;
+			if ((ti.pos.y < Screen.height * (1 - _topBorderRatio) && ti.pos.x > Screen.width * _leftBorderRatio) && si.inZoneSwipe) endZoneSwipe = true;
             if (_touchStay != null)
             {
                 _touchStay(si);

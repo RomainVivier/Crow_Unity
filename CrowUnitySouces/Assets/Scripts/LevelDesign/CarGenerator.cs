@@ -8,7 +8,7 @@ public class CarGenerator : MonoBehaviour {
 	Transform[] m_spawnPoints;
 	List<GameObject> m_cars = new List<GameObject>();
 
-	const bool NOROADBLOCKS = false;
+	const bool NOROADBLOCKS = true;
 	
 	void OnEnable()
 	{

@@ -52,7 +52,7 @@ public class SlapMachine : Gadget {
     }
 	void AddToScore()
 	{
-		Score.Instance.AddToScore(1000);
+		Score.Instance.AddToScore(500);
 	}
 
     public override void Stop()

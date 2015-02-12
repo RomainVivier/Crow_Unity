@@ -238,3 +238,21 @@ Time: 26.35078
 Obstacles Cleared: 0
 Buttons Pressed: 0
 
+Score: 8149
+Distance: 4049.682
+Time: 87.40086
+Obstacles Cleared: 8
+Buttons Pressed: 9
+
+Score: 654
+Distance: 654.7035
+Time: 20.37236
+Obstacles Cleared: 0
+Buttons Pressed: 0
+
+Score: 2179
+Distance: 2179.478
+Time: 54.30651
+Obstacles Cleared: 0
+Buttons Pressed: 0
+
