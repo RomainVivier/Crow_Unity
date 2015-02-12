@@ -35,7 +35,7 @@ public class SoundPlayer : MonoBehaviour
         {
             m_fmodEvent=FMOD_StudioSystem.instance.GetEvent("event:/"+_soundName);
             if(_soundNameRight!="") m_fmodEventRight=FMOD_StudioSystem.instance.GetEvent("event:/"+_soundNameRight);
-            if(_soundNameExit!="") m_fmodEventRight=FMOD_StudioSystem.instance.GetEvent("event:/"+_soundNameExit);
+            if(_soundNameExit!="" && _soundNameExit!="stop") m_fmodEventRight=FMOD_StudioSystem.instance.GetEvent("event:/"+_soundNameExit);
             if(_soundNameExitRight!="") m_fmodEventRight=FMOD_StudioSystem.instance.GetEvent("event:/"+_soundNameExitRight);
         }
         
@@ -45,20 +45,32 @@ public class SoundPlayer : MonoBehaviour
     void Update()
     {
         // Update only if it don't use trigger
-        /*if (useTrigger) return;
+        if (useTrigger)
+        {
+           if(_is3D && _onlyOnce && m_alreadyPlayed)
+           {
+               FMOD.Studio.PLAYBACK_STATE state;
+               m_fmodEvent.getPlaybackState(out state);
+               //if (state == FMOD.Studio.PLAYBACK_STATE.STOPPED) m_fmodEvent.release();
+           }
+        }
+        else
+        {
 
-        // Restart event if stopped
-        FMOD.Studio.PLAYBACK_STATE state;
-        m_fmodEvent.getPlaybackState(out state);
-        if (state == FMOD.Studio.PLAYBACK_STATE.STOPPED) m_fmodEvent.start();
+            // Restart event if stopped
+            FMOD.Studio.PLAYBACK_STATE state;
+            m_fmodEvent.getPlaybackState(out state);
+            if (state == FMOD.Studio.PLAYBACK_STATE.STOPPED) m_fmodEvent.start();
 
-        // Set 3D attributes
-        _3D_ATTRIBUTES threeDeeAttr = new _3D_ATTRIBUTES();
-        threeDeeAttr.position = UnityUtil.toFMODVector(transform.position);
-        threeDeeAttr.up = UnityUtil.toFMODVector(transform.up);
-        threeDeeAttr.forward = UnityUtil.toFMODVector(transform.forward);
-        threeDeeAttr.velocity = UnityUtil.toFMODVector(-GameObject.FindObjectOfType<Car>().gameObject.transform.Find("Body").rigidbody.velocity);
-        m_fmodEvent.set3DAttributes(threeDeeAttr);*/
+            // Set 3D attributes
+            _3D_ATTRIBUTES threeDeeAttr = new _3D_ATTRIBUTES();
+            threeDeeAttr.position = UnityUtil.toFMODVector(transform.position);
+            threeDeeAttr.up = UnityUtil.toFMODVector(transform.up);
+            threeDeeAttr.forward = UnityUtil.toFMODVector(transform.forward);
+            threeDeeAttr.velocity = UnityUtil.toFMODVector(-GameObject.FindObjectOfType<Car>().gameObject.transform.Find("Body").rigidbody.velocity);
+            m_fmodEvent.set3DAttributes(threeDeeAttr);
+        }
+
     }
     #endregion
 
@@ -71,6 +83,7 @@ public class SoundPlayer : MonoBehaviour
     void OnTriggerExit(Collider other)
     {
         if (_soundNameExit != "") handleTrigger(other, _soundNameExit, _soundNameExitRight);
+        if (_soundNameExit == "stop") m_fmodEvent.release();
     }
 
     private void handleTrigger(Collider other, string soundLeft, string soundRight)
@@ -110,7 +123,6 @@ public class SoundPlayer : MonoBehaviour
                     else
                     {
                         m_fmodEvent.start();
-
                         // Set 3D attributes
                         _3D_ATTRIBUTES threeDeeAttr = new _3D_ATTRIBUTES();
                         threeDeeAttr.position = UnityUtil.toFMODVector(transform.position);
