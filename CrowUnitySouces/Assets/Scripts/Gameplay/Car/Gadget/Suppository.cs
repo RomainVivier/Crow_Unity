@@ -17,7 +17,7 @@ public class Suppository : Gadget
 
     public override void Awake()
     {
-        GadgetManager.Instance.Register("Suppository", this);
+        //GadgetManager.Instance.Register("Suppository", this);
         m_timer = new Timer();
         base.Awake();
     }
@@ -40,7 +40,7 @@ public class Suppository : Gadget
         base.Play();
         IsReady = false;
 
-        m_timer.Reset(2f);
+        m_timer.Reset(5f);
         //TODO Play sound here
 		Invoke ("Insert", 3.3f);
         Invoke("End", 2.7f);

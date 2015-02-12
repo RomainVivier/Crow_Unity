@@ -78,7 +78,14 @@ public class GameOverController : MonoBehaviour {
 		else
 		{
 			string text = File.ReadAllText (fileName);
+			try{
 			highscore = int.Parse (text);
+			}
+			catch
+			{
+				Debug.LogError(text);
+				highscore = 0;
+			}
 		}
 
 		_highScore.text = "Highscore: " + highscore;

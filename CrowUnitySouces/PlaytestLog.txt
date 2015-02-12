@@ -1,0 +1,240 @@
+Score: 1849
+Distance: 1093.532
+Time: 36.46706
+Obstacles Cleared: 0
+Buttons Pressed: 0
+
+Score: 409
+Distance: 434.2963
+Time: 18.29958
+Obstacles Cleared: 0
+Buttons Pressed: 0
+
+Score: 4119
+Distance: 645.5652
+Time: 18.83364
+Obstacles Cleared: 4
+Buttons Pressed: 0
+
+Score: 7049
+Distance: 1099.623
+Time: 26.6878
+Obstacles Cleared: 11
+Buttons Pressed: 0
+
+Score: 3839
+Distance: 906.2061
+Time: 26.63025
+Obstacles Cleared: 6
+Buttons Pressed: 0
+
+Score: 209
+Distance: 260.8204
+Time: 6.840923
+Obstacles Cleared: 0
+Buttons Pressed: 0
+
+Score: 0
+Distance: 67.83231
+Time: 2.191246
+Obstacles Cleared: 0
+Buttons Pressed: 0
+
+Score: 9669
+Distance: 1530.284
+Time: 45.72116
+Obstacles Cleared: 5
+Buttons Pressed: 15
+
+Score: 2129
+Distance: 672.0909
+Time: 27.15811
+Obstacles Cleared: 3
+Buttons Pressed: 3
+
+Score: 1258
+Distance: 1338.845
+Time: 32.7389
+Obstacles Cleared: 0
+Buttons Pressed: 3
+
+Score: 629
+Distance: 707.9273
+Time: 26.0815
+Obstacles Cleared: 0
+Buttons Pressed: 0
+
+Score: 0
+Distance: 68.84776
+Time: 3.41462
+Obstacles Cleared: 0
+Buttons Pressed: 0
+
+Score: 4238
+Distance: 1921.163
+Time: 42.82637
+Obstacles Cleared: 3
+Buttons Pressed: 6
+
+Score: 16938
+Distance: 1949.101
+Time: 48.77333
+Obstacles Cleared: 0
+Buttons Pressed: 9
+
+Score: 4649
+Distance: 1109.348
+Time: 30.16424
+Obstacles Cleared: 4
+Buttons Pressed: 5
+
+Score: 21937
+Distance: 2965.539
+Time: 66.77744
+Obstacles Cleared: 3
+Buttons Pressed: 19
+
+Score: 419
+Distance: 497.6164
+Time: 25.30489
+Obstacles Cleared: 1
+Buttons Pressed: 2
+
+Score: 2728
+Distance: 2773.264
+Time: 64.68563
+Obstacles Cleared: 0
+Buttons Pressed: 0
+
+Score: 12288
+Distance: 1914.193
+Time: 46.56899
+Obstacles Cleared: 8
+Buttons Pressed: 7
+
+Score: 10288
+Distance: 1971.57
+Time: 54.00037
+Obstacles Cleared: 13
+Buttons Pressed: 14
+
+Score: 3249
+Distance: 1293.492
+Time: 38.21633
+Obstacles Cleared: 2
+Buttons Pressed: 5
+
+Score: 16738
+Distance: 3020.261
+Time: 63.17447
+Obstacles Cleared: 9
+Buttons Pressed: 16
+
+Score: 12747
+Distance: 3208.832
+Time: 68.77676
+Obstacles Cleared: 12
+Buttons Pressed: 18
+
+Score: 10848
+Distance: 3230.496
+Time: 66.02063
+Obstacles Cleared: 0
+Buttons Pressed: 10
+
+Score: 5108
+Distance: 2368.52
+Time: 52.27461
+Obstacles Cleared: 10
+Buttons Pressed: 9
+
+Score: 16238
+Distance: 3018.995
+Time: 56.3922
+Obstacles Cleared: 2
+Buttons Pressed: 14
+
+Score: 3039
+Distance: 897.3977
+Time: 28.44595
+Obstacles Cleared: 4
+Buttons Pressed: 5
+
+Score: 3778
+Distance: 1758.68
+Time: 39.31502
+Obstacles Cleared: 2
+Buttons Pressed: 5
+
+Score: 7328
+Distance: 2756.648
+Time: 64.99126
+Obstacles Cleared: 7
+Buttons Pressed: 8
+
+Score: 7988
+Distance: 1969.953
+Time: 46.91141
+Obstacles Cleared: 4
+Buttons Pressed: 9
+
+Score: 18008
+Distance: 4435.698
+Time: 96.02103
+Obstacles Cleared: 12
+Buttons Pressed: 20
+
+Score: 11608
+Distance: 2336.222
+Time: 49.80635
+Obstacles Cleared: 4
+Buttons Pressed: 12
+
+Score: 14958
+Distance: 3568.594
+Time: 84.97877
+Obstacles Cleared: 11
+Buttons Pressed: 21
+
+Score: 6388
+Distance: 2388.445
+Time: 59.37733
+Obstacles Cleared: 1
+Buttons Pressed: 10
+
+Score: 13535
+Distance: 3436.215
+Time: 73.92799
+Obstacles Cleared: 8
+Buttons Pressed: 17
+
+Score: 8858
+Distance: 8859.07
+Time: 162.139
+Obstacles Cleared: 0
+Buttons Pressed: 0
+
+Score: 3859
+Distance: 3859.729
+Time: 74.04531
+Obstacles Cleared: 0
+Buttons Pressed: 0
+
+Score: 5953
+Distance: 5953.428
+Time: 115.9305
+Obstacles Cleared: 0
+Buttons Pressed: 0
+
+Score: 3610
+Distance: 3610.027
+Time: 74.90872
+Obstacles Cleared: 0
+Buttons Pressed: 0
+
+Score: 498
+Distance: 498.7306
+Time: 26.35078
+Obstacles Cleared: 0
+Buttons Pressed: 0
+

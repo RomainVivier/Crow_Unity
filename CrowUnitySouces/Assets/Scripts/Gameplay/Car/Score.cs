@@ -7,6 +7,7 @@ public class Score : MonoBehaviour
 #region members
 
     public Text _text;
+	public Text _addition;
 	public int _carsDestroyed;
 	public int _gadgetsUsed;
 	public float _gameTime;
@@ -78,6 +79,9 @@ public class Score : MonoBehaviour
 	public void AddToScore(int increment)
 	{
 		m_eventPoints += increment;
+		_addition.text = "+ " + increment.ToString();
+		//_addition.animation.Stop();
+		_addition.GetComponent<Animator>().SetTrigger("Fire");
 		GetComponent<Animator> ().SetTrigger ("ScoreUp");
 	}
 
@@ -108,7 +112,7 @@ public class Score : MonoBehaviour
     void Update ()
     {
 		_gameTime += Time.deltaTime;
-		m_score = m_distanceTraveled + m_eventPoints;
+		m_score = DistanceTravaled + m_eventPoints;
 		_text.text = ((int)m_score).ToString();
 	}
 }

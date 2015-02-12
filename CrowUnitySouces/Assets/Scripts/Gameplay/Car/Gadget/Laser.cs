@@ -6,16 +6,16 @@ public class Laser : Gadget
 
 
     #region constants
-    const float COOLDOWN_TIME=10f;
+    const float COOLDOWN_TIME=3.0f;
     const float VALVE_OPENING_TIME = 0.2f;
-    const float FIRING_TIME = 1.5f;
+    const float FIRING_TIME = 2.2f;
     const float VALVE_CLOSING_TIME = 0.2f;
 
-    const float START_ANGLE_DEG = -10f;
-    const float END_ANGLE_DEG = 10f;
+    const float START_ANGLE_DEG = 0f;
+    const float END_ANGLE_DEG = 1f;
     const float RANGE = 100f;
     const float DISPLAY_RANGE = RANGE;
-    const float TARGET_CONTACT_TIME = 0.2f;
+    const float TARGET_CONTACT_TIME = 0.0f;
     #endregion
 
     #region members
@@ -158,6 +158,7 @@ public class Laser : Gadget
                                     {
                                         rh.collider.gameObject.SetActive(false);
 									Score.Instance._carsDestroyed++;
+									Score.Instance.AddToScore(500);
                                         _laserEffect.transform.position = rh.point;
                                         _laserEffect.GetComponent<ParticleSystem>().Play();
                                     }

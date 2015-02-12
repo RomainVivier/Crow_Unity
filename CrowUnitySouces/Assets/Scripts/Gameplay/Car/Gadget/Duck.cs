@@ -6,7 +6,7 @@ public class Duck : Gadget
 
     private FMOD.Studio.EventInstance duckSound;
     private float currentCooldown = 0;
-    private const int COOLDOWN = 2;
+    private const int COOLDOWN = 3;
     private int nbUses = 0;
 
 	public override void Awake ()
@@ -47,7 +47,7 @@ public class Duck : Gadget
             IsReady = false;
             nbUses++;
 			if(nbUses==2) (GameObject.FindObjectOfType<AI>() as AI).playDialog("AI Gadgets/AI_Duck");
-			Score.Instance.AddToScore(50);
+			Score.Instance.AddToScore(100);
         }
     }
 }

@@ -27,6 +27,7 @@ public class Rocket : Gadget {
     private FMOD.Studio.EventInstance m_blowInstance;
 
     public FMOD_StudioEventEmitter _rocketExecute;
+	const float COOLDOWN = 3.0f;
 
     #endregion
 
@@ -70,10 +71,10 @@ public class Rocket : Gadget {
         {
             Blow();
             transform.localPosition = m_offsetWithParent;
-            Stop();
-        }
-
-        if(!m_timer.IsElapsedLoop)
+			Invoke ("Stop", COOLDOWN);
+		}
+		
+		if(!m_timer.IsElapsedLoop)
         {
             transform.position = Vector3.Lerp(m_startPosition, m_target, 1 - m_timer.CurrentNormalized);
             m_rocketDist.setValue(Mathf.Clamp((Vector3.Distance(transform.position, m_target) / _rocketUIMax), 0f, 1f));
@@ -114,14 +115,13 @@ public class Rocket : Gadget {
                     m_target = go.transform.position;
                     FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Gadgets/Rocket/gadgetRocketEngage", transform.position);
                     m_rocketLaunchtimer.Reset(0.6f);
-					Score.Instance.AddToScore(500);
                 }
             }
         }
 
         if (obstacles.Length == 0 || m_target == Vector3.zero)
         {
-            Stop();
+			Invoke ("Stop", COOLDOWN);
         }
 
         
@@ -149,9 +149,9 @@ public class Rocket : Gadget {
         if (Vector3.Distance(m_startPosition, m_target) > _targetMaxDistance)
         {
             m_target = Vector3.zero;
-            Stop();
-        }
-        else
+			Invoke ("Stop", COOLDOWN);
+		}
+		else
         {
             m_timer.Reset(Vector3.Distance(m_startPosition, m_target) / _rocketSpeed);
         }
@@ -183,12 +183,14 @@ public class Rocket : Gadget {
         _explosionParticles.GetComponent<ParticleSystem>().Play();
         var colliders = Physics.OverlapSphere(transform.position, _blastRadius);
         m_target = Vector3.zero;
+
         foreach(Collider collider in colliders)
         {
             if (collider.CompareTag("Obstacle"))
             {
                 collider.gameObject.SetActive(false);
 				Score.Instance._carsDestroyed++;
+				Score.Instance.AddToScore(500);
             }
         }
     }

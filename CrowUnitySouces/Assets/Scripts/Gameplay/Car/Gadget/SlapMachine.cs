@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class SlapMachine : Gadget {
@@ -9,6 +9,8 @@ public class SlapMachine : Gadget {
     public Animator _cameraAnimator;
 
     private Timer m_timer;
+
+	const float COOLDOWN = 5.0f;
 
     #endregion
 
@@ -39,7 +41,7 @@ public class SlapMachine : Gadget {
         base.Play();
         IsReady = false;
 
-        m_timer.Reset(1f);
+        m_timer.Reset(COOLDOWN);
         FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Gadgets/Punch/gadgetPunchExecute", transform.position);
         int value = Random.Range(4,5);
         _cameraAnimator.SetTrigger("Slap_"+value);
@@ -50,7 +52,7 @@ public class SlapMachine : Gadget {
     }
 	void AddToScore()
 	{
-		Score.Instance.AddToScore(800);
+		Score.Instance.AddToScore(1000);
 	}
 
     public override void Stop()

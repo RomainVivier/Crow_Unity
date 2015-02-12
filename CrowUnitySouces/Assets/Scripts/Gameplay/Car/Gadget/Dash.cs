@@ -9,6 +9,8 @@ public class Dash : Gadget
     public float _speedCoeff;
 	public WindshieldController _windshield;
 
+	const float COOLDOWN = 4.0f;
+
     private Timer m_timer;
 
     #endregion
@@ -47,15 +49,13 @@ public class Dash : Gadget
         _car.updateValues();
         m_timer.Reset(1f);
         IsReady = false;
-		GetComponentInChildren<SpriteRenderer> ().enabled = true;
+		//GetComponentInChildren<SpriteRenderer> ().enabled = true;
 		GetComponentInChildren<Animator> ().SetTrigger ("HornsOut");
 		_windshield._isInvincible = true;
     }
 
     public override void Stop()
     {
-        base.Stop();
-
         _rc.setSpeedKmh /= _speedCoeff;
         _car.gameObject.GetComponent<PolynomialEngine>().maxPowerKw /= 50;
         _car.gameObject.GetComponent<PolynomialEngine>().powerMinRpmKw/= 50;
@@ -64,15 +64,22 @@ public class Dash : Gadget
         //_car.gameObject.transform.FindChild("Body/CenterOfMass").localPosition -= new Vector3(0, -0.25f, 0);
         _car.maxSpeedKmh /= _speedCoeff;
         _car.updateValues();
-        IsReady = true;
+        
 
 		Invoke("StopInvincibility", 0.5f);
+		Invoke("StopBase", COOLDOWN);
     }
+
+	void StopBase()
+	{
+		IsReady = true;
+		base.Stop();
+	}
 
 
 	void StopInvincibility()
 	{
-		GetComponentInChildren<SpriteRenderer> ().enabled = false;
+		//GetComponentInChildren<SpriteRenderer> ().enabled = false;
 		GetComponentInChildren<Animator> ().SetTrigger ("HornsIn");
 		_windshield._isInvincible = false;
 	}

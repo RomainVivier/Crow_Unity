@@ -26,7 +26,7 @@ public class DifficultyManager : MonoBehaviour
 	}
 	public int GetRandomizedDifficulty()
 	{
-		//Random.seed = _seed++; 
+		Random.seed = _seed++; 
 		float result = _difficulty - _randomRange * 0.5f + Random.value * _randomRange + 1;
 		return (int)result;
 	}
