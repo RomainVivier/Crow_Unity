@@ -109,7 +109,7 @@ public class Rocket : Gadget {
         {
             foreach (GameObject go in obstacles)
             {
-                if (go.transform.position.x - transform.position.x > 10  && (m_target == Vector3.zero || Vector3.Distance(transform.position, m_target) > Vector3.Distance(transform.position, go.transform.position)))
+                if (go.transform.position.x - transform.position.x > 20  && (m_target == Vector3.zero || Vector3.Distance(transform.position, m_target) > Vector3.Distance(transform.position, go.transform.position)))
                 {
                     m_target = go.transform.position;
                 }
