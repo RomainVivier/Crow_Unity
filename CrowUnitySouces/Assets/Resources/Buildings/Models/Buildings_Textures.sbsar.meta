@@ -6,7 +6,7 @@ SubstanceImporter:
   - serializedVersion: 12
     name: Building_Texture
     prototypeName: Building_Texture
-    shader: {fileID: 4, guid: 0000000000000000f000000000000000, type: 0}
+    shader: {fileID: 13, guid: 0000000000000000f000000000000000, type: 0}
     inputs:
     - name: $outputsize
       value:
@@ -31,51 +31,51 @@ SubstanceImporter:
         texture: {instanceID: 0}
     - name: Base_Wall_Wall_Color
       value:
-        scalar[0]: .690999985
+        scalar[0]: .25999999
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
         texture: {instanceID: 0}
     - name: Base_Wall_Wall_Saturation_Variation
       value:
-        scalar[0]: .479999989
+        scalar[0]: .5
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
         texture: {instanceID: 0}
     - name: Base_Wall_Wall_Lightness_Variation
       value:
-        scalar[0]: .439999998
+        scalar[0]: .319999993
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
         texture: {instanceID: 0}
     - name: Brick_Wall_Wall_Color
       value:
-        scalar[0]: .505999982
+        scalar[0]: .270000011
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
         texture: {instanceID: 0}
     - name: Brick_Wall_Wall_Saturation_Variation
       value:
-        scalar[0]: .600000024
+        scalar[0]: .5
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
         texture: {instanceID: 0}
     - name: Brick_Wall_Wall_Lightness_Variation
       value:
-        scalar[0]: .419999987
+        scalar[0]: .370000005
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
         texture: {instanceID: 0}
     - name: Brick_Wall_Corner_Color
       value:
-        scalar[0]: .71944797
-        scalar[1]: .793300986
-        scalar[2]: .811765015
+        scalar[0]: .522002161
+        scalar[1]: .517733574
+        scalar[2]: .529411793
         scalar[3]: 1
         texture: {instanceID: 0}
     - name: Base_Wall_Wall_Corner_Color
@@ -87,14 +87,14 @@ SubstanceImporter:
         texture: {instanceID: 0}
     - name: Extra_Details_Color
       value:
-        scalar[0]: .772548974
-        scalar[1]: .747600019
-        scalar[2]: .733165979
+        scalar[0]: .173199803
+        scalar[1]: .14451775
+        scalar[2]: .198529422
         scalar[3]: 1
         texture: {instanceID: 0}
     - name: Base_Wall_General_Wall_Brick_Quantity
       value:
-        scalar[0]: 1
+        scalar[0]: .699999988
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
@@ -108,9 +108,9 @@ SubstanceImporter:
         texture: {instanceID: 0}
     - name: Roof_Roof_Color_1
       value:
-        scalar[0]: .273487002
-        scalar[1]: .458824009
-        scalar[2]: .282765001
+        scalar[0]: .0158953276
+        scalar[1]: .137216657
+        scalar[2]: .154411793
         scalar[3]: 1
         texture: {instanceID: 0}
     - name: Roof_Roof_Color_2
@@ -129,45 +129,150 @@ SubstanceImporter:
         texture: {instanceID: 0}
     - name: Door_Door2_Color
       value:
-        scalar[0]: .654411793
-        scalar[1]: .407978624
-        scalar[2]: .274275512
+        scalar[0]: .202696562
+        scalar[1]: .0871539712
+        scalar[2]: .227941155
         scalar[3]: 1
         texture: {instanceID: 0}
     - name: Door_Door1_Color
       value:
-        scalar[0]: .316176474
-        scalar[1]: .218535379
-        scalar[2]: .10694205
+        scalar[0]: .0948853791
+        scalar[1]: .125809103
+        scalar[2]: .33088237
         scalar[3]: 1
         texture: {instanceID: 0}
     - name: Window_Glass_Color
       value:
-        scalar[0]: .109999999
-        scalar[1]: .469999999
-        scalar[2]: .270000011
-        scalar[3]: 1
+        scalar[0]: 1
+        scalar[1]: 1
+        scalar[2]: 0
+        scalar[3]: .699999988
         texture: {instanceID: 0}
     - name: Concrete_Hue_Variations
       value:
-        scalar[0]: .5
+        scalar[0]: .310000002
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
         texture: {instanceID: 0}
     - name: Concrete_Saturation_Variations
       value:
-        scalar[0]: .5
+        scalar[0]: .709999979
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
         texture: {instanceID: 0}
     - name: Concrete_Lightness_Variations
       value:
-        scalar[0]: .5
+        scalar[0]: .319999993
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
+        texture: {instanceID: 0}
+    - name: General_l_General_Wall_Brick_Quantity
+      value:
+        scalar[0]: .699999988
+        scalar[1]: 0
+        scalar[2]: 0
+        scalar[3]: 0
+        texture: {instanceID: 0}
+    - name: Brick_Wall_Night_Lights
+      value:
+        scalar[0]: 1
+        scalar[1]: 0
+        scalar[2]: 0
+        scalar[3]: 0
+        texture: {instanceID: 0}
+    - name: Brick_Wall_Night_Light_Color
+      value:
+        scalar[0]: .996078432
+        scalar[1]: 0
+        scalar[2]: .516916811
+        scalar[3]: 1
+        texture: {instanceID: 0}
+    - name: Base_Wall_Wall_Night_Light
+      value:
+        scalar[0]: 1
+        scalar[1]: 0
+        scalar[2]: 0
+        scalar[3]: 0
+        texture: {instanceID: 0}
+    - name: Base_Wall_Wall_Night_Light_Color
+      value:
+        scalar[0]: .696551323
+        scalar[1]: 0
+        scalar[2]: 1
+        scalar[3]: 1
+        texture: {instanceID: 0}
+    - name: Base_Wall_2_Wall_Color
+      value:
+        scalar[0]: .340000004
+        scalar[1]: 0
+        scalar[2]: 0
+        scalar[3]: 0
+        texture: {instanceID: 0}
+    - name: Base_Wall_2_Wall_Saturation_Variation
+      value:
+        scalar[0]: .519999981
+        scalar[1]: 0
+        scalar[2]: 0
+        scalar[3]: 0
+        texture: {instanceID: 0}
+    - name: Base_Wall_2_Wall_Lightness_Variation
+      value:
+        scalar[0]: .319999993
+        scalar[1]: 0
+        scalar[2]: 0
+        scalar[3]: 0
+        texture: {instanceID: 0}
+    - name: Base_Wall_2_Wall_Night_Light
+      value:
+        scalar[0]: 1
+        scalar[1]: 0
+        scalar[2]: 0
+        scalar[3]: 0
+        texture: {instanceID: 0}
+    - name: Base_Wall_2_Wall_Night_Light_Color
+      value:
+        scalar[0]: .282758713
+        scalar[1]: 0
+        scalar[2]: 1
+        scalar[3]: 1
+        texture: {instanceID: 0}
+    - name: Concrete_Hue
+      value:
+        scalar[0]: .310000002
+        scalar[1]: 0
+        scalar[2]: 0
+        scalar[3]: 0
+        texture: {instanceID: 0}
+    - name: Concrete_Saturation
+      value:
+        scalar[0]: .709999979
+        scalar[1]: 0
+        scalar[2]: 0
+        scalar[3]: 0
+        texture: {instanceID: 0}
+    - name: Concrete_Lightness
+      value:
+        scalar[0]: .319999993
+        scalar[1]: 0
+        scalar[2]: 0
+        scalar[3]: 0
+        texture: {instanceID: 0}
+    - name: Concrete_Night_Lights
+      value:
+        scalar[0]: 0
+        scalar[1]: 0
+        scalar[2]: 0
+        scalar[3]: 0
+        texture: {instanceID: 0}
+    - name: Concrete_nightLightColor
+      value:
+        scalar[0]: .858823538
+        scalar[1]: 0
+        scalar[2]: .996078432
+        scalar[3]: 1
         texture: {instanceID: 0}
     materialInformation:
       serializedVersion: 5
@@ -193,16 +298,27 @@ SubstanceImporter:
             texture: {instanceID: 0}
             scale: {x: 1, y: 1}
             offset: {x: 0, y: 0}
+        data:
+          first:
+            name: _Illum
+          second:
+            texture: {instanceID: 0}
+            scale: {x: 1, y: 1}
+            offset: {x: 0, y: 0}
       floats:
         data:
           first:
             name: _Shininess
-          second: .0300000031
+          second: .050179854
+        data:
+          first:
+            name: _EmissionLM
+          second: 0
       colors:
         data:
           first:
             name: _Color
-          second: {r: 1, g: 1, b: 1, a: 1}
+          second: {r: .632352948, g: .632352948, b: .632352948, a: 1}
         data:
           first:
             name: _SpecColor
@@ -234,10 +350,16 @@ SubstanceImporter:
       textureHeight: 256
       textureFormat: 0
       loadingBehavior: 3
+    - serializedVersion: 2
+      buildTarget: Standalone
+      textureWidth: 1024
+      textureHeight: 2048
+      textureFormat: 0
+      loadingBehavior: 3
   - serializedVersion: 12
     name: Building_Texture_2
     prototypeName: Building_Texture
-    shader: {fileID: 4, guid: 0000000000000000f000000000000000, type: 0}
+    shader: {fileID: 13, guid: 0000000000000000f000000000000000, type: 0}
     inputs:
     - name: $outputsize
       value:
@@ -262,51 +384,51 @@ SubstanceImporter:
         texture: {instanceID: 0}
     - name: Base_Wall_Wall_Color
       value:
-        scalar[0]: .477999985
+        scalar[0]: .25999999
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
         texture: {instanceID: 0}
     - name: Base_Wall_Wall_Saturation_Variation
       value:
-        scalar[0]: .550000012
+        scalar[0]: .5
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
         texture: {instanceID: 0}
     - name: Base_Wall_Wall_Lightness_Variation
       value:
-        scalar[0]: .460000008
+        scalar[0]: .319999993
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
         texture: {instanceID: 0}
     - name: Brick_Wall_Wall_Color
       value:
-        scalar[0]: .547999978
+        scalar[0]: .270000011
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
         texture: {instanceID: 0}
     - name: Brick_Wall_Wall_Saturation_Variation
       value:
-        scalar[0]: .479999989
+        scalar[0]: .5
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
         texture: {instanceID: 0}
     - name: Brick_Wall_Wall_Lightness_Variation
       value:
-        scalar[0]: .5
+        scalar[0]: .370000005
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
         texture: {instanceID: 0}
     - name: Brick_Wall_Corner_Color
       value:
-        scalar[0]: .70588237
-        scalar[1]: .748174429
-        scalar[2]: .75
+        scalar[0]: .522002161
+        scalar[1]: .517733574
+        scalar[2]: .529411793
         scalar[3]: 1
         texture: {instanceID: 0}
     - name: Base_Wall_Wall_Corner_Color
@@ -318,30 +440,30 @@ SubstanceImporter:
         texture: {instanceID: 0}
     - name: Extra_Details_Color
       value:
-        scalar[0]: .926470578
-        scalar[1]: .926470578
-        scalar[2]: .926470578
+        scalar[0]: .173199803
+        scalar[1]: .14451775
+        scalar[2]: .198529422
         scalar[3]: 1
         texture: {instanceID: 0}
     - name: Base_Wall_General_Wall_Brick_Quantity
       value:
-        scalar[0]: 1
+        scalar[0]: .699999988
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
         texture: {instanceID: 0}
     - name: Toldo_Color
       value:
-        scalar[0]: .209999993
-        scalar[1]: .569999993
-        scalar[2]: .370000005
+        scalar[0]: .898038983
+        scalar[1]: .393256009
+        scalar[2]: .140871003
         scalar[3]: 1
         texture: {instanceID: 0}
     - name: Roof_Roof_Color_1
       value:
-        scalar[0]: .273487002
-        scalar[1]: .458824009
-        scalar[2]: .282765001
+        scalar[0]: .0158953276
+        scalar[1]: .137216657
+        scalar[2]: .154411793
         scalar[3]: 1
         texture: {instanceID: 0}
     - name: Roof_Roof_Color_2
@@ -353,52 +475,157 @@ SubstanceImporter:
         texture: {instanceID: 0}
     - name: Darker_Color
       value:
-        scalar[0]: .0948853791
-        scalar[1]: .184401482
-        scalar[2]: .33088237
+        scalar[0]: .349697232
+        scalar[1]: .401130527
+        scalar[2]: .485294104
         scalar[3]: 1
         texture: {instanceID: 0}
     - name: Door_Door2_Color
       value:
-        scalar[0]: .654411793
-        scalar[1]: .407978624
-        scalar[2]: .274275512
+        scalar[0]: .202696562
+        scalar[1]: .0871539712
+        scalar[2]: .227941155
         scalar[3]: 1
         texture: {instanceID: 0}
     - name: Door_Door1_Color
       value:
-        scalar[0]: .316176474
-        scalar[1]: .218535379
-        scalar[2]: .10694205
+        scalar[0]: .0948853791
+        scalar[1]: .125809103
+        scalar[2]: .33088237
         scalar[3]: 1
         texture: {instanceID: 0}
     - name: Window_Glass_Color
       value:
-        scalar[0]: .109999999
-        scalar[1]: .469999999
-        scalar[2]: .270000011
-        scalar[3]: 1
+        scalar[0]: 1
+        scalar[1]: 1
+        scalar[2]: 0
+        scalar[3]: .699999988
         texture: {instanceID: 0}
     - name: Concrete_Hue_Variations
       value:
-        scalar[0]: .5
+        scalar[0]: .310000002
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
         texture: {instanceID: 0}
     - name: Concrete_Saturation_Variations
       value:
-        scalar[0]: .5
+        scalar[0]: .709999979
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
         texture: {instanceID: 0}
     - name: Concrete_Lightness_Variations
       value:
-        scalar[0]: .5
+        scalar[0]: .319999993
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
+        texture: {instanceID: 0}
+    - name: General_l_General_Wall_Brick_Quantity
+      value:
+        scalar[0]: .699999988
+        scalar[1]: 0
+        scalar[2]: 0
+        scalar[3]: 0
+        texture: {instanceID: 0}
+    - name: Brick_Wall_Night_Lights
+      value:
+        scalar[0]: 1
+        scalar[1]: 0
+        scalar[2]: 0
+        scalar[3]: 0
+        texture: {instanceID: 0}
+    - name: Brick_Wall_Night_Light_Color
+      value:
+        scalar[0]: .996078432
+        scalar[1]: 0
+        scalar[2]: .516916811
+        scalar[3]: 1
+        texture: {instanceID: 0}
+    - name: Base_Wall_Wall_Night_Light
+      value:
+        scalar[0]: 1
+        scalar[1]: 0
+        scalar[2]: 0
+        scalar[3]: 0
+        texture: {instanceID: 0}
+    - name: Base_Wall_Wall_Night_Light_Color
+      value:
+        scalar[0]: .696551323
+        scalar[1]: 0
+        scalar[2]: 1
+        scalar[3]: 1
+        texture: {instanceID: 0}
+    - name: Base_Wall_2_Wall_Color
+      value:
+        scalar[0]: .340000004
+        scalar[1]: 0
+        scalar[2]: 0
+        scalar[3]: 0
+        texture: {instanceID: 0}
+    - name: Base_Wall_2_Wall_Saturation_Variation
+      value:
+        scalar[0]: .519999981
+        scalar[1]: 0
+        scalar[2]: 0
+        scalar[3]: 0
+        texture: {instanceID: 0}
+    - name: Base_Wall_2_Wall_Lightness_Variation
+      value:
+        scalar[0]: .319999993
+        scalar[1]: 0
+        scalar[2]: 0
+        scalar[3]: 0
+        texture: {instanceID: 0}
+    - name: Base_Wall_2_Wall_Night_Light
+      value:
+        scalar[0]: 1
+        scalar[1]: 0
+        scalar[2]: 0
+        scalar[3]: 0
+        texture: {instanceID: 0}
+    - name: Base_Wall_2_Wall_Night_Light_Color
+      value:
+        scalar[0]: .282758713
+        scalar[1]: 0
+        scalar[2]: 1
+        scalar[3]: 1
+        texture: {instanceID: 0}
+    - name: Concrete_Hue
+      value:
+        scalar[0]: .310000002
+        scalar[1]: 0
+        scalar[2]: 0
+        scalar[3]: 0
+        texture: {instanceID: 0}
+    - name: Concrete_Saturation
+      value:
+        scalar[0]: .709999979
+        scalar[1]: 0
+        scalar[2]: 0
+        scalar[3]: 0
+        texture: {instanceID: 0}
+    - name: Concrete_Lightness
+      value:
+        scalar[0]: .319999993
+        scalar[1]: 0
+        scalar[2]: 0
+        scalar[3]: 0
+        texture: {instanceID: 0}
+    - name: Concrete_Night_Lights
+      value:
+        scalar[0]: 0
+        scalar[1]: 0
+        scalar[2]: 0
+        scalar[3]: 0
+        texture: {instanceID: 0}
+    - name: Concrete_nightLightColor
+      value:
+        scalar[0]: .858823538
+        scalar[1]: 0
+        scalar[2]: .996078432
+        scalar[3]: 1
         texture: {instanceID: 0}
     materialInformation:
       serializedVersion: 5
@@ -424,16 +651,27 @@ SubstanceImporter:
             texture: {instanceID: 0}
             scale: {x: 1, y: 1}
             offset: {x: 0, y: 0}
+        data:
+          first:
+            name: _Illum
+          second:
+            texture: {instanceID: 0}
+            scale: {x: 1, y: 1}
+            offset: {x: 0, y: 0}
       floats:
         data:
           first:
             name: _Shininess
-          second: .0300000031
+          second: .050179854
+        data:
+          first:
+            name: _EmissionLM
+          second: 0
       colors:
         data:
           first:
             name: _Color
-          second: {r: 1, g: 1, b: 1, a: 1}
+          second: {r: .632352948, g: .632352948, b: .632352948, a: 1}
         data:
           first:
             name: _SpecColor
@@ -463,6 +701,12 @@ SubstanceImporter:
       buildTarget: 
       textureWidth: 256
       textureHeight: 256
+      textureFormat: 0
+      loadingBehavior: 3
+    - serializedVersion: 2
+      buildTarget: Standalone
+      textureWidth: 1024
+      textureHeight: 2048
       textureFormat: 0
       loadingBehavior: 3
   deletedPrototypes: []
