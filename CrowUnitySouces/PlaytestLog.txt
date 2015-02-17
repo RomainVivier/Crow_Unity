@@ -256,3 +256,15 @@ Time: 54.30651
 Obstacles Cleared: 0
 Buttons Pressed: 0
 
+Score: 1997
+Distance: 497.8909
+Time: 26.36758
+Obstacles Cleared: 0
+Buttons Pressed: 3
+
+Score: 1809
+Distance: 1310.266
+Time: 41.70554
+Obstacles Cleared: 1
+Buttons Pressed: 2
+
