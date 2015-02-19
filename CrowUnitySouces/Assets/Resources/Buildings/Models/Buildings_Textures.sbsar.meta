@@ -234,7 +234,7 @@ SubstanceImporter:
         texture: {instanceID: 0}
     - name: Base_Wall_2_Wall_Night_Light_Color
       value:
-        scalar[0]: .282758713
+        scalar[0]: .324137688
         scalar[1]: 0
         scalar[2]: 1
         scalar[3]: 1
