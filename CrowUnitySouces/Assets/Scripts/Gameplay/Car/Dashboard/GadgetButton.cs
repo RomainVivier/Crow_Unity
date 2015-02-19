@@ -11,6 +11,7 @@ public class GadgetButton : MonoBehaviour
     public string _gadgetID;
     public GadgetAbility[] _abilities;
     public Vector2 _swipeVector=Vector2.zero;
+    public bool _activatedOnStart = false;
 
     private Vector2 m_startPoint;
     private float m_tgtAngle;
@@ -43,6 +44,11 @@ public class GadgetButton : MonoBehaviour
     {
         m_tgtAngle=Mathf.Atan2(_swipeVector.y,_swipeVector.x);
         m_gadget = GadgetManager.Instance.GetGadget(_gadgetID);
+        
+        if(_activatedOnStart)
+        {
+            Init();
+        }
     }
 
     public void OnLeftClickPress()
