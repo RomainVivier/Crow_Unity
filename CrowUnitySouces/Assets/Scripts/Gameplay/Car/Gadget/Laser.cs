@@ -11,7 +11,7 @@ public class Laser : Gadget
     const float FIRING_TIME = 1.5f;
     const float VALVE_CLOSING_TIME = 0.2f;
     const float CONVERGING_DIST = 2f;
-    const float RANGE = 100f;
+    const float RANGE = 250f;
     //const float DISPLAY_RANGE = RANGE;
     const float TARGET_CONTACT_TIME = 0.2f;
     #endregion
