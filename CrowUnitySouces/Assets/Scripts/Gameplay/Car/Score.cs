@@ -112,10 +112,10 @@ public class Score : MonoBehaviour
         }
     }
 
-    public void AddScore(int value)
+    public void AddScore(int value,int combo=1)
     {
-        m_combo++;
         m_score += m_combo * value;
+        m_combo+=combo;
     }
 
     public void ResetCombo()

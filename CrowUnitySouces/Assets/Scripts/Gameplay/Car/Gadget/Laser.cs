@@ -81,6 +81,7 @@ public class Laser : Gadget
         m_particlesJunction = m_particlesJunctionBoomTransform.GetComponent<ParticleSystem>();
         m_particlesLaserTransform = transform.Find("ParticlesLaser");
         m_particlesLaser = m_particlesLaserTransform.GetComponent<ParticleSystem>();
+        m_particlesLaser.Stop();
 
         // = transform.FindChild("ParticlesL").GetComponent<ParticleSystem>();
 
