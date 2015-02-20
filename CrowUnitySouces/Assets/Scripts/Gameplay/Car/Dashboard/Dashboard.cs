@@ -45,7 +45,7 @@ public class Dashboard : MonoBehaviour
     /// </summary>
     private void UpdatePanels()
     {
-        float dist = 10000000;// Score.Instance.DistanceTravaled;
+        float dist = Score.Instance.DistanceTravaled;
 
         for (int i = 0; i < m_panels.Length; i++)
         {
