@@ -15,7 +15,7 @@ public class TouchManager : MonoBehaviour
     public TouchDelegate _touchStart;
     public TouchDelegate _touchStay;
     public TouchDelegate _touchEnd;
-    public TouchDelegate _touchEndZone;
+    public TouchDelegate _SwipeZone;
 
     #endregion Delegates
 
@@ -38,6 +38,7 @@ public class TouchManager : MonoBehaviour
 
     private Vector2 m_wheelCenter;
     private float m_wheelRadius;
+    private bool m_waitForTouchEnd;
 
     #region Singleton
 
@@ -80,10 +81,11 @@ public class TouchManager : MonoBehaviour
         for (int i = 0; i < 11; i++) m_swipeInfos[i].inSwipe = false;
 
         //_touchEnd += Swipe;
-        _touchEndZone += Swipe;
+        _SwipeZone += Swipe;
         m_wheelCenter.x = -0.44f * Screen.height + Screen.width / 2;
         m_wheelCenter.y = 0.062f;
         m_wheelRadius = 0.2f * Screen.height;//0.155f
+        m_waitForTouchEnd = false;
     }
 
     #endregion
@@ -103,16 +105,22 @@ public class TouchManager : MonoBehaviour
         
 #if UNITY_STANDALONE
 
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && !m_waitForTouchEnd)
         {
             t.state = TouchInfos.State.BEGIN;
         }
-        else if (Input.GetMouseButton(0))
+        else if (Input.GetMouseButton(0) && !m_waitForTouchEnd)
         {
             t.state = TouchInfos.State.HELD;
         }
         else if (Input.GetMouseButtonUp(0))
         {
+            if (m_waitForTouchEnd)
+            {
+                m_waitForTouchEnd = false;
+                return;
+            }
+
             t.state = TouchInfos.State.END;
         }
         handleTouch(t,ref m_swipeInfos[0]);
@@ -138,6 +146,16 @@ public class TouchManager : MonoBehaviour
                     t.state = TouchInfos.State.UNHELD;
                     break;
             }
+             
+            if (m_waitForTouchEnd)
+            {
+                if(t.state == TouchInfos.State.END)
+                {
+                    m_waitForTouchEnd = false;
+                }
+                return;
+            }
+
             handleTouch(t, ref m_swipeInfos[i + 1]);
         }
 #endif
@@ -163,18 +181,23 @@ public class TouchManager : MonoBehaviour
         }
         
         bool endSwipe = false;
-        bool endZoneSwipe = false;
+        bool ZoneSwipe = false;
         if (ti.state==TouchInfos.State.HELD)
         {
             //if ((ti.pos - m_wheelCenter).magnitude > m_wheelRadius && si.inZoneSwipe) endZoneSwipe = true;
-            if (ti.pos.y < Screen.height * 0.4 && si.inZoneSwipe)
-            {
-                endZoneSwipe = true;
-            }
 
             if (_touchStay != null)
             {
                 _touchStay(si);
+            }
+
+            if (si.inZoneSwipe)
+            {
+                si.swipeEnd = ti.pos;
+                if (_SwipeZone != null)
+                {
+                    _SwipeZone(si);
+                }
             }
         }
 
@@ -185,7 +208,7 @@ public class TouchManager : MonoBehaviour
 
         if (ti.state == TouchInfos.State.END && si.inZoneSwipe)
         {
-            endZoneSwipe = true;
+            ZoneSwipe = true;
         }
 
         if(endSwipe)
@@ -198,13 +221,13 @@ public class TouchManager : MonoBehaviour
             }
         }
 
-        if(endZoneSwipe)
+        if(ZoneSwipe)
         {
             si.inZoneSwipe = false;
             si.swipeEnd = ti.pos;
-            if(_touchEndZone != null)
+            if(_SwipeZone != null)
             {
-                _touchEndZone(si);
+                _SwipeZone(si);
             }
         }
     }
@@ -212,13 +235,15 @@ public class TouchManager : MonoBehaviour
     public void Swipe(SwipeInfos si)
     {
         Vector2 swipeVector = si.swipeStart - si.swipeEnd;
-        if(swipeVector.magnitude > (Screen.width / 6) )
+        Debug.Log("vector magnitude = " + swipeVector.magnitude + " :: step value = " + (Screen.width / 10));
+        if(swipeVector.magnitude > (Screen.width / 10) )
         {
             if(swipeVector.x > 0)
             {
                 if (_swipeRight != null)
                 {
                     _swipeRight();
+                    m_waitForTouchEnd = true;
                 }
             }
             else
@@ -226,6 +251,7 @@ public class TouchManager : MonoBehaviour
                 if (_swipeLeft != null)
                 {
                     _swipeLeft();
+                    m_waitForTouchEnd = true;
                 }
             }
         }
