@@ -12,7 +12,6 @@ public class Laser : Gadget
     const float VALVE_CLOSING_TIME = 0.2f;
     const float RANGE = 500f;
     //const float DISPLAY_RANGE = RANGE;
-    const float TARGET_CONTACT_TIME = 0.2f;
     #endregion
 
     #region members
@@ -21,6 +20,7 @@ public class Laser : Gadget
     public float _firingTime = 4;
     public float _particlesSpeed = 100; // units/s
     public float _particlesRotationSpeed = 1; // rad/s
+    public float _targetContactTime = 0.2f;
 
     private Timer m_cooldownTimer;
     private Timer m_stateTimer;
@@ -212,7 +212,7 @@ public class Laser : Gadget
                             else
                             {
                                 m_contactTime += Time.deltaTime;
-                                if(m_contactTime>=TARGET_CONTACT_TIME && rh.collider.CompareTag("Obstacle"))
+                                if(m_contactTime>=_targetContactTime && rh.collider.CompareTag("Obstacle"))
                                 {
                                     _laserEffect.GetComponent<ParticleSystem>().Play();
                                     _laserEffect.transform.position = go.transform.position;//rh.point;
