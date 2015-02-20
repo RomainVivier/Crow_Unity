@@ -242,7 +242,7 @@ public class RailsControl : CarControl
 		if(chunk.NextChunk!=null)
 		{
 			int oldNbRails=rails.nbRails;
-            //TODO incrémenté la distance parcourue
+
             if(Score.Instance!=null) Score.Instance.DistanceTravaled += chunk._rails.Dist;
 			chunk=chunk.NextChunk;
 			rails=chunk._rails;

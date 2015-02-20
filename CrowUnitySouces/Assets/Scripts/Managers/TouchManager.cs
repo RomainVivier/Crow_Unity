@@ -235,7 +235,7 @@ public class TouchManager : MonoBehaviour
     public void Swipe(SwipeInfos si)
     {
         Vector2 swipeVector = si.swipeStart - si.swipeEnd;
-        Debug.Log("vector magnitude = " + swipeVector.magnitude + " :: step value = " + (Screen.width / 10));
+        //Debug.Log("vector magnitude = " + swipeVector.magnitude + " :: step value = " + (Screen.width / 10));
         if(swipeVector.magnitude > (Screen.width / 10) )
         {
             if(swipeVector.x > 0)
