@@ -44,6 +44,11 @@ public class RailsControl : CarControl
         get { return chunkProgress; }
     }
 
+    public Rails Rails
+    {
+        get { return rails; }
+    }
+
 	void Start ()
 	{
         // FMOD

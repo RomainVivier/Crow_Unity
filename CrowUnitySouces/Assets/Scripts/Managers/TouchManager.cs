@@ -99,11 +99,27 @@ public class TouchManager : MonoBehaviour
     {
         TouchInfos t=new TouchInfos();
         t.state = TouchInfos.State.UNHELD;
-        if (Input.GetMouseButtonDown(0)) t.state = TouchInfos.State.BEGIN;
-        else if (Input.GetMouseButton(0)) t.state = TouchInfos.State.HELD;
-        else if (Input.GetMouseButtonUp(0)) t.state = TouchInfos.State.END;
-        t.pos = new Vector2(Input.mousePosition.x,Input.mousePosition.y);
+        t.pos = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+        
+#if UNITY_STANDALONE
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            t.state = TouchInfos.State.BEGIN;
+        }
+        else if (Input.GetMouseButton(0))
+        {
+            t.state = TouchInfos.State.HELD;
+        }
+        else if (Input.GetMouseButtonUp(0))
+        {
+            t.state = TouchInfos.State.END;
+        }
         handleTouch(t,ref m_swipeInfos[0]);
+
+#endif
+
+#if UNITY_ANDROID
 
         for (int i = 0; i < Input.touchCount; i++)
         {
@@ -124,6 +140,8 @@ public class TouchManager : MonoBehaviour
             }
             handleTouch(t, ref m_swipeInfos[i + 1]);
         }
+#endif
+
     }
 
     private void handleTouch(TouchInfos ti, ref SwipeInfos si)
@@ -131,28 +149,44 @@ public class TouchManager : MonoBehaviour
         if (ti.state==TouchInfos.State.BEGIN)
         {
             //if ((ti.pos - m_wheelCenter).magnitude < m_wheelRadius) si.inZoneSwipe = true;
-            if (ti.pos.y > Screen.height*0.4) si.inZoneSwipe = true;
+            if (ti.pos.y > Screen.height * 0.4)
+            {
+                si.inZoneSwipe = true;
+            }
+
             si.inSwipe = true;
             si.swipeStart = ti.pos;
             if (_touchStart != null)
             {
                 _touchStart(si); 
             }
-    }
+        }
+        
         bool endSwipe = false;
         bool endZoneSwipe = false;
         if (ti.state==TouchInfos.State.HELD)
         {
             //if ((ti.pos - m_wheelCenter).magnitude > m_wheelRadius && si.inZoneSwipe) endZoneSwipe = true;
-            if (ti.pos.y < Screen.height*0.4 && si.inZoneSwipe) endZoneSwipe = true;
+            if (ti.pos.y < Screen.height * 0.4 && si.inZoneSwipe)
+            {
+                endZoneSwipe = true;
+            }
+
             if (_touchStay != null)
             {
                 _touchStay(si);
             }
         }
 
-        if (ti.state==TouchInfos.State.END && si.inSwipe ) endSwipe = true;
-        if (ti.state==TouchInfos.State.END && si.inZoneSwipe ) endZoneSwipe = true;
+        if (ti.state == TouchInfos.State.END && si.inSwipe)
+        {
+            endSwipe = true;
+        }
+
+        if (ti.state == TouchInfos.State.END && si.inZoneSwipe)
+        {
+            endZoneSwipe = true;
+        }
 
         if(endSwipe)
         {
