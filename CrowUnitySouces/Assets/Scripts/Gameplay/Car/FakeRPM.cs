@@ -45,7 +45,7 @@ public class FakeRPM : MonoBehaviour
             m_timeToReengage -= Time.fixedDeltaTime;
             if (m_timeToReengage <= 0)
             {
-                m_disengaged = true;
+                m_disengaged = false;
                 m_timeToReengage = 0;
             }
         }
