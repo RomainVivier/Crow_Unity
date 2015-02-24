@@ -192,7 +192,7 @@ public class Car : MonoBehaviour
 
         // Update fake RPM sound
         float diffSpeed=forwardVelocity-oldSpeed;
-        if (diffSpeed < -0.1) fakeRPM.loseSpeed((diffSpeed + 0.1f) * -10f);
+        if (diffSpeed < -1) fakeRPM.loseSpeed((diffSpeed + 1f) * -1f);
         oldSpeed = forwardVelocity;
         fakeRPM.update(inputs.throttle, inputs.brake);
 

@@ -18,6 +18,7 @@ public class Rails : MonoBehaviour
 	public Vector3[] positions;
 	public Vector3[] deltas;
     public float[] speedOverrides;
+
     public float Dist
     {
         get { return dist; }
@@ -25,6 +26,7 @@ public class Rails : MonoBehaviour
 
 	private int nbComputedPositions;
 	private Vector3[] computedPositions;
+    private float[] computedDists;
 	private bool needToComputePositions=true;
     private float dist=0;
 
@@ -35,7 +37,8 @@ public class Rails : MonoBehaviour
 
 	void Start ()
 	{
-        updateDist();
+        computePositions();
+        //updateDist();
 	}
 	
 	void Update ()
@@ -77,10 +80,10 @@ public class Rails : MonoBehaviour
             swapArrays(railsIndex);
             sortRails = false;
         }
-        updateDist();
+        //updateDist();
 	}
 
-    void updateDist()
+    /*void updateDist()
     {
         Vector3 prevPoint=getPoint(0,0);
         dist = 0;
@@ -90,7 +93,7 @@ public class Rails : MonoBehaviour
             dist += (point - prevPoint).magnitude;
             prevPoint=point;
         }
-    }
+    }*/
 
     void mergeSortRails(int first, int last,ref int[] railsIndex, ref float[] railsPos)
     {
@@ -190,7 +193,7 @@ public class Rails : MonoBehaviour
 	void computePositions()
 	{
 		nbComputedPositions=(nbPoints-1)*NB_POSITIONS_PER_SEGMENT+1;
-		computedPositions=new Vector3[nbComputedPositions*nbRails];		
+		computedPositions=new Vector3[nbComputedPositions*nbRails];
 		for(int r=0;r<nbRails;r++)
 		{
 			for(int p=0;p<nbPoints-1;p++)
@@ -207,7 +210,12 @@ public class Rails : MonoBehaviour
 			computedPositions[(nbComputedPositions-1)*nbRails+r]=positions[(nbPoints-1)*nbRails+r];
 		}
 		needToComputePositions=false;
-	}
+        computedDists = new float[nbComputedPositions];
+        computedDists[0] = 0;
+        for(int i=1;i<nbComputedPositions;i++)
+            computedDists[i] = computedDists[i - 1] + (computedPositions[(i - 1) * nbRails] - computedPositions[i * nbRails]).magnitude;
+        dist = computedDists[nbComputedPositions - 1];
+    }
 	
 	Vector3 bezier(Vector3[] points, float pos)
 	{
@@ -248,6 +256,30 @@ public class Rails : MonoBehaviour
 		pPos=pointProgress-prevPP;
 		if(pPos>1) pPos=1;
 	
+    }
+
+    // Returns the correct progress distant-wise
+    public float correct2Incorrect(float correct)
+    {
+        if (correct <= 0) return 0;
+        if (correct >= 1) return 1;
+        float tgtDist = correct * dist;
+        int pos = 0;
+        while (pos != nbComputedPositions - 1 && computedDists[pos + 1] < tgtDist) pos++;
+        if (pos == nbComputedPositions - 1) return 1;
+        float inProgress = (tgtDist - computedDists[pos]) / (computedDists[pos + 1] - computedDists[pos]);
+        return (pos+inProgress)/(nbComputedPositions-1);
+    }
+
+    public float incorrect2Correct(float incorrect)
+    {
+        if (incorrect >= 1) return 1;
+        if (incorrect <= 0) return 0;
+        float inProgress = incorrect % (1f / (nbComputedPositions - 1f));
+        int pos = Mathf.FloorToInt(incorrect * (nbComputedPositions-1));
+        if(pos==nbComputedPositions-1) return 1;
+        float ptDist = Mathf.Lerp(computedDists[pos], computedDists[pos + 1], inProgress *(nbComputedPositions - 1f));
+        return ptDist / dist;
     }
 
 	// Return a point in the curve in [0,nbRails-1] and [0,1]
