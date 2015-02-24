@@ -18,16 +18,6 @@ public class Duck : Gadget
 	
 	public override void Update ()
     {
-        /*if(currentCooldown==float.PositiveInfinity)
-        {
-            FMOD.Studio.PLAYBACK_STATE state;
-            duckSound.getPlaybackState(out state);
-            if (state == FMOD.Studio.PLAYBACK_STATE.STOPPED)
-            {
-                currentCooldown = COOLDOWN;
-                Stop();
-            }
-        }*/
         currentCooldown -= Time.deltaTime;
         if(currentCooldown<=0 && !IsReady)
         {
@@ -43,7 +33,7 @@ public class Duck : Gadget
         if (currentCooldown <= 0)
         {
             duckSound.start();
-            currentCooldown = COOLDOWN;//float.PositiveInfinity;
+            currentCooldown = COOLDOWN;
             IsReady = false;
             nbUses++;
             if(nbUses==2) (GameObject.FindObjectOfType<AI>() as AI).playDialog("AI Gadgets/AI_Duck");
