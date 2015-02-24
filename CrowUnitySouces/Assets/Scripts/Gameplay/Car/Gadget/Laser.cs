@@ -151,6 +151,10 @@ public class Laser : Gadget
                     Vector3 pos1r = pos0r + (pos1 - pos0r) * progress;
                     m_leftLineRenderer.SetPosition(1, pos1l);
                     m_rightLineRenderer.SetPosition(1, pos1r);
+                    float length = (pos1l - pos0l).magnitude;
+                    float finalLength = (pos1 - pos0l).magnitude;
+                    m_leftLineRenderer.material.mainTextureScale = new Vector2(finalLength/2*length/finalLength,1);
+                    m_rightLineRenderer.material.mainTextureScale = new Vector2(finalLength/2*length/finalLength,1);
                 }
                 break;
             case State.FIRING:
