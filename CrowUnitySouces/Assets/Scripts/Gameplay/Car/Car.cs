@@ -193,52 +193,9 @@ public class Car : MonoBehaviour
         oldInputs = inputs;
 
 
-        #region old fake sounds stuff
-        // Update fake speed
-        /*
-        float tgtFakeSpeed = forwardVelocity / (railsControl ? railsControl.setSpeedKmh/3.6f : maxSpeed);
-        if (tgtFakeSpeed < fakeSoundSpeed - fakeSoundInstantThresholdKmh / 3.6)
-            fakeSoundSpeed = tgtFakeSpeed;
-        float lerpVal= tgtFakeSpeed>fakeSoundSpeed ? Mathf.Pow(fakeSoundAcceleration,Time.fixedDeltaTime)
-                                                : Mathf.Pow(fakeSoundBrakes,Time.fixedDeltaTime);
-        fakeSoundSpeed -= frictionSound * fakeSoundBrakesSpeedFriction*Time.fixedDeltaTime;
-        if (fakeSoundSpeed < 0) fakeSoundSpeed = 0;
-        fakeSoundSpeed = Mathf.Lerp(tgtFakeSpeed, fakeSoundSpeed, lerpVal);
-        float fakeSpeed = fakeSoundSpeed * maxSpeed;
-        int newFakeGear;
-        float fakeRPM = transmission.getMaxPossibleRPM(fakeSpeed, engine.getMaxRpm(), out newFakeGear);
-        if(newFakeGear>fakeGear)
-        {
-            fakeGear = newFakeGear;
-            //FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Car Mechanics/carGearUp", transform.position);
-        }
-        if(newFakeGear<fakeGear)
-        {
-            fakeGear = newFakeGear;
-            //FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Car Mechanics/carGearDown", transform.position);
-        }*/
-        /*float fakeRPM = Mathf.Lerp(engine.getMaxRpm(),rpm,transmission.isEngaged());
-
-
-        // Update overRev
-        //fakeRPM = rpm;
-        if(rpm>engine.getMaxRpm()*0.97 && transmission.getCurrentGear()==0)
-        {
-            fakeRPM=Mathf.Lerp(engine.getMaxRpm(),engine.getMaxRpm()*0.8f,(Mathf.Sin(overRevTime*2*Mathf.PI/overRevPeriod)+1)/2);
-            overRevTime += Time.fixedDeltaTime;
-        }
-        else overRevTime=0;*/
-        //Debug.Log(overRevTime);
-        //if (fakeRPM < engine.getMinRpm()) fakeRPM = engine.getMinRpm();
-        //if (!isOnGround()) fakeRPM = engine.getMaxRpm();
-        //float soundRpm=fakeRPM*ENGINE_SOUND_MAX_RPM/engine.getMaxRpm();
-        //float soundRpm = rpm * ENGINE_SOUND_MAX_RPM / engine.getMaxRpm();
-        //engineRPM.setValue(soundRpm);
-        #endregion
-        fakeRPM.update(inputs.throttle, inputs.brake);
-
         // Update sounds
         float frictionSound = Mathf.Abs(inputs.steering);
+        fakeRPM.update(inputs.throttle, inputs.brake);
         engineRPM.setValue(fakeRPM.getRPM());
         tiresGround.setValue(isOnGround() ? 1 : 0);
         tiresFriction.setValue(frictionSound);

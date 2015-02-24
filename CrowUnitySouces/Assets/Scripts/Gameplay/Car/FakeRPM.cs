@@ -13,6 +13,7 @@ public class FakeRPM : MonoBehaviour
         public float gearTime;
         public float power;
         public float instability;
+        public float upshiftDelay;
     }
     public GearParameters[] _gears;
 
@@ -28,6 +29,7 @@ public class FakeRPM : MonoBehaviour
     private float m_currentGearPos = 0;
     private bool m_disengaged = false;
     private float m_timeToReengage = 0;
+    private float m_shiftDelay = 0;
     #endregion
 
     #region methods
@@ -50,30 +52,49 @@ public class FakeRPM : MonoBehaviour
         else
         {
             m_currentGearPos += acceleration * Time.fixedDeltaTime / _gears[m_currentGear].gearTime;
-            if(m_currentGearPos>1)
+            if (m_currentGearPos > 1)
             {
                 if (m_currentGear == _gears.Length - 1) m_currentGearPos = 1;
                 else
                 {
-                    m_currentGear++;
-                    m_currentGearPos = 0;
-                    m_disengaged = true;
-                    m_timeToReengage = _shiftTime;
-                    FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Car Mechanics/carGearUp", transform.position);
+                    if (m_shiftDelay > 0)
+                    {
+                        m_shiftDelay -= Time.fixedDeltaTime;
+                        if (m_shiftDelay <= 0)
+                        {
+                            m_shiftDelay = 0;
+                            m_currentGear++;
+                            m_currentGearPos = 0;
+                            m_disengaged = true;
+                            m_timeToReengage = _shiftTime;
+                            FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Car Mechanics/carGearUp", transform.position);
+                        }
+                    }
+                    else m_shiftDelay = _gears[m_currentGear].upshiftDelay;
                 }
             }
-            if(m_currentGearPos<0)
+            else if (m_currentGearPos < 0)
             {
-                if(m_currentGear==0) m_currentGearPos=0;
+                if (m_currentGear == 0) m_currentGearPos = 0;
                 else
                 {
-                    m_disengaged = true;
-                    m_currentGearPos=1;
-                    m_currentGear--;
-                    m_timeToReengage = _shiftTime;
-                    FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Car Mechanics/carGearDown", transform.position);
+                    if (m_shiftDelay > 0)
+                    {
+                        m_shiftDelay -= Time.fixedDeltaTime;
+                        if (m_shiftDelay <= 0)
+                        {
+                            m_shiftDelay = 0;
+                            m_disengaged = true;
+                            m_currentGearPos = 1;
+                            m_currentGear--;
+                            m_timeToReengage = _shiftTime;
+                            FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Car Mechanics/carGearDown", transform.position);
+                        }
+                    }
+                    else m_shiftDelay = 0.00001f;
                 }
             }
+            else m_shiftDelay = 0;
         }
     }
 
