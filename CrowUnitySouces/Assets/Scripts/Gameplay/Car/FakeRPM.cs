@@ -98,11 +98,34 @@ public class FakeRPM : MonoBehaviour
         }
     }
 
+    public void loseSpeed(float gears)
+    {
+        m_currentGearPos -= gears;
+        if(m_currentGearPos<0)
+        {
+            if (m_currentGear == 0) m_currentGearPos = 0;
+            else
+            {
+                while(m_currentGearPos<0)
+                {
+                    m_currentGear--;
+                    m_currentGearPos++;
+                }
+                if(m_currentGear<0)
+                {
+                    m_currentGear=0;
+                    m_currentGearPos = 0;
+                }
+                FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Car Mechanics/carGearDown", transform.position);
+            }
+        }
+    }
+
     public float getRPM()
     {
         float pos = Mathf.Pow(m_currentGearPos, _gears[m_currentGear].power);
         float rpm = Mathf.Lerp(_gears[m_currentGear].startRPM, _gears[m_currentGear].endRPM, pos);
-        rpm += (Mathf.PerlinNoise(m_currentGearPos*100, 0)-0.5f)*_gears[m_currentGear].instability;
+        rpm += (Mathf.PerlinNoise(m_currentGearPos*100, m_currentGear*100)-0.5f)*_gears[m_currentGear].instability;
         if(m_disengaged)
         {
             float engaged=0;

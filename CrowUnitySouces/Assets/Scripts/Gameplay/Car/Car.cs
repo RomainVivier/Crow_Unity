@@ -53,9 +53,7 @@ public class Car : MonoBehaviour
     private FMOD.Studio.ParameterInstance tiresSpeed;
     private FMOD.Studio.ParameterInstance tiresGround;
 
-    private float fakeSoundSpeed=0; // 0=0m/s, 1=max speed
-    private int fakeGear = 0;
-    private float overRevTime = 0;
+    private float oldSpeed=0;
 
      // MonoBehaviour methods
 	void Start ()
@@ -192,10 +190,14 @@ public class Car : MonoBehaviour
         // Store old inputs
         oldInputs = inputs;
 
+        // Update fake RPM sound
+        float diffSpeed=forwardVelocity-oldSpeed;
+        if (diffSpeed < -0.1) fakeRPM.loseSpeed((diffSpeed + 0.1) * -10);
+        oldSpeed = forwardVelocity;
+        fakeRPM.update(inputs.throttle, inputs.brake);
 
         // Update sounds
         float frictionSound = Mathf.Abs(inputs.steering);
-        fakeRPM.update(inputs.throttle, inputs.brake);
         engineRPM.setValue(fakeRPM.getRPM());
         tiresGround.setValue(isOnGround() ? 1 : 0);
         tiresFriction.setValue(frictionSound);
