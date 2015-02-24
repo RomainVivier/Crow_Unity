@@ -5,7 +5,7 @@ public class PrefabSpawner : MonoBehaviour
 {
     #region members
     public GameObject prefab;
-    public Vector3 _offset;
+    public Vector3 _offset = new Vector3(0, 1, 0);
     public Rails _rail;
     public float _railIndex;
     public float _railProgress;
@@ -28,11 +28,13 @@ public class PrefabSpawner : MonoBehaviour
             obstacle.Rails = _rail;
             obstacle.RailsIndex = _railIndex;
             obstacle.RailsProgress = _railProgress;
-            m_spawnedObject.transform.position = _rail.getPoint(_railIndex, _railProgress);
-        }
 
+			if(_rail != null)
+				m_spawnedObject.transform.position = _rail.getPoint(_railIndex, _railProgress)+ _offset;
+		}
+		
         m_spawnedObject.transform.parent = transform;
-    }
+    }	
     
     void OnDrawGizmos()
     {

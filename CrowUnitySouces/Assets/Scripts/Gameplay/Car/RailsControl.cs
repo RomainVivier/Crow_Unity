@@ -41,7 +41,7 @@ public class RailsControl : CarControl
 
     public float Progress
     {
-        get { return chunkProgress; }
+        get { return rails.incorrect2Correct(chunkProgress); }
     }
 
     public Rails Rails
