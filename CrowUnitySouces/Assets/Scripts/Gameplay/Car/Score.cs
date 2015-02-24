@@ -6,7 +6,7 @@ public class Score : MonoBehaviour
 {
     #region members
     private const float DISPLAY_LAG = 1;
-    private const int NB_DIGITS = 7;
+    private const int NB_DIGITS = 8;
 
     public Text _text;
     public float _timeToReset = 5f;
@@ -115,15 +115,18 @@ public class Score : MonoBehaviour
         if (!HideScore)
         {
             _text.text = ((int)(DistanceTravaled + m_displayScore)).ToString();
-            /*float displayScore=DistanceTravaled+m_displayScore;
-            float[] reelAngles=new float[NB_REELS];
-            reelAngles[0] = (displayScore % 10)*2*Mathf.PI;
+            float displayScore=DistanceTravaled+m_displayScore;
+            //float[] digitPos=new float[NB_DIGITS];
+            //digitPos[0] = (displayScore % 10)*0.1f;
+            //m.mainTextureOffset = new Vector2(0, (displayScore % 10)*0.1);
             float pow10 = 1;
-            for(int i=1;i<reelAngles;i++)
+            for(int i=1;i<NB_DIGITS;i++)
             {
                 pow10 *= 10;
-
-            }*/
+                float digitPos = Mathf.Floor(((displayScore) / pow10) % 10);
+                if (displayScore % pow10 > pow10 - 1) digitPos += displayScore % 1;
+                //m.mainTextureOffset = new Vector2(0, digitPos);
+            }
         }
     }
 
