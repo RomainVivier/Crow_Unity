@@ -38,7 +38,7 @@ public class SoundPlayer : MonoBehaviour
             if(_soundNameExit!="" && _soundNameExit!="stop") m_fmodEventRight=FMOD_StudioSystem.instance.GetEvent("event:/"+_soundNameExit);
             if(_soundNameExitRight!="") m_fmodEventRight=FMOD_StudioSystem.instance.GetEvent("event:/"+_soundNameExitRight);
         }
-        
+        gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
         m_alreadyPlayed = false;
     }
 
