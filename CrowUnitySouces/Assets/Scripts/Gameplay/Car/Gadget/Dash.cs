@@ -61,6 +61,7 @@ public class Dash : Gadget
         //_car.gameObject.transform.FindChild("Body/CenterOfMass").localPosition -= new Vector3(0, -0.25f, 0);
         _car.maxSpeedKmh /= _speedCoeff;
         _car.updateValues();
+        if (_car.getForwardVelocityKmh() > _car.maxSpeedKmh) _car.InstantSetSpeedKmh(_car.maxSpeedKmh);
         IsReady = true;
 	
     }

@@ -6,7 +6,7 @@ public class Score : MonoBehaviour
 {
     #region members
     private const float DISPLAY_LAG = 1;
-    private const int NB_DIGITS = 7;
+    private const int NB_DIGITS = 8;
 
     public Text _text;
     public float _timeToReset = 5f;
@@ -14,8 +14,9 @@ public class Score : MonoBehaviour
     private float m_distanceTraveled = 0f;
     private float m_speed;
     private float m_score;
+    private float m_oldDist = 0;
     private float m_displayScore;
-    private int m_combo = 0;
+    private int m_combo = 1;
     private Timer m_comboTimer;
     private bool m_hideScore = false;
     private float m_augmentSpeed=0;
@@ -110,20 +111,26 @@ public class Score : MonoBehaviour
 
     void Update()
     {
+        float diffDist = DistanceTravaled - m_oldDist;
+        m_score += diffDist * Combo;
+        m_displayScore += diffDist * Combo;
+        m_oldDist = DistanceTravaled;
         m_displayScore += m_augmentSpeed * Time.deltaTime;
         if (m_displayScore > m_score) m_displayScore = m_score;
         if (!HideScore)
         {
-            _text.text = ((int)(DistanceTravaled + m_displayScore)).ToString();
-            /*float displayScore=DistanceTravaled+m_displayScore;
-            float[] reelAngles=new float[NB_REELS];
-            reelAngles[0] = (displayScore % 10)*2*Mathf.PI;
+            _text.text = ((int)(m_displayScore)).ToString();
+            //float[] digitPos=new float[NB_DIGITS];
+            //digitPos[0] = (displayScore % 10)*0.1f;
+            //m.mainTextureOffset = new Vector2(0, (displayScore % 10)*0.1);
             float pow10 = 1;
-            for(int i=1;i<reelAngles;i++)
+            for(int i=1;i<NB_DIGITS;i++)
             {
                 pow10 *= 10;
-
-            }*/
+                float digitPos = Mathf.Floor(((m_displayScore) / pow10) % 10);
+                if (m_displayScore % pow10 > pow10 - 1) digitPos += m_displayScore % 1;
+                //m.mainTextureOffset = new Vector2(0, digitPos);
+            }
         }
     }
 
@@ -137,7 +144,7 @@ public class Score : MonoBehaviour
 
     public void ResetCombo()
     {
-        m_combo = 0;
+        m_combo = 1;
     }
 
 }
