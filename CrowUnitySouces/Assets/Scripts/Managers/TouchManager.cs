@@ -235,8 +235,8 @@ public class TouchManager : MonoBehaviour
     public void Swipe(SwipeInfos si)
     {
         Vector2 swipeVector = si.swipeStart - si.swipeEnd;
-        Debug.Log("vector magnitude = " + swipeVector.magnitude + " :: step value = " + (Screen.width / 10));
-        if(swipeVector.magnitude > (Screen.width / 10) )
+        //Debug.Log("vector magnitude = " + swipeVector.magnitude + " :: step value = " + (Screen.width / 10));
+        if(Mathf.Abs(swipeVector.x) > (Screen.width / 10) )
         {
             if(swipeVector.x > 0)
             {
@@ -260,6 +260,7 @@ public class TouchManager : MonoBehaviour
     public void SwipeZone(SwipeInfos si)
     {
         Vector2 swipeVector = si.swipeStart - si.swipeEnd;
+        
         if(swipeVector.magnitude > m_wheelRadius/4)//(Screen.width / 6) )
         {
             if(swipeVector.x > 0)

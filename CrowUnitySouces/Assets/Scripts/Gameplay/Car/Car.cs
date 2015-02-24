@@ -132,13 +132,29 @@ public class Car : MonoBehaviour
         else steerAngleIn=0;
         if(steerAngleOut>0)
 		{
-			wheels[0].steerAngle=steerAngleOut;
-			wheels[1].steerAngle=steerAngleIn;	
+            if(wheels[0].isGrounded || wheels[1].isGrounded)
+            {
+			    wheels[0].steerAngle=steerAngleOut;
+			    wheels[1].steerAngle=steerAngleIn;	
+            }
+            else
+            {
+			    //wheels[2].steerAngle=steerAngleOut/4;
+			    //wheels[3].steerAngle=steerAngleIn/4;	
+            }
 		}
 		else
 		{
-			wheels[0].steerAngle=steerAngleIn;
-			wheels[1].steerAngle=steerAngleOut;			
+            if(wheels[0].isGrounded || wheels[1].isGrounded)
+            {
+			    wheels[0].steerAngle=steerAngleIn;
+			    wheels[1].steerAngle=steerAngleOut;	
+            }
+            else
+            {
+			    //wheels[2].steerAngle=steerAngleIn/4;
+			    //wheels[3].steerAngle=steerAngleOut/4;	
+            }		
 		}
         Quaternion newRotation = wheelQuaternion;
         newRotation *= Quaternion.Euler(new Vector3(0,wheelRotation*inputs.steering,0));
@@ -148,9 +164,9 @@ public class Car : MonoBehaviour
 		float force=forwardVelocity*forwardVelocity*dragCoef;
 		body.AddForce(body.transform.forward*-force);
 		float downForce=downforce*forwardVelocity*forwardVelocity;
-		body.AddForce(body.transform.up*-downForce);		
+		body.AddForce(body.transform.up*-downForce);
 
-		// Antiroll bars
+        // Antiroll bars
 		for(int i=0;i<2;i++)
 		{
 			WheelHit hit;
@@ -164,13 +180,25 @@ public class Car : MonoBehaviour
 			if(groundedR) travelR=wheels[i*2+1].transform.InverseTransformPoint(hit.point).y-wheels[i*2+1].radius;
 			else travelR=1;
 			float antiRollForce=(travelL-travelR)*antiRoll;
-			if(groundedL) body.AddForceAtPosition(transform.up*-antiRollForce,wheels[i*2].transform.position);
-			if(groundedR) body.AddForceAtPosition(transform.up*antiRollForce,wheels[i*2+1].transform.position);
+			if(groundedL) body.AddForceAtPosition(body.transform.up*-antiRollForce,wheels[i*2].transform.position);
+			if(groundedR) body.AddForceAtPosition(body.transform.up*antiRollForce,wheels[i*2+1].transform.position);
+            //if (groundedL != groundedR) body.AddForce(new Vector3(0,-1,0) * 10000);
 		}
 		
-		// Store old inputs
-		oldInputs=inputs;
+        // Antiroll force
+        /*for (int i = 0; i < 4;i++) if(!wheels[i].isGrounded)
+        {
+            float dist;
+            RaycastHit rh;
+            Physics.Raycast(wheels[i].transform.position, new Vector3(0, -1, 0), out rh, 10);
+            dist = (rh.point - wheels[i].transform.position).magnitude;
+            body.AddForceAtPosition(new Vector3(0, dist * dist * -1000, 0), wheels[i].transform.position);
+        }*/
+        
+        // Store old inputs
+        oldInputs = inputs;
 		
+
         // Update fake speed
         /*
         float tgtFakeSpeed = forwardVelocity / (railsControl ? railsControl.setSpeedKmh/3.6f : maxSpeed);
@@ -336,5 +364,9 @@ public class Car : MonoBehaviour
         return body.transform.up;
     }
 	
+    public bool isSteering()
+    {
+        return oldInputs.steering > 0.1 || oldInputs.steering<-0.1;
+    }
 }
 

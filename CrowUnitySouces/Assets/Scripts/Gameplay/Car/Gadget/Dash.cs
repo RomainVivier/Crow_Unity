@@ -40,7 +40,7 @@ public class Dash : Gadget
         //_car.InstantSetSpeedKmh(_rc.setSpeedKmh);
         _car.gameObject.GetComponent<PolynomialEngine>().maxPowerKw *= 100;
         _car.gameObject.GetComponent<PolynomialEngine>().powerMinRpmKw*= 100;
-        //_car.transform.FindChild("Body").GetComponent<Rigidbody>().AddRelativeTorque(-1000, 0, 0, ForceMode.Impulse);
+        if(!_car.isSteering()) _car.transform.FindChild("Body").GetComponent<Rigidbody>().AddRelativeTorque(-10000, 0, 0, ForceMode.Impulse);
         _car.gameObject.GetComponent<Transmission>().lockGear(4);
         //_car.gameObject.transform.FindChild("Body/CenterOfMass").localPosition += new Vector3(0, -0.25f, 0);
         _car.maxSpeedKmh *= _speedCoeff;
@@ -61,6 +61,7 @@ public class Dash : Gadget
         //_car.gameObject.transform.FindChild("Body/CenterOfMass").localPosition -= new Vector3(0, -0.25f, 0);
         _car.maxSpeedKmh /= _speedCoeff;
         _car.updateValues();
+        if (_car.getForwardVelocityKmh() > _car.maxSpeedKmh) _car.InstantSetSpeedKmh(_car.maxSpeedKmh);
         IsReady = true;
 	
     }
