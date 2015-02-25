@@ -78,7 +78,6 @@ public class Score : MonoBehaviour
         {
             if(m_body == null)
             {
-                Debug.Log("Body null !");
                 m_body = GameObject.Find("Body");
             }
 
