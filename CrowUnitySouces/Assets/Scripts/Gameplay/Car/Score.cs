@@ -149,10 +149,10 @@ public class Score : MonoBehaviour
         /*m_score += diffDist * Combo;
         m_displayScore += diffDist * Combo;*/
         m_oldDist = DistanceTravaled;
-        m_distMod += diffDist / (_incrementDist * _incrementDistMust);
+        m_distMod += diffDist / (_incrementDist * _incrementDistMult);
         if(m_distMod>1)
         {
-            int bonus = Mathf.FloorToInt(m_distMod) * _incrementValue * _incrementDistMust;
+            int bonus = Mathf.FloorToInt(m_distMod) * _incrementValue * _incrementDistMult;
             m_score += bonus;
             float newAugmentSpeed = bonus / DIST_DISPLAY_LAG;
             if (newAugmentSpeed > m_augmentSpeed) m_augmentSpeed = newAugmentSpeed;
