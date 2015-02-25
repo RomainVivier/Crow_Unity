@@ -129,7 +129,6 @@ public class Spoonbill : Gadget
 
     public override void Stop()
     {
-        Debug.Log("spoonbill stopped");
         base.Stop();
         gameObject.SetActive(false);
         _buttonAnim.SetBool("Engage", false);
