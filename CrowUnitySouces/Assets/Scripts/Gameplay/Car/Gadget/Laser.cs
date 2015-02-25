@@ -192,6 +192,7 @@ public class Laser : Gadget
                     m_centerLineRenderer.SetPosition(0, pos1);
                     m_centerLineRenderer.SetPosition(1, pos2);
                     m_centerLineRenderer.material.mainTextureScale = new Vector2(m_laserLength/25,1);
+                    m_centerLineRenderer.SetWidth(0.2f, 5f);
                     
                     // Place particles
                     m_particlesPos += Time.deltaTime * _particlesSpeed;
