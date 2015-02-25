@@ -30,6 +30,8 @@ public class Score : MonoBehaviour
     private static Score m_instance;
     private RailsControl m_rc;
     private GameObject[] m_digits;
+
+    private GameObject m_body;
     #endregion
 
     #region Properties
@@ -73,6 +75,19 @@ public class Score : MonoBehaviour
                 _text.text = "";
             }
             m_hideScore = value;
+        }
+    }
+
+    public GameObject Body
+    {
+        get
+        {
+            if(m_body == null)
+            {
+                m_body = GameObject.Find("Body");
+            }
+
+            return m_body;
         }
     }
 
@@ -122,6 +137,7 @@ public class Score : MonoBehaviour
         m_comboTimer = new Timer();
         m_displayScore = 0;
         m_digits = new GameObject[NB_DIGITS];
+        m_body = GameObject.Find("Body");
     }
 
     #endregion
