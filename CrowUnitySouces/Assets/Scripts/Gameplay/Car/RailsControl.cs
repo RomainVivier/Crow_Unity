@@ -41,7 +41,7 @@ public class RailsControl : CarControl
 
     public float Progress
     {
-        get { return chunkProgress; }
+        get { return rails.incorrect2Correct(chunkProgress); }
     }
 
     public Rails Rails
@@ -274,10 +274,10 @@ public class RailsControl : CarControl
     {
         return rails.nbRails;
     }
-    //private void OnValidate()
-    //{
-    //    rails = chunk.GetComponent<Rails>();
-    //    target = rails.getPoint(currentRail, chunkProgress);
-    //}
+
+    public override Vector3 getForwardTarget()
+    {
+        return rails.getForward(currentRail, chunkProgress);
+    }
 
 }
