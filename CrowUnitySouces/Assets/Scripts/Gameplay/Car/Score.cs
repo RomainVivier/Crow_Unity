@@ -6,7 +6,7 @@ public class Score : MonoBehaviour
 {
     #region members
     private const float DISPLAY_LAG = 1;
-    private const int NB_DIGITS = 7;
+    private const int NB_DIGITS = 6;
 
     public Text _text;
     public float _timeToReset = 5f;
@@ -101,15 +101,21 @@ public class Score : MonoBehaviour
         }
     }
 
+    void Start()
+    {
+        m_digits = new GameObject[NB_DIGITS];
+        for(int i=0;i<NB_DIGITS;i++)
+        {
+            m_digits[i] = GameObject.Find("ScoreDigit"+ i);
+            m_digits[i].GetComponent<MeshRenderer>().material.mainTextureScale = new Vector2(1, 0.1f);
+        }
+    }
+
     private void Init()
     {
         m_comboTimer = new Timer();
         m_displayScore = 0;
         m_digits = new GameObject[NB_DIGITS];
-        for(int i=0;i<NB_DIGITS;i++)
-        {
-            m_digits[i] = GameObject.Find("ScoreDigit" + i);
-        }
     }
 
     #endregion
@@ -124,17 +130,17 @@ public class Score : MonoBehaviour
         if (m_displayScore > m_score) m_displayScore = m_score;
         if (!HideScore)
         {
-            //_text.text = ((int)(m_displayScore)).ToString();
+            _text.text = "";// ((int)(m_displayScore)).ToString();
             //float[] digitPos=new float[NB_DIGITS];
             //digitPos[0] = (displayScore % 10)*0.1f;
-            //m.mainTextureOffset = new Vector2(0, (displayScore % 10)*0.1);
+            m_digits[0].GetComponent<MeshRenderer>().material.mainTextureOffset= new Vector2(0, 1-((m_displayScore+1) % 10)*0.1f);
             float pow10 = 1;
             for(int i=1;i<NB_DIGITS;i++)
             {
                 pow10 *= 10;
-                float digitPos = Mathf.Floor(((m_displayScore) / pow10) % 10);
+                float digitPos = Mathf.Floor((((m_displayScore) / pow10)+1) % 10);
                 if (m_displayScore % pow10 > pow10 - 1) digitPos += m_displayScore % 1;
-                m_digits[i].GetComponent<MeshRenderer>().material.mainTextureOffset = new Vector2(0, digitPos);
+                m_digits[i].GetComponent<MeshRenderer>().material.mainTextureOffset = new Vector2(0, 1-digitPos*0.1f);
             }
         }
     }
