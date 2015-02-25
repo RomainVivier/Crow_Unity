@@ -7,7 +7,7 @@ public class Dash : Gadget
     public RailsControl _rc;
     public Car _car;
     public float _speedCoeff;
-
+    public float _duration = 1f;
     private Timer m_timer;
 
     #endregion
@@ -45,7 +45,7 @@ public class Dash : Gadget
         //_car.gameObject.transform.FindChild("Body/CenterOfMass").localPosition += new Vector3(0, -0.25f, 0);
         _car.maxSpeedKmh *= _speedCoeff;
         _car.updateValues();
-        m_timer.Reset(1f);
+        m_timer.Reset(_duration);
         IsReady = false;
     }
 
