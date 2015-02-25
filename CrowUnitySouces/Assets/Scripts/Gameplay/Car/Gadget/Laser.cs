@@ -171,6 +171,7 @@ public class Laser : Gadget
                 else
                 {
                     Vector3 forward=m_car.getForwardVector();
+                    Vector3 forwardTarget = m_car.getForwardTarget();
                     Vector3 right = m_car.getRightVector();
                     Vector3 up = m_car.getUpVector();
 
@@ -187,7 +188,7 @@ public class Laser : Gadget
                     m_rightLineRenderer.SetPosition(1, pos1);
 
                     // Update and draw center laser
-                    Vector3 pos2 = pos1 + forward * m_laserLength;
+                    Vector3 pos2 = pos1 + forwardTarget * m_laserLength;
                     m_centerLineRenderer.SetPosition(0, pos1);
                     m_centerLineRenderer.SetPosition(1, pos2);
                     m_centerLineRenderer.material.mainTextureScale = new Vector2(m_laserLength/25,1);
@@ -197,12 +198,12 @@ public class Laser : Gadget
                     m_particlesRot += Time.deltaTime * _particlesRotationSpeed;
                     float progress = (1 - (m_stateTimer.Current / _firingTime));
                     float dist=0.2f+progress*1f;
-                    m_particlesLaserTransform.position = pos1 + forward * m_particlesPos + up * dist * Mathf.Cos(m_particlesRot) + right * dist * Mathf.Sin(m_particlesRot);
+                    m_particlesLaserTransform.position = pos1 + forwardTarget * m_particlesPos + up * dist * Mathf.Cos(m_particlesRot) + right * dist * Mathf.Sin(m_particlesRot);
                     m_particlesLaser.startColor = new Color(1,1,1,1 - progress);
                     
                     // Raycast to check damages
                     RaycastHit rh;
-                    if(Physics.Raycast(pos1,forward,out rh,m_laserLength))
+                    if(Physics.Raycast(pos1,forwardTarget,out rh,m_laserLength))
                     {
                         //if (!m_lasers[i].particles.isPlaying) m_lasers[i].particles.Play();
                         //m_lasers[i].particlesTransform.position = rh.point;

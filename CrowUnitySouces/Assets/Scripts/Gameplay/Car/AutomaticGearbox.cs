@@ -93,4 +93,9 @@ public class AutomaticGearbox : CarControl {
 		}
 		return ret;
 	}
+
+    public override Vector3 getForwardTarget()
+    {
+        return nextControl.getForwardTarget();
+    }
 }

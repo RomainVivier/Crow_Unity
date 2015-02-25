@@ -287,6 +287,12 @@ public class Car : MonoBehaviour
     }
 
 	// Public getters
+    public Vector3 getForwardTarget()
+    {
+        Vector3 ret=control.getForwardTarget();
+        if (ret == Vector3.zero) return getForwardVector(); else return ret;
+    }
+
 	public float getForwardVelocity()
 	{
 		Vector3 velocity=body.GetRelativePointVelocity(new Vector3(0,0,0));

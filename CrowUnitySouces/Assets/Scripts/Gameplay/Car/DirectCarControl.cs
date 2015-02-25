@@ -13,4 +13,10 @@ public class DirectCarControl : CarControl {
 		ret.downshift=Input.GetAxis ("Downshift")>0;		
 		return ret;
 	}
+
+    public override Vector3 getForwardTarget()
+    {
+        return Vector3.zero;
+    }
 }
+
