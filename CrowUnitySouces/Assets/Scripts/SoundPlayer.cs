@@ -122,7 +122,7 @@ public class SoundPlayer : MonoBehaviour
                     }
                     else
                     {
-                        m_fmodEvent=FMOD_StudioSystem.instance.GetEvent("event:/"+_soundName);
+                        if(m_fmodEvent==null) m_fmodEvent=FMOD_StudioSystem.instance.GetEvent("event:/"+_soundName);
                         m_fmodEvent.start();
 
                         // Set 3D attributes
