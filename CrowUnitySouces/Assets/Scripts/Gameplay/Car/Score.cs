@@ -6,7 +6,7 @@ public class Score : MonoBehaviour
 {
     #region members
     private const float DISPLAY_LAG = 1;
-    private const int NB_DIGITS = 8;
+    private const int NB_DIGITS = 7;
 
     public Text _text;
     public float _timeToReset = 5f;
@@ -23,7 +23,7 @@ public class Score : MonoBehaviour
 
     private static Score m_instance;
     private RailsControl m_rc;
-
+    private GameObject[] m_digits;
     #endregion
 
     #region Properties
@@ -105,6 +105,11 @@ public class Score : MonoBehaviour
     {
         m_comboTimer = new Timer();
         m_displayScore = 0;
+        m_digits = new GameObject[NB_DIGITS];
+        for(int i=0;i<NB_DIGITS;i++)
+        {
+            m_digits[i] = GameObject.Find("ScoreDigit" + i);
+        }
     }
 
     #endregion
@@ -119,7 +124,7 @@ public class Score : MonoBehaviour
         if (m_displayScore > m_score) m_displayScore = m_score;
         if (!HideScore)
         {
-            _text.text = ((int)(m_displayScore)).ToString();
+            //_text.text = ((int)(m_displayScore)).ToString();
             //float[] digitPos=new float[NB_DIGITS];
             //digitPos[0] = (displayScore % 10)*0.1f;
             //m.mainTextureOffset = new Vector2(0, (displayScore % 10)*0.1);
@@ -129,7 +134,7 @@ public class Score : MonoBehaviour
                 pow10 *= 10;
                 float digitPos = Mathf.Floor(((m_displayScore) / pow10) % 10);
                 if (m_displayScore % pow10 > pow10 - 1) digitPos += m_displayScore % 1;
-                //m.mainTextureOffset = new Vector2(0, digitPos);
+                m_digits[i].GetComponent<MeshRenderer>().material.mainTextureOffset = new Vector2(0, digitPos);
             }
         }
     }
