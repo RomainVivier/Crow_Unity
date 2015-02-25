@@ -5,22 +5,28 @@ using System.Collections;
 public class Score : MonoBehaviour
 {
     #region members
-    private const float DISPLAY_LAG = 1;
+    private const float SCORE_DISPLAY_LAG = 1;
+    private const float DIST_DISPLAY_LAG = 0.25f;
+
     private const int NB_DIGITS = 6;
 
     public Text _text;
     public float _timeToReset = 5f;
+    public float _incrementDist = 1;
+    public int _incrementValue = 1;
+    public int _incrementDistMult = 1;
 
     private float m_distanceTraveled = 0f;
     private float m_speed;
     private float m_score;
+    private float m_distMod;
     private float m_oldDist = 0;
     private float m_displayScore;
+    private float m_displayScoreDist;
     private int m_combo = 1;
     private Timer m_comboTimer;
     private bool m_hideScore = false;
     private float m_augmentSpeed=0;
-
     private static Score m_instance;
     private RailsControl m_rc;
     private GameObject[] m_digits;
@@ -139,11 +145,26 @@ public class Score : MonoBehaviour
     void Update()
     {
         float diffDist = DistanceTravaled - m_oldDist;
-        m_score += diffDist * Combo;
-        m_displayScore += diffDist * Combo;
+
+        /*m_score += diffDist * Combo;
+        m_displayScore += diffDist * Combo;*/
         m_oldDist = DistanceTravaled;
+        m_distMod += diffDist / (_incrementDist * _incrementDistMult);
+        if(m_distMod>1)
+        {
+            int bonus = Mathf.FloorToInt(m_distMod) * _incrementValue * _incrementDistMult;
+            m_score += bonus;
+            float newAugmentSpeed = bonus / DIST_DISPLAY_LAG;
+            if (newAugmentSpeed > m_augmentSpeed) m_augmentSpeed = newAugmentSpeed;
+            m_distMod -= Mathf.Floor(m_distMod);
+        }
+
         m_displayScore += m_augmentSpeed * Time.deltaTime;
-        if (m_displayScore > m_score) m_displayScore = m_score;
+        if (m_displayScore > m_score)
+        {
+            m_displayScore = m_score;
+            m_augmentSpeed = 0;
+        }
         if (!HideScore)
         {
             _text.text = "";// ((int)(m_displayScore)).ToString();
@@ -167,7 +188,7 @@ public class Score : MonoBehaviour
         m_score += m_combo * value;
         m_combo+=combo;
         float diff = m_score - m_displayScore;
-        m_augmentSpeed = diff / DISPLAY_LAG;
+        m_augmentSpeed = diff / SCORE_DISPLAY_LAG;
     }
 
     public void ResetCombo()
