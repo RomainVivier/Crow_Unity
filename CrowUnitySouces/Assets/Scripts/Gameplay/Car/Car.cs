@@ -55,6 +55,24 @@ public class Car : MonoBehaviour
 
     private float oldSpeed=0;
 
+    private Car m_instance;
+    public Car Instance
+    {
+        get
+        {
+            if (m_instance == null)
+            {
+                m_instance = this;
+            }
+            else if (this != m_instance)
+            {
+                Destroy(this.gameObject);
+            }
+
+            return m_instance;
+        }
+    }
+
      // MonoBehaviour methods
 	void Start ()
 	{
