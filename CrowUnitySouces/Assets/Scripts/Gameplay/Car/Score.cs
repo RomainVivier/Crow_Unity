@@ -140,6 +140,7 @@ public class Score : MonoBehaviour
                 pow10 *= 10;
                 float digitPos = Mathf.Floor((((m_displayScore) / pow10)+1) % 10);
                 if (m_displayScore % pow10 > pow10 - 1) digitPos += m_displayScore % 1;
+                //float digitPos = (m_displayScore / pow10) + 0.5f;
                 m_digits[i].GetComponent<MeshRenderer>().material.mainTextureOffset = new Vector2(0, 1-digitPos*0.1f);
             }
         }
