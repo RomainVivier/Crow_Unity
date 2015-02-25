@@ -19,7 +19,6 @@ public class BoxingGlove : Gadget
     {
         GadgetManager.Instance.Register("BoxingGlove", this);
         m_timer = new Timer();
-        m_collider = GetComponent<BoxCollider>();
         gameObject.SetActive(false);
         base.Awake();
     }
@@ -40,7 +39,6 @@ public class BoxingGlove : Gadget
         base.Play();
         gameObject.SetActive(true);
         _anim.SetTrigger("Engage");
-        m_collider.enabled = true;
         m_timer.Reset(1.1f);
         IsReady = false;
     }
@@ -49,7 +47,6 @@ public class BoxingGlove : Gadget
     {
         base.Stop();
         gameObject.SetActive(false);
-        m_collider.enabled = false;
         IsReady = true;
 
     }
@@ -57,7 +54,6 @@ public class BoxingGlove : Gadget
     void OnCollisionEnter(Collision collision)
     {
         Debug.Log(collision.collider.name);
-
     }
 
     void OnTriggerEnter(Collider other)

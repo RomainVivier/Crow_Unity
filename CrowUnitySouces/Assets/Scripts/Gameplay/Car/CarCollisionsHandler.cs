@@ -71,9 +71,9 @@ public class CarCollisionsHandler : MonoBehaviour
             rigidbody.AddForce(-forward * _ownMomentum, ForceMode.Impulse);
 
 			m_windshield.Hit();
-			m_cameraShake.DoShake();
+            //Score.Instance.DistanceTravaled += 10000;
+            m_cameraShake.DoShake();
             Score.Instance.ResetCombo();
-            Debug.Log("vehcle collision");
         }
     }
 

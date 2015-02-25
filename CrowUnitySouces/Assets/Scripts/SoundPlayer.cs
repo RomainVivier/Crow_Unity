@@ -18,7 +18,7 @@ public class SoundPlayer : MonoBehaviour
     public int forcePan = 0;
     public bool useTrigger = true;
 
-    private FMOD.Studio.EventInstance m_fmodEvent;
+    private FMOD.Studio.EventInstance m_fmodEvent=null;
     private FMOD.Studio.EventInstance m_fmodEventRight=null;
     private FMOD.Studio.EventInstance m_fmodEventExit = null;
     private FMOD.Studio.EventInstance m_fmodEventExitRight = null;
@@ -31,7 +31,7 @@ public class SoundPlayer : MonoBehaviour
     void Start()
     {
         // Init fmod events
-        if(_is3D)
+        if(_is3D && !useTrigger)
         {
             m_fmodEvent=FMOD_StudioSystem.instance.GetEvent("event:/"+_soundName);
             if(_soundNameRight!="") m_fmodEventRight=FMOD_StudioSystem.instance.GetEvent("event:/"+_soundNameRight);
@@ -47,16 +47,16 @@ public class SoundPlayer : MonoBehaviour
         // Update only if it don't use trigger
         if (useTrigger)
         {
+           /*
            if(_is3D && _onlyOnce && m_alreadyPlayed)
            {
                FMOD.Studio.PLAYBACK_STATE state;
                m_fmodEvent.getPlaybackState(out state);
                //if (state == FMOD.Studio.PLAYBACK_STATE.STOPPED) m_fmodEvent.release();
-           }
+           }*/
         }
         else
         {
-
             // Restart event if stopped
             FMOD.Studio.PLAYBACK_STATE state;
             m_fmodEvent.getPlaybackState(out state);
@@ -122,7 +122,9 @@ public class SoundPlayer : MonoBehaviour
                     }
                     else
                     {
+                        m_fmodEvent=FMOD_StudioSystem.instance.GetEvent("event:/"+_soundName);
                         m_fmodEvent.start();
+
                         // Set 3D attributes
                         _3D_ATTRIBUTES threeDeeAttr = new _3D_ATTRIBUTES();
                         threeDeeAttr.position = UnityUtil.toFMODVector(transform.position);
@@ -134,6 +136,13 @@ public class SoundPlayer : MonoBehaviour
                 }
             }
         }
+    }
+    #endregion
+
+    #region destructor
+    ~SoundPlayer()
+    {
+        if (m_fmodEvent!=null) m_fmodEvent.release();
     }
     #endregion
 }
