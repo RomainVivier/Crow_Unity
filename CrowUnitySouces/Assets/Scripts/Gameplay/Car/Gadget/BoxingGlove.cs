@@ -11,6 +11,7 @@ public class BoxingGlove : Gadget
     private BoxCollider m_collider;
     private Timer m_timer;
     private Car m_car;
+
     #endregion
 
     #region MonoBehaviour
@@ -54,20 +55,13 @@ public class BoxingGlove : Gadget
 
     }
 
-    void OnCollisionEnter(Collision collision)
-    {
-        //Debug.Log("Boxing glove collides "+ collision.collider.name);
-    }
-
     void OnTriggerEnter(Collider other)
     {
-        Debug.Log(other.name);
         if (other.collider.CompareTag("Obstacle"))
         {
-            //Debug.Log("punch out baby !");
-            other.rigidbody.AddForce(m_car.getForwardVector() * _punchPower, ForceMode.Impulse);
+            Vector3 forceDirection = (other.transform.position - transform.position + Vector3.up).normalized;
+            other.rigidbody.AddForce(forceDirection * _punchPower);
             other.gameObject.AddComponent<ObstacleDestroyer>();
-            
             Score.Instance.AddScore(500);
         }
         
