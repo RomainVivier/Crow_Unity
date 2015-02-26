@@ -6,7 +6,7 @@ public class Score : MonoBehaviour
 {
     #region members
     private const float SCORE_DISPLAY_LAG = 1;
-    private const float DIST_DISPLAY_LAG = 0.25f;
+    private const float DIST_DISPLAY_LAG = 0.2f;
 
     private const int NB_DIGITS = 6;
 
@@ -27,6 +27,7 @@ public class Score : MonoBehaviour
     private Timer m_comboTimer;
     private bool m_hideScore = false;
     private float m_augmentSpeed=0;
+    private float m_addBonus;
     private static Score m_instance;
     private RailsControl m_rc;
     private GameObject[] m_digits;
@@ -152,19 +153,23 @@ public class Score : MonoBehaviour
         m_distMod += diffDist / (_incrementDist * _incrementDistMult);
         if(m_distMod>1)
         {
-            int bonus = Mathf.FloorToInt(m_distMod) * _incrementValue * _incrementDistMult;
+            int bonus = Mathf.FloorToInt(m_distMod) * _incrementValue * _incrementDistMult*m_combo;
             m_score += bonus;
-            float newAugmentSpeed = bonus / DIST_DISPLAY_LAG;
+            m_addBonus += bonus;
+            float newAugmentSpeed = m_addBonus / DIST_DISPLAY_LAG;
             if (newAugmentSpeed > m_augmentSpeed) m_augmentSpeed = newAugmentSpeed;
             m_distMod -= Mathf.Floor(m_distMod);
         }
 
         m_displayScore += m_augmentSpeed * Time.deltaTime;
+        m_addBonus -= m_augmentSpeed * Time.deltaTime;
         if (m_displayScore > m_score)
         {
             m_displayScore = m_score;
             m_augmentSpeed = 0;
         }
+        if (m_addBonus < 0) m_addBonus = 0;
+
         if (!HideScore)
         {
             _text.text = "";// ((int)(m_displayScore)).ToString();
