@@ -5,14 +5,20 @@ ModelImporter:
   fileIDToRecycleName:
     100000: Object003
     100002: //RootNode
+    100004: Dash Base
     400000: Object003
     400002: //RootNode
+    400004: Dash Base
     2300000: Object003
     2300002: //RootNode
+    2300004: Dash Base
     3300000: Object003
     3300002: //RootNode
+    3300004: Dash Base
     4300000: Object001
     4300002: Object003
+    4300004: Carosserie
+    4300006: Dash Base
     9500000: //RootNode
   materials:
     importMaterials: 1

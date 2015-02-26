@@ -4,10 +4,51 @@ ModelImporter:
   serializedVersion: 16
   fileIDToRecycleName:
     100000: //RootNode
+    100002: Dash Base
+    100004: Score_0
+    100006: Score_1
+    100008: Score_2
+    100010: Score_3
+    100012: Score_4
+    100014: Score_5
+    100016: ScoreBox
     400000: //RootNode
+    400002: Dash Base
+    400004: Score_0
+    400006: Score_1
+    400008: Score_2
+    400010: Score_3
+    400012: Score_4
+    400014: Score_5
+    400016: ScoreBox
     2300000: //RootNode
+    2300002: Dash Base
+    2300004: Score_0
+    2300006: Score_1
+    2300008: Score_2
+    2300010: Score_3
+    2300012: Score_4
+    2300014: Score_5
+    2300016: ScoreBox
     3300000: //RootNode
+    3300002: Dash Base
+    3300004: Score_0
+    3300006: Score_1
+    3300008: Score_2
+    3300010: Score_3
+    3300012: Score_4
+    3300014: Score_5
+    3300016: ScoreBox
     4300000: Object001
+    4300002: Carosserie
+    4300004: Dash Base
+    4300006: ScoreBox
+    4300008: Score_5
+    4300010: Score_4
+    4300012: Score_3
+    4300014: Score_2
+    4300016: Score_1
+    4300018: Score_0
     9500000: //RootNode
   materials:
     importMaterials: 1
