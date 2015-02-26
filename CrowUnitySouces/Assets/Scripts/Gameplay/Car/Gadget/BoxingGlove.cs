@@ -56,7 +56,7 @@ public class BoxingGlove : Gadget
 
     void OnCollisionEnter(Collision collision)
     {
-        Debug.Log(collision.collider.name);
+        //Debug.Log("Boxing glove collides "+ collision.collider.name);
     }
 
     void OnTriggerEnter(Collider other)
@@ -64,8 +64,9 @@ public class BoxingGlove : Gadget
         Debug.Log(other.name);
         if (other.collider.CompareTag("Obstacle"))
         {
-            Debug.Log("punch out baby !");
-            other.rigidbody.AddForce(Vector3.forward * _punchPower, ForceMode.Impulse);
+            //Debug.Log("punch out baby !");
+            other.rigidbody.AddForce(m_car.getForwardVector() * _punchPower, ForceMode.Impulse);
+            other.gameObject.AddComponent<ObstacleDestroyer>();
             
             Score.Instance.AddScore(500);
         }
