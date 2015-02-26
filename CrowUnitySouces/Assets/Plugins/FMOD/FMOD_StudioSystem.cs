@@ -300,7 +300,11 @@ public class FMOD_StudioSystem : MonoBehaviour
         {
             ERRCHECK(result);
         }
-
+        
+        FMOD.System llsys;
+        ERRCHECK(system.getLowLevelSystem(out llsys));
+        llsys.setDSPBufferSize(128, 16);
+        
         isInitialized = true;
     }
 	
