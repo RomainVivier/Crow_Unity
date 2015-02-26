@@ -5,14 +5,44 @@ ModelImporter:
   fileIDToRecycleName:
     100000: AI_Screen
     100002: //RootNode
+    100004: Screen_00
+    100006: Screen_01
+    100008: Screen_02
+    100010: Screen_03
+    100012: Screen_04
+    100014: Screen_05
     400000: AI_Screen
     400002: //RootNode
+    400004: Screen_00
+    400006: Screen_01
+    400008: Screen_02
+    400010: Screen_03
+    400012: Screen_04
+    400014: Screen_05
     2300000: AI_Screen
     2300002: //RootNode
+    2300004: Screen_00
+    2300006: Screen_01
+    2300008: Screen_02
+    2300010: Screen_03
+    2300012: Screen_04
+    2300014: Screen_05
     3300000: AI_Screen
     3300002: //RootNode
+    3300004: Screen_00
+    3300006: Screen_01
+    3300008: Screen_02
+    3300010: Screen_03
+    3300012: Screen_04
+    3300014: Screen_05
     4300000: AI_Border
     4300002: AI_Screen
+    4300004: Screen_05
+    4300006: Screen_04
+    4300008: Screen_03
+    4300010: Screen_02
+    4300012: Screen_01
+    4300014: Screen_00
     9500000: //RootNode
   materials:
     importMaterials: 1
