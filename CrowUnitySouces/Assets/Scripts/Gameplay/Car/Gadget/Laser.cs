@@ -6,7 +6,6 @@ public class Laser : Gadget
 
 
     #region constants
-    const float COOLDOWN_TIME=8f;
     const float VALVE_OPENING_TIME = 0.2f;
     const float LASER_JUNCTION_TIME = 0.3f;
     const float VALVE_CLOSING_TIME = 0.2f;
@@ -262,6 +261,7 @@ public class Laser : Gadget
                     IsReady = true;
                     m_state = State.READY;
                     Stop();
+                    m_cooldownTimer.Reset(0);
                 }
                 break;
         }
@@ -279,7 +279,7 @@ public class Laser : Gadget
 			FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Gadgets/Laser/gadgetLaserExecute",transform.position);
 		    _laserEffect.GetComponent<ParticleSystem>().Stop();
             IsReady = false;
-            m_cooldownTimer.Reset(COOLDOWN_TIME);
+            m_cooldownTimer.Reset(_cooldown);
             m_state = State.VALVE_OPENING;
             m_stateTimer.Reset(VALVE_OPENING_TIME);
         }

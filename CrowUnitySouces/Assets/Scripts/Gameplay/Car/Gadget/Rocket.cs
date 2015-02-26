@@ -9,6 +9,7 @@ public class Rocket : Gadget {
     public float _blastRadius;
     public float _rocketSpeed;
     public float _rocketUIMax;
+    public float _cooldown=6;
 
     enum State
     {
@@ -28,6 +29,7 @@ public class Rocket : Gadget {
     private float m_railsIndex;
     private float m_railsProgress;
     private float m_railsSpeed;
+    private Timer m_cooldownTimer;
     private Obstacle m_target;
 
     private FMOD.Studio.EventInstance m_rocketUI;
@@ -192,7 +194,7 @@ public class Rocket : Gadget {
         transform.localPosition = m_offsetWithParent;
         m_state = State.Idle;
         gameObject.SetActive(false);
-        IsReady = true;
+        //IsReady = true;
     }
 
     #endregion

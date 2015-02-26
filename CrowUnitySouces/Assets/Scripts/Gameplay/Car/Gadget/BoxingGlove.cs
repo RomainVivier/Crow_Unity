@@ -51,7 +51,7 @@ public class BoxingGlove : Gadget
         base.Stop();
         gameObject.SetActive(false);
         m_car.updateValues();
-        IsReady = true;
+        //IsReady = true;
 
     }
 

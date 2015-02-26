@@ -60,7 +60,7 @@ public class Suppository : Gadget
     public override void Stop()
     {
         base.Stop();
-        IsReady = true;
+        //IsReady = true;
     }
 
     #endregion 

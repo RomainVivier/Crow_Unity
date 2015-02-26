@@ -35,6 +35,7 @@ public class Dash : Gadget
     {
         GadgetManager.Instance.Register("Dash", this);
         m_timer = new Timer();
+        m_cooldownTimer = new Timer();
         for (int i = 0; i < _cameraParameters.Length;i++)
         {
             CameraParameters cp=_cameraParameters[i];
@@ -58,6 +59,7 @@ public class Dash : Gadget
             cp.camera.fieldOfView = Mathf.Lerp(cp.startFOV, cp.targetFOV,m_cameraPos);
             cp.camera.transform.localPosition = cp.startPos + m_cameraPos * cp.displacement;
         }
+
         base.Update();
     }
 
@@ -93,7 +95,6 @@ public class Dash : Gadget
         _car.maxSpeedKmh /= _speedCoeff;
         _car.updateValues();
         if (_car.getForwardVelocityKmh() > _car.maxSpeedKmh) _car.InstantSetSpeedKmh(_car.maxSpeedKmh);
-        IsReady = true;
-	
+        m_cooldownTimer.Reset(cooldown);
     }
 }

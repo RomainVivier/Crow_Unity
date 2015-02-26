@@ -14,12 +14,13 @@ public class Gadget : MonoBehaviour
     public Material _cardMaterial;
     public int _score=500;
     public int _combo=1;
+    public float _cooldown;
 
     private bool m_isReady = true;
     protected string m_playSound = "event:/SFX/Buttons/ButtonSmall/buttonPushSmallValidated";
     protected string m_cantPlaySound = "event:/SFX/Buttons/ButtonSmall/buttonPushSmallDenied";
     protected GadgetFamily m_gadgetFamily;
-
+    protected Timer m_cooldownTimer;
     #endregion 
 
     #region Properties
@@ -44,10 +45,12 @@ public class Gadget : MonoBehaviour
 
     public virtual void Awake()
     {
+        m_cooldownTimer = new Timer();
     }
 
     public virtual void Update()
     {
+        if (m_cooldownTimer.IsElapsedOnce) IsReady = true;
     }
 
     #endregion
@@ -74,7 +77,9 @@ public class Gadget : MonoBehaviour
             _buttonAnim.SetBool("Engage", false);
             //_buttonAnim.SetTrigger("Engage");
         }
+        if(m_cooldownTimer>0) m_cooldownTimer.Reset(_cooldown);
     }
+
     #endregion
 
     #region Functions
