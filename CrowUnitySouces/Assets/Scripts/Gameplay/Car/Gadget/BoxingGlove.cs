@@ -10,7 +10,7 @@ public class BoxingGlove : Gadget
 
     private BoxCollider m_collider;
     private Timer m_timer;
-
+    private Car m_car;
     #endregion
 
     #region MonoBehaviour
@@ -20,6 +20,7 @@ public class BoxingGlove : Gadget
         GadgetManager.Instance.Register("BoxingGlove", this);
         m_timer = new Timer();
         gameObject.SetActive(false);
+        m_car = transform.parent.parent.parent.gameObject.GetComponent<Car>();
         base.Awake();
     }
 
@@ -40,6 +41,7 @@ public class BoxingGlove : Gadget
         gameObject.SetActive(true);
         _anim.SetTrigger("Engage");
         m_timer.Reset(1.1f);
+        m_car.updateValues();
         IsReady = false;
     }
 
@@ -47,6 +49,7 @@ public class BoxingGlove : Gadget
     {
         base.Stop();
         gameObject.SetActive(false);
+        m_car.updateValues();
         IsReady = true;
 
     }
