@@ -30,7 +30,7 @@ public class Rocket : Gadget {
     private float m_railsSpeed;
     private Timer m_cooldownTimer;
     private Obstacle m_target;
-
+    private GameObject m_rocketObject;
     private FMOD.Studio.EventInstance m_rocketUI;
     private FMOD.Studio.ParameterInstance m_rocketDist;
     private FMOD.Studio.EventInstance m_rocketExecute3D;
@@ -56,7 +56,8 @@ public class Rocket : Gadget {
         GadgetManager.Instance.Register("Rocket", this);
         
         m_rocketLaunchtimer = new Timer();
-        gameObject.SetActive(false);
+        m_rocketObject = transform.Find("Object").gameObject;
+        m_rocketObject.gameObject.SetActive(false);
         m_explosionParticles = GameObject.Find("RocketExplosion");
 
         m_carTransform = transform.parent.parent;
@@ -114,7 +115,7 @@ public class Rocket : Gadget {
         }
         else
         {
-            transform.position = m_rails.getPoint(m_railsIndex, m_rails.correct2Incorrect(m_railsProgress)) + Vector3.Scale(Vector3.up, m_offsetWithParent);
+            m_rocketObject.transform.position = m_rails.getPoint(m_railsIndex, m_rails.correct2Incorrect(m_railsProgress)) + Vector3.Scale(Vector3.up, m_offsetWithParent);
         }
 
     }
@@ -124,18 +125,18 @@ public class Rocket : Gadget {
 
         if(m_target != null)
         {
-            m_rocketDist.setValue(Mathf.Clamp((Vector3.Distance(transform.position, m_target.transform.position) / _rocketUIMax), 0f, 1f));
+            m_rocketDist.setValue(Mathf.Clamp((Vector3.Distance(m_rocketObject.transform.position, m_target.transform.position) / _rocketUIMax), 0f, 1f));
         }
 
         // Set gadgetRocketExecte3D 3D attributesFMOD.Studio._3D_ATTRIBUTES threeDeeAttr = new FMOD.Studio._3D_ATTRIBUTES();
         FMOD.Studio._3D_ATTRIBUTES threeDeeAttr = new FMOD.Studio._3D_ATTRIBUTES();
-        threeDeeAttr.position = FMOD.Studio.UnityUtil.toFMODVector(transform.position);
-        threeDeeAttr.up = FMOD.Studio.UnityUtil.toFMODVector(transform.up);
-        threeDeeAttr.forward = FMOD.Studio.UnityUtil.toFMODVector(transform.forward);
+        threeDeeAttr.position = FMOD.Studio.UnityUtil.toFMODVector(m_rocketObject.transform.position);
+        threeDeeAttr.up = FMOD.Studio.UnityUtil.toFMODVector(m_rocketObject.transform.up);
+        threeDeeAttr.forward = FMOD.Studio.UnityUtil.toFMODVector(m_rocketObject.transform.forward);
         threeDeeAttr.velocity = FMOD.Studio.UnityUtil.toFMODVector(Vector3.zero);
         m_rocketExecute3D.set3DAttributes(threeDeeAttr);
 
-        float dist = (transform.position - m_carTransform.position).magnitude;
+        float dist = (m_rocketObject.transform.position - m_carTransform.position).magnitude;
         dist = Mathf.Clamp(dist, 10, 200);
         m_rocketExecute3DDist.setValue(dist);
     }
@@ -147,7 +148,7 @@ public class Rocket : Gadget {
     public override void Play()
     {
         base.Play();
-        gameObject.SetActive(true);
+        m_rocketObject.gameObject.SetActive(true);
         IsReady = false;
 
         var obstacles = GameObject.FindGameObjectsWithTag("Obstacle");
@@ -155,14 +156,14 @@ public class Rocket : Gadget {
         {
             foreach (GameObject go in obstacles)
             {
-                if (go.transform.position.x - transform.position.x > 20  && (m_target == null || Vector3.Distance(transform.position, m_target.transform.position) > Vector3.Distance(transform.position, go.transform.position)))
+                if (go.transform.position.x - m_rocketObject.transform.position.x > 20  && (m_target == null || Vector3.Distance(m_rocketObject.transform.position, m_target.transform.position) > Vector3.Distance(m_rocketObject.transform.position, go.transform.position)))
                 {
                     m_target = go.GetComponent<Obstacle>();
                 }
             }
         }
 
-        if (obstacles.Length == 0 || m_target == null || Vector3.Distance(transform.position, m_target.transform.position) > 100) 
+        if (obstacles.Length == 0 || m_target == null || Vector3.Distance(m_rocketObject.transform.position, m_target.transform.position) > 100) 
         {
             //TODO SET A FAKE Obstacle
             //m_target = transform.position + transform.forward * 100;
@@ -183,16 +184,16 @@ public class Rocket : Gadget {
         }
 
         m_rocketLaunchtimer.Reset(0.6f);
-        FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Gadgets/Rocket/gadgetRocketEngage", transform.position);
+        FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Gadgets/Rocket/gadgetRocketEngage", m_rocketObject.transform.position);
 
     }
 
     public override void Stop()
     {
         base.Stop();
-        transform.localPosition = m_offsetWithParent;
+        m_rocketObject.transform.localPosition = m_offsetWithParent;
         m_state = State.Idle;
-        gameObject.SetActive(false);
+        m_rocketObject.gameObject.SetActive(false);
         //IsReady = true;
     }
 
@@ -217,14 +218,14 @@ public class Rocket : Gadget {
         m_blowInstance.start();
         FMOD.Studio.ParameterInstance param;
         m_blowInstance.getParameter("Position", out param);
-        Vector3 dpos = transform.position - transform.parent.parent.position;
+        Vector3 dpos = m_rocketObject.transform.position - transform.parent.parent.position;
         Vector3 forward = transform.parent.parent.forward;
         float position = Vector3.Dot(dpos, forward);
         param.setValue(position > 0 ? 0 : 1);
         FMOD.Studio._3D_ATTRIBUTES threeDeeAttr = new FMOD.Studio._3D_ATTRIBUTES();
-        threeDeeAttr.position = FMOD.Studio.UnityUtil.toFMODVector(transform.position);
-        threeDeeAttr.up = FMOD.Studio.UnityUtil.toFMODVector(transform.up);
-        threeDeeAttr.forward = FMOD.Studio.UnityUtil.toFMODVector(transform.forward);
+        threeDeeAttr.position = FMOD.Studio.UnityUtil.toFMODVector(m_rocketObject.transform.position);
+        threeDeeAttr.up = FMOD.Studio.UnityUtil.toFMODVector(m_rocketObject.transform.up);
+        threeDeeAttr.forward = FMOD.Studio.UnityUtil.toFMODVector(m_rocketObject.transform.forward);
         threeDeeAttr.velocity = FMOD.Studio.UnityUtil.toFMODVector(Vector3.zero);
         m_blowInstance.set3DAttributes(threeDeeAttr);
 		m_explosionParticles.transform.position = m_target.transform.position;
@@ -244,7 +245,7 @@ public class Rocket : Gadget {
     void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, _blastRadius);
+        //Gizmos.DrawWireSphere(m_rocketObject.transform.position, _blastRadius);
     }
 
     #endregion 

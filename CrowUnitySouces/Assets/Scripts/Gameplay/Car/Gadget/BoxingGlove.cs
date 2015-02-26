@@ -11,7 +11,7 @@ public class BoxingGlove : Gadget
     private BoxCollider m_collider;
     private Timer m_timer;
     private Car m_car;
-
+    private GameObject m_childObject;
     #endregion
 
     #region MonoBehaviour
@@ -20,7 +20,10 @@ public class BoxingGlove : Gadget
     {
         GadgetManager.Instance.Register("BoxingGlove", this);
         m_timer = new Timer();
-        gameObject.SetActive(false);
+        m_childObject = transform.GetChild(0).gameObject;
+        collider.enabled = false;
+        m_childObject.SetActive(false);
+        //gameObject.SetActive(false);
         m_car = transform.parent.parent.parent.gameObject.GetComponent<Car>();
         base.Awake();
     }
@@ -39,7 +42,9 @@ public class BoxingGlove : Gadget
     public override void Play()
     {
         base.Play();
-        gameObject.SetActive(true);
+        collider.enabled = true;
+        m_childObject.SetActive(true);
+        //gameObject.SetActive(true);
         _anim.SetTrigger("Engage");
         m_timer.Reset(1.1f);
         m_car.updateValues();
@@ -49,7 +54,9 @@ public class BoxingGlove : Gadget
     public override void Stop()
     {
         base.Stop();
-        gameObject.SetActive(false);
+        collider.enabled = false;
+        m_childObject.SetActive(false);
+        //gameObject.SetActive(false);
         m_car.updateValues();
         //IsReady = true;
 

@@ -30,6 +30,7 @@ public class Duck : Gadget
             IsReady = false;
             nbUses++;
             if(nbUses==2) (GameObject.FindObjectOfType<AI>() as AI).playDialog("AI Gadgets/AI_Duck");
+            base.Stop();
         }
     }
 }

@@ -258,7 +258,6 @@ public class Laser : Gadget
             case State.COOLDOWN:
                 if (m_cooldownTimer.IsElapsedOnce)
                 {
-                    IsReady = true;
                     m_state = State.READY;
                     Stop();
                     m_cooldownTimer.Reset(0);

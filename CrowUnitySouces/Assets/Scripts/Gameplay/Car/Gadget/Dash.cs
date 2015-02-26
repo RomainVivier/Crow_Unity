@@ -51,7 +51,7 @@ public class Dash : Gadget
             Stop();
         }
         float pos = Mathf.Pow(IsReady ? _decreaseFovInertia : _increaseFovInertia, Time.deltaTime);
-        m_cameraPos = Mathf.Lerp(IsReady ? 0 : 1, m_cameraPos, pos);
+        m_cameraPos = Mathf.Lerp(m_timer.IsElapsedLoop ? 0 : 1, m_cameraPos, pos);
         for (int i = 0; i < _cameraParameters.Length;i++)
         {
             CameraParameters cp=_cameraParameters[i];
