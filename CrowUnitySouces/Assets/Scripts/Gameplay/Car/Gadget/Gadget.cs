@@ -12,6 +12,8 @@ public class Gadget : MonoBehaviour
     public bool _isAssign = false;
     public bool _invertGesture = false;
     public Material _cardMaterial;
+    public int _score=500;
+    public int _combo=1;
 
     private bool m_isReady = true;
     protected string m_playSound = "event:/SFX/Buttons/ButtonSmall/buttonPushSmallValidated";
@@ -73,7 +75,13 @@ public class Gadget : MonoBehaviour
             //_buttonAnim.SetTrigger("Engage");
         }
     }
+    #endregion
 
+    #region Functions
+    protected void addScore()
+    {
+        Score.Instance.AddScore(_score,_combo);
+    }
     #endregion
 
 }
