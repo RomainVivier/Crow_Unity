@@ -128,7 +128,7 @@ public class Score : MonoBehaviour
         m_digits = new GameObject[NB_DIGITS];
         for(int i=0;i<NB_DIGITS;i++)
         {
-            m_digits[i] = GameObject.Find("ScoreDigit"+ i);
+            m_digits[i] = GameObject.Find("Score_"+ i);
             m_digits[i].GetComponent<MeshRenderer>().material.mainTextureScale = new Vector2(1, 0.1f);
         }
     }

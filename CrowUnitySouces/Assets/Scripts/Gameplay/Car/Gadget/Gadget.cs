@@ -77,7 +77,7 @@ public class Gadget : MonoBehaviour
             _buttonAnim.SetBool("Engage", false);
             //_buttonAnim.SetTrigger("Engage");
         }
-        if(m_cooldownTimer>0) m_cooldownTimer.Reset(_cooldown);
+        if(_cooldown>=0) m_cooldownTimer.Reset(_cooldown);
     }
 
     #endregion

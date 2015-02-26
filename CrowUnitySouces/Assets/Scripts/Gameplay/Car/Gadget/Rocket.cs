@@ -9,7 +9,6 @@ public class Rocket : Gadget {
     public float _blastRadius;
     public float _rocketSpeed;
     public float _rocketUIMax;
-    public float _cooldown=6;
 
     enum State
     {

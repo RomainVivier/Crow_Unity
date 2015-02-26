@@ -38,6 +38,7 @@ public class Spoonbill : Gadget
         gameObject.SetActive(false);
         IsReady = true;
         m_state = State.Disengaged;
+        base.Awake();
     }
 
     public override void Update()

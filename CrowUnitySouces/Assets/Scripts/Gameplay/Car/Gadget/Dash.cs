@@ -35,7 +35,6 @@ public class Dash : Gadget
     {
         GadgetManager.Instance.Register("Dash", this);
         m_timer = new Timer();
-        m_cooldownTimer = new Timer();
         for (int i = 0; i < _cameraParameters.Length;i++)
         {
             CameraParameters cp=_cameraParameters[i];
@@ -95,6 +94,5 @@ public class Dash : Gadget
         _car.maxSpeedKmh /= _speedCoeff;
         _car.updateValues();
         if (_car.getForwardVelocityKmh() > _car.maxSpeedKmh) _car.InstantSetSpeedKmh(_car.maxSpeedKmh);
-        m_cooldownTimer.Reset(cooldown);
     }
 }
