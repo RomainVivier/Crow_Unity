@@ -21,7 +21,6 @@ public class Laser : Gadget
     public float _particlesSpeed = 100; // units/s
     public float _particlesRotationSpeed = 1; // rad/s
     public float _targetContactTime = 0.2f;
-
     private Timer m_cooldownTimer;
     private Timer m_stateTimer;
     private Car m_car;
@@ -224,7 +223,7 @@ public class Laser : Gadget
                                     _laserEffect.GetComponent<ParticleSystem>().Play();
                                     _laserEffect.transform.position = go.transform.position;//rh.point;
                                     rh.collider.gameObject.SetActive(false);
-                                    Score.Instance.AddScore(500);
+                                    addScore();
 
                                     // Play sound
                                     FMOD.Studio.EventInstance blowInstance

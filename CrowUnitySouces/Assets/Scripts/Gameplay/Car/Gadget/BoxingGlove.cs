@@ -62,7 +62,7 @@ public class BoxingGlove : Gadget
             Vector3 forceDirection = (other.transform.position - transform.position + Vector3.up).normalized;
             other.rigidbody.AddForce(forceDirection * _punchPower);
             other.gameObject.AddComponent<ObstacleDestroyer>();
-            Score.Instance.AddScore(500);
+            addScore();
         }
         
     }
