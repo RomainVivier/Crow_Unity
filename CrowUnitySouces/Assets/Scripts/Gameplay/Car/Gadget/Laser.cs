@@ -209,6 +209,7 @@ public class Laser : Gadget
                         if(rh.collider!=null)
                         {
                             GameObject go = rh.collider.gameObject;
+                            //Debug.Log(go.name);
                             if(go!=m_contactObject)
                             {
                                 m_contactObject = go;
