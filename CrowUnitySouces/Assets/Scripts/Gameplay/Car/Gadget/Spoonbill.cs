@@ -68,7 +68,7 @@ public class Spoonbill : Gadget
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.collider.CompareTag("Obstacle") && m_state != State.Attacking)
+        if (other.collider.CompareTag("Obstacle") && (m_state == State.Engaged || m_state == State.Engaging))
         {
             //(GameObject.FindObjectOfType<CarCollisionsInhibiter>() as CarCollisionsInhibiter)._nbCol++;
             inhibitedCollisions = true;
