@@ -7,7 +7,7 @@ public class TouchManager : MonoBehaviour
     #region Delegates
 
     public delegate void SwipeDelegate();
-    public delegate void TouchDelegate(SwipeInfos si);
+    public delegate bool TouchDelegate(SwipeInfos si);
 
     public SwipeDelegate _swipeLeft;
     public SwipeDelegate _swipeRight;
@@ -188,7 +188,7 @@ public class TouchManager : MonoBehaviour
 
             if (_touchStay != null)
             {
-                _touchStay(si);
+                if(_touchStay(si));//si.swipeStart = si.swipeEnd;
             }
 
             if (si.inZoneSwipe)
@@ -196,7 +196,7 @@ public class TouchManager : MonoBehaviour
                 si.swipeEnd = ti.pos;
                 if (_SwipeZone != null)
                 {
-                    _SwipeZone(si);
+                    if (_SwipeZone(si)) ;// si.swipeStart = si.swipeEnd;
                 }
             }
         }
@@ -232,32 +232,35 @@ public class TouchManager : MonoBehaviour
         }
     }
 
-    public void Swipe(SwipeInfos si)
+    public bool Swipe(SwipeInfos si)
     {
         Vector2 swipeVector = si.swipeStart - si.swipeEnd;
         //Debug.Log("vector magnitude = " + swipeVector.magnitude + " :: step value = " + (Screen.width / 10));
-        if(Mathf.Abs(swipeVector.x) > (Screen.width / 10) )
+        if(Mathf.Abs(swipeVector.x) > (Screen.width / 10) && si.swipeStart.y>Screen.height*0.30 && si.swipeEnd.y>Screen.height*0.30)
         {
             if(swipeVector.x > 0)
             {
                 if (_swipeRight != null)
                 {
                     _swipeRight();
-                    m_waitForTouchEnd = true;
+                    //m_waitForTouchEnd = true;
                 }
+                return true;
             }
             else
             {
                 if (_swipeLeft != null)
                 {
                     _swipeLeft();
-                    m_waitForTouchEnd = true;
+                    //m_waitForTouchEnd = true;
                 }
             }
+            return true;
         }
+        return false;
     }
 
-    public void SwipeZone(SwipeInfos si)
+    public bool SwipeZone(SwipeInfos si)
     {
         Vector2 swipeVector = si.swipeStart - si.swipeEnd;
         
@@ -277,7 +280,9 @@ public class TouchManager : MonoBehaviour
                     _swipeLeft();
                 }
             }
+            return true;
         }
+        return false;
     }
 
     #endregion TouchFunctions
