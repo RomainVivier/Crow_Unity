@@ -27,6 +27,7 @@ public class Dash : Gadget
 
     private Timer m_timer;
     private float m_cameraPos = 0;
+
     #endregion
 
     #region MonoBehaviour
@@ -72,7 +73,8 @@ public class Dash : Gadget
         //_car.InstantSetSpeedKmh(_rc.setSpeedKmh);
         _car.gameObject.GetComponent<PolynomialEngine>().maxPowerKw *= 100;
         _car.gameObject.GetComponent<PolynomialEngine>().powerMinRpmKw*= 100;
-        if(!_car.isSteering() && Vector3.Dot(_car.getForwardVector(),_car.getForwardTarget())>0.99) _car.transform.FindChild("Body").GetComponent<Rigidbody>().AddRelativeTorque(-10000, 0, 0, ForceMode.Impulse);
+        //if(!_car.isSteering() && Vector3.Dot(_car.getForwardVector(),_car.getForwardTarget())>0.99)
+            _car.transform.FindChild("Body").GetComponent<Rigidbody>().AddRelativeTorque(-10000, 0, 0, ForceMode.Impulse);
         _car.gameObject.GetComponent<Transmission>().lockGear(4);
         //_car.gameObject.transform.FindChild("Body/CenterOfMass").localPosition += new Vector3(0, -0.25f, 0);
         _car.maxSpeedKmh *= _speedCoeff;
