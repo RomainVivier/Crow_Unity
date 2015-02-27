@@ -6,6 +6,8 @@ public abstract class Obstacle : MonoBehaviour
 {
     #region members
 
+    public float _maxDistVignette;
+    public float _minDistVignette;
     public GameObject _vignette;
 
     protected List<GadgetAbility> m_weaknesses;
@@ -40,12 +42,12 @@ public abstract class Obstacle : MonoBehaviour
 
     public virtual void Update()
     {
-        if(Vector3.Distance(Score.Instance.Body.transform.position, transform.position) < 150f && !_vignette.activeSelf)
+        if(Vector3.Distance(Score.Instance.Body.transform.position, transform.position) < _maxDistVignette && !_vignette.activeSelf)
         {
             _vignette.SetActive(true);
         }
 
-        if (Vector3.Distance(Score.Instance.Body.transform.position, transform.position) < 50f && _vignette.activeSelf)
+        if (Vector3.Distance(Score.Instance.Body.transform.position, transform.position) < _minDistVignette && _vignette.activeSelf)
         {
             _vignette.SetActive(false);
         }
