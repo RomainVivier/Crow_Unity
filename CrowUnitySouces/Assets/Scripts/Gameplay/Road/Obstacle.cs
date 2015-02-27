@@ -8,7 +8,9 @@ public abstract class Obstacle : MonoBehaviour
 
     public float _maxDistVignette;
     public float _minDistVignette;
-    public GameObject _vignette;
+    public SpriteRenderer _vignette;
+
+    protected Color m_vignetteColor;
 
     protected List<GadgetAbility> m_weaknesses;
     protected Rails m_rails;
@@ -37,20 +39,21 @@ public abstract class Obstacle : MonoBehaviour
     public virtual void Start()
     {
         m_weaknesses = new List<GadgetAbility>();
-        _vignette.SetActive(false);
+        m_vignetteColor = _vignette.color;
+        m_vignetteColor.a = 0f;
+        _vignette.color = m_vignetteColor;
     }
 
     public virtual void Update()
     {
-        if(Vector3.Distance(Score.Instance.Body.transform.position, transform.position) < _maxDistVignette && !_vignette.activeSelf)
+        float dist = Vector3.Distance(Score.Instance.Body.transform.position, transform.position);
+        if( dist < _maxDistVignette && dist > _minDistVignette)
         {
-            _vignette.SetActive(true);
+            m_vignetteColor.a = Mathf.Lerp(0f, 1f, (dist - _minDistVignette) / (_maxDistVignette - _minDistVignette) );
+            _vignette.color = m_vignetteColor;
+            _vignette.gameObject.transform.rotation = Quaternion.LookRotation(Vector3.Scale(Score.Instance.Body.transform.position - transform.position, Vector3.right));
         }
 
-        if (Vector3.Distance(Score.Instance.Body.transform.position, transform.position) < _minDistVignette && _vignette.activeSelf)
-        {
-            _vignette.SetActive(false);
-        }
 
     }
 
