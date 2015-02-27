@@ -23,6 +23,10 @@ public class SoundPlayer : MonoBehaviour
     private FMOD.Studio.EventInstance m_fmodEventExit = null;
     private FMOD.Studio.EventInstance m_fmodEventExitRight = null;
 
+    private FMOD.Studio.PLAYBACK_STATE m_state;
+    private _3D_ATTRIBUTES m_threeDeeAttr;
+    private int m_nbUpdates = 0;
+
     private bool m_alreadyPlayed;
     #endregion
 
@@ -40,10 +44,12 @@ public class SoundPlayer : MonoBehaviour
         }
         gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
         m_alreadyPlayed = false;
+        m_threeDeeAttr = new _3D_ATTRIBUTES();
     }
 
     void Update()
     {
+        
         // Update only if it don't use trigger
         if (useTrigger)
         {
@@ -57,18 +63,23 @@ public class SoundPlayer : MonoBehaviour
         }
         else
         {
-            // Restart event if stopped
-            FMOD.Studio.PLAYBACK_STATE state;
-            m_fmodEvent.getPlaybackState(out state);
-            if (state == FMOD.Studio.PLAYBACK_STATE.STOPPED) m_fmodEvent.start();
+            m_nbUpdates = (m_nbUpdates + 1) % 10;
+            if(m_nbUpdates==0)
+            {
+                // Restart event if stopped
+                m_fmodEvent.getPlaybackState(out m_state);
+                if (m_state == FMOD.Studio.PLAYBACK_STATE.STOPPED) m_fmodEvent.start();
 
-            // Set 3D attributes
-            _3D_ATTRIBUTES threeDeeAttr = new _3D_ATTRIBUTES();
-            threeDeeAttr.position = UnityUtil.toFMODVector(transform.position);
-            threeDeeAttr.up = UnityUtil.toFMODVector(transform.up);
-            threeDeeAttr.forward = UnityUtil.toFMODVector(transform.forward);
-            threeDeeAttr.velocity = UnityUtil.toFMODVector(-GameObject.FindObjectOfType<Car>().gameObject.transform.Find("Body").rigidbody.velocity);
-            m_fmodEvent.set3DAttributes(threeDeeAttr);
+                // Set 3D attributes
+                if(_is3D)
+                {
+                    m_threeDeeAttr.position = UnityUtil.toFMODVector(transform.position);
+                    m_threeDeeAttr.up = UnityUtil.toFMODVector(transform.up);
+                    m_threeDeeAttr.forward = UnityUtil.toFMODVector(transform.forward);
+                    m_threeDeeAttr.velocity = UnityUtil.toFMODVector(-GameObject.FindObjectOfType<Car>().gameObject.transform.Find("Body").rigidbody.velocity);
+                    m_fmodEvent.set3DAttributes(m_threeDeeAttr);
+                }
+            }
         }
 
     }
