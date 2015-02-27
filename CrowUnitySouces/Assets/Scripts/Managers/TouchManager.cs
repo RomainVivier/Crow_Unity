@@ -3,6 +3,10 @@ using System.Collections;
 
 public class TouchManager : MonoBehaviour
 {
+    #region constants
+    const float SWIPE_MULT = 4;
+    const float SWIPE_RETURN = 1f;
+    #endregion
 
     #region Delegates
 
@@ -25,7 +29,10 @@ public class TouchManager : MonoBehaviour
         public Vector2 swipeEnd;
         public bool inSwipe;
         public bool inZoneSwipe;
+        public float mult;
+        public int lastDirection;
     };
+
     private struct TouchInfos
     {
         public enum State{UNHELD,BEGIN,HELD,END};
@@ -93,6 +100,11 @@ public class TouchManager : MonoBehaviour
     void Update()
     {
         Touch();
+        float mult = Mathf.Pow(SWIPE_RETURN, Time.deltaTime);
+        for(int i=0;i<11;i++)
+        {
+            m_swipeInfos[i].mult = Mathf.Lerp(1, m_swipeInfos[i].mult, mult);
+        }
     }
 
     #region TouchFunctions
@@ -174,6 +186,8 @@ public class TouchManager : MonoBehaviour
 
             si.inSwipe = true;
             si.swipeStart = ti.pos;
+            si.mult = 1;
+            si.lastDirection = 0;
             if (_touchStart != null)
             {
                 _touchStart(si); 
@@ -188,7 +202,7 @@ public class TouchManager : MonoBehaviour
 
             if (_touchStay != null)
             {
-                if(_touchStay(si));//si.swipeStart = si.swipeEnd;
+                if (_touchStay(si)) handleSwipe(ref si);
             }
 
             if (si.inZoneSwipe)
@@ -196,7 +210,7 @@ public class TouchManager : MonoBehaviour
                 si.swipeEnd = ti.pos;
                 if (_SwipeZone != null)
                 {
-                    if (_SwipeZone(si)) ;// si.swipeStart = si.swipeEnd;
+                    if(_SwipeZone(si)) handleSwipe(ref si);
                 }
             }
         }
@@ -232,11 +246,21 @@ public class TouchManager : MonoBehaviour
         }
     }
 
+    private void handleSwipe(ref SwipeInfos si)
+    {
+        int newLastDirection = si.swipeEnd.x - si.swipeStart.x > 1 ? 1 : -1;
+        if (newLastDirection * si.lastDirection == -1) si.mult = SWIPE_MULT;
+        else si.mult *= SWIPE_MULT;
+        si.swipeStart = si.swipeEnd;
+        si.lastDirection = newLastDirection;
+    }
+
     public bool Swipe(SwipeInfos si)
     {
         Vector2 swipeVector = si.swipeStart - si.swipeEnd;
         //Debug.Log("vector magnitude = " + swipeVector.magnitude + " :: step value = " + (Screen.width / 10));
-        if(Mathf.Abs(swipeVector.x) > (Screen.width / 10) && si.swipeStart.y>Screen.height*0.30 && si.swipeEnd.y>Screen.height*0.30)
+        float mult = swipeVector.x * si.lastDirection < 0 ? si.mult : 1;
+        if(Mathf.Abs(swipeVector.x) > mult*(Screen.width / 10) && si.swipeStart.y>Screen.height*0.30 && si.swipeEnd.y>Screen.height*0.30)
         {
             if(swipeVector.x > 0)
             {
