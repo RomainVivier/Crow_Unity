@@ -140,7 +140,6 @@ public class Laser : Gadget
                         float adjacent = (contactPoint - centerPoint).magnitude;
                         float opposed = (centerPoint - m_lasers[0].lightTransform.position).magnitude;
                         tgtAngle = Mathf.Atan(opposed / adjacent);
-                        Debug.Log(adjacent + " " + opposed);
                     }
                     else tgtAngle = 0;
                     // Update particles
