@@ -129,7 +129,7 @@ public class Score : MonoBehaviour
         for(int i=0;i<NB_DIGITS;i++)
         {
             m_digits[i] = GameObject.Find("Score_"+ i);
-            m_digits[i].GetComponent<MeshRenderer>().material.mainTextureScale = new Vector2(1, 0.1f);
+            m_digits[i].GetComponent<MeshRenderer>().material.mainTextureScale = new Vector2(1, 1f);
         }
     }
 
@@ -175,12 +175,12 @@ public class Score : MonoBehaviour
             _text.text = "";// ((int)(m_displayScore)).ToString();
             //float[] digitPos=new float[NB_DIGITS];
             //digitPos[0] = (displayScore % 10)*0.1f;
-            m_digits[0].GetComponent<MeshRenderer>().material.mainTextureOffset= new Vector2(0, 1-((m_displayScore+1) % 10)*0.1f);
+            m_digits[0].GetComponent<MeshRenderer>().material.mainTextureOffset= new Vector2(0, 1-((m_displayScore) % 10)*0.1f);
             float pow10 = 1;
             for(int i=1;i<NB_DIGITS;i++)
             {
                 pow10 *= 10;
-                float digitPos = Mathf.Floor((((m_displayScore) / pow10)+1) % 10);
+                float digitPos = Mathf.Floor((((m_displayScore) / pow10)) % 10);
                 if (m_displayScore % pow10 > pow10 - 1) digitPos += m_displayScore % 1;
                 //float digitPos = (m_displayScore / pow10) + 0.5f;
                 m_digits[i].GetComponent<MeshRenderer>().material.mainTextureOffset = new Vector2(0, 1-digitPos*0.1f);
