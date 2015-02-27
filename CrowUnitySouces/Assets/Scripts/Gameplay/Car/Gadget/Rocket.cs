@@ -114,7 +114,6 @@ public class Rocket : Gadget {
 
         if (m_target == null)
         {
-            Debug.Log(m_failProgress);
             if (m_failProgress < 400f)
             {
                 m_rocketObject.transform.position = m_rails.getPoint(m_railsIndex, m_rails.correct2Incorrect(m_railsProgress)) + Vector3.Scale(Vector3.up, m_offsetWithParent);
@@ -126,7 +125,6 @@ public class Rocket : Gadget {
         } 
         else
         {
-            Debug.Log("did not fail");
             if (m_rails == m_target.Rails && m_railsProgress >= m_target.RailsProgress)
             {
                 Blow();
