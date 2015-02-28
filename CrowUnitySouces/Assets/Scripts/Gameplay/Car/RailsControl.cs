@@ -116,7 +116,8 @@ public class RailsControl : CarControl
 			wantThrottleBrake=-brakeCommand;
 		}
 		else wantThrottleBrake=1;
-		
+        if (!car.isOnGround()) wantThrottleBrake = 0;
+
 		// Move smoothly the pedals
 		float percent=Mathf.Pow(pedalsInertia,Time.fixedDeltaTime);
 		throttleBrake=Mathf.Lerp(wantThrottleBrake,throttleBrake,percent);

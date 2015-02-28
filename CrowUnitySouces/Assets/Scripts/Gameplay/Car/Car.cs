@@ -15,7 +15,10 @@ public class Car : MonoBehaviour
 	public float antiRoll=8000;
 	public float downforce=10;
     public float wheelRotation = 180;
+
+    [Header("Air control")]
     public float airSteering = 0;
+    public float rotationDampingNoThrottle = 0.1f;
 
 	// Components
 	private Engine engine;
@@ -179,6 +182,14 @@ public class Car : MonoBehaviour
             body.velocity = Quaternion.AngleAxis(rotAngle,body.transform.up)*body.velocity;
             body.transform.Rotate(body.transform.up, rotAngle);
         }
+        if(!isOnGround())
+        {
+            float damping = Mathf.Lerp(rotationDampingNoThrottle, 1, inputs.throttle);
+            float mult = Mathf.Pow(damping, Time.deltaTime);
+            Vector3 angularVelocity = body.angularVelocity;
+            angularVelocity *= mult;
+            body.angularVelocity = angularVelocity;
+        }
 
 		// Aerodynamic drag & downforce
 		float force=forwardVelocity*forwardVelocity*dragCoef;
@@ -233,6 +244,7 @@ public class Car : MonoBehaviour
         engineSpeed.setValue(forwardVelocity*3.6f);
         rumbleSpeed.setValue(forwardVelocity * 3.6f);
         engineLoad.setValue(inputs.throttle>0.5 ? 1 : 0);
+        
         //Debug print
 		/*if(nbUpdates%10==0)
 		{
@@ -297,14 +309,15 @@ public class Car : MonoBehaviour
 		body.centerOfMass=centerOfMass;
 	}
 
-	// Private methods
-    private bool isOnGround()
+	
+    public bool isOnGround()
     {
         bool ret = false;
         for (int i = 0; i < 4; i++) if (wheels[i].isGrounded) ret = true;
         return ret;
     }
 
+    // Private methods
     public void InstantSetSpeedKmh(float speedKmh)
     {
         InstantSetSpeed(speedKmh / 3.6f);
