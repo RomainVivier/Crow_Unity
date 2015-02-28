@@ -5,10 +5,10 @@ public class PrefabSpawner : MonoBehaviour
 {
     #region members
     public GameObject prefab;
-    public Vector3 _offset;
+    public Vector3 _offset = new Vector3(0, 1, 0);
     public Rails _rail;
     public float _railIndex;
-    public float _railProggress;
+    public float _railProgress;
 
 
     private Vector3 m_pos;
@@ -21,8 +21,20 @@ public class PrefabSpawner : MonoBehaviour
     {
         if (m_spawnedObject != null) GameObject.Destroy(m_spawnedObject);
         m_spawnedObject=(GameObject) GameObject.Instantiate(prefab, transform.position + _offset, transform.rotation);
+        Obstacle obstacle = m_spawnedObject.GetComponent<Obstacle>();
+
+        if(obstacle != null)
+        {
+            obstacle.Rails = _rail;
+            obstacle.RailsIndex = _railIndex;
+            obstacle.RailsProgress = _railProgress;
+
+			if(_rail != null)
+				m_spawnedObject.transform.position = _rail.getPoint(_railIndex, _railProgress)+ _offset;
+		}
+		
         m_spawnedObject.transform.parent = transform;
-    }
+    }	
     
     void OnDrawGizmos()
     {
@@ -34,7 +46,7 @@ public class PrefabSpawner : MonoBehaviour
     {
         if (_rail != null)
         {
-            transform.position = _rail.getPoint(_railIndex, _railProggress);
+            transform.position = _rail.getPoint(_railIndex, _railProgress);
         }
     }
 

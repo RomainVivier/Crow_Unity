@@ -37,6 +37,7 @@ public class GameOverController : MonoBehaviour {
 
 	public void Show()
 	{
+		/*
 		if(m_showFlag == true)
 			return;
 
@@ -97,5 +98,6 @@ public class GameOverController : MonoBehaviour {
 		{
 			_message.text = "Game Over, Man!";
 		}
+		*/
 	}
 }

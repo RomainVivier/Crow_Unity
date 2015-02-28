@@ -16,7 +16,8 @@ public abstract class CarControl : MonoBehaviour
 	protected CarControl nextControl;
 
 	public abstract CarInputs getInputs();
-		
+    public abstract Vector3 getForwardTarget();
+
 	public void init(int pos) // Position in the chain
 	{
 		CarControl[] controls=gameObject.GetComponents<CarControl>();

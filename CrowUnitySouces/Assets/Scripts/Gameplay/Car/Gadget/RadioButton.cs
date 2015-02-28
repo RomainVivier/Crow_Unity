@@ -16,6 +16,7 @@ public class RadioButton : Gadget {
         {
             GadgetManager.Instance.Register("RadioDown", this);
         }
+        base.Awake();
     }
 
     public override void Play()

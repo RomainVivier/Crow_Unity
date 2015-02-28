@@ -8,26 +8,57 @@ ModelImporter:
     100004: Wheel_BarRight
     100006: Wheel_BarTop
     100008: Wheel_Centre
+    100010: Bar_D
+    100012: Bar_L
+    100014: Bar_R
+    100016: Link_D
+    100018: Link_L
+    100020: Link_R
     400000: //RootNode
     400002: Wheel_BarLeft
     400004: Wheel_BarRight
     400006: Wheel_BarTop
     400008: Wheel_Centre
+    400010: Bar_D
+    400012: Bar_L
+    400014: Bar_R
+    400016: Link_D
+    400018: Link_L
+    400020: Link_R
     2300000: //RootNode
     2300002: Wheel_BarLeft
     2300004: Wheel_BarRight
     2300006: Wheel_BarTop
     2300008: Wheel_Centre
+    2300010: Bar_D
+    2300012: Bar_L
+    2300014: Bar_R
+    2300016: Link_D
+    2300018: Link_L
+    2300020: Link_R
     3300000: //RootNode
     3300002: Wheel_BarLeft
     3300004: Wheel_BarRight
     3300006: Wheel_BarTop
     3300008: Wheel_Centre
+    3300010: Bar_D
+    3300012: Bar_L
+    3300014: Bar_R
+    3300016: Link_D
+    3300018: Link_L
+    3300020: Link_R
     4300000: Wheel_Handle
     4300002: Wheel_Centre
     4300004: Wheel_BarTop
     4300006: Wheel_BarRight
     4300008: Wheel_BarLeft
+    4300010: Wheel
+    4300012: Bar_R
+    4300014: Link_R
+    4300016: Bar_D
+    4300018: Link_D
+    4300020: Bar_L
+    4300022: Link_L
     9500000: //RootNode
   materials:
     importMaterials: 1

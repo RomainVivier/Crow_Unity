@@ -41,7 +41,12 @@ public class RailsControl : CarControl
 
     public float Progress
     {
-        get { return chunkProgress; }
+        get { return rails.incorrect2Correct(chunkProgress); }
+    }
+
+    public Rails Rails
+    {
+        get { return rails; }
     }
 
 	void Start ()
@@ -82,8 +87,8 @@ public class RailsControl : CarControl
 
 
         //code pour le swipe
-        TouchManager.Instance._swipeLeftUp += () => { ShiftRail(1f); };
-        TouchManager.Instance._swipeRightUp += () => { ShiftRail(-1f); };
+        TouchManager.Instance._swipeLeft += () => { ShiftRail(1f); };
+        TouchManager.Instance._swipeRight += () => { ShiftRail(-1f); };
 
 	}
 	
@@ -237,7 +242,7 @@ public class RailsControl : CarControl
 		if(chunk.NextChunk!=null)
 		{
 			int oldNbRails=rails.nbRails;
-            //TODO incrémenté la distance parcourue
+
             if(Score.Instance!=null) Score.Instance.DistanceTravaled += chunk._rails.Dist;
 			chunk=chunk.NextChunk;
 			rails=chunk._rails;
@@ -269,10 +274,10 @@ public class RailsControl : CarControl
     {
         return rails.nbRails;
     }
-    //private void OnValidate()
-    //{
-    //    rails = chunk.GetComponent<Rails>();
-    //    target = rails.getPoint(currentRail, chunkProgress);
-    //}
+
+    public override Vector3 getForwardTarget()
+    {
+        return rails.getForward(currentRail, chunkProgress);
+    }
 
 }

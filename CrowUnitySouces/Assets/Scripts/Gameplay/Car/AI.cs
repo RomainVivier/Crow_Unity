@@ -59,7 +59,8 @@ public class AI : MonoBehaviour
     {
         if(playingSound)
         {
-            currentSound.stop(FMOD.Studio.STOP_MODE.IMMEDIATE); 
+            currentSound.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+            currentSound.release();
         }
         currentSound=FMOD_StudioSystem.instance.GetEvent("event:/Dialog/IA/"+name);
         currentSound.start();

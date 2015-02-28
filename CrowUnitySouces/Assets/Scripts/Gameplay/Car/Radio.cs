@@ -64,12 +64,12 @@ public class Radio : MonoBehaviour {
         {
             if(m_targetFrequency == 1)
             {
-                m_currentFrequency = 7f;
-                m_startFrequency = 7;
-                m_targetFrequency = 6;
+                m_currentFrequency = 9f;
+                m_startFrequency = 9;
+                m_targetFrequency = 8;
                 m_timer.Reset(_switchDuration / 2);
             }
-            else if(m_targetFrequency == 7)
+            else if(m_targetFrequency == 9)
             {
                 m_currentFrequency = 1f;
                 m_startFrequency = 1;
@@ -104,9 +104,9 @@ public class Radio : MonoBehaviour {
 
         m_startFrequency = (int)m_currentFrequency;
 
-        if(m_currentFrequency == 6 )
+        if(m_currentFrequency == 8 )
         {
-            m_targetFrequency = 7;
+            m_targetFrequency = 9;
             m_timer.Reset(_switchDuration / 2);
         }
         else

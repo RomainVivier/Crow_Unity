@@ -52,13 +52,13 @@ public class SlapMachine : Gadget {
     }
 	void AddToScore()
 	{
-		Score.Instance.AddToScore(500);
+		//Score.Instance.AddToScore(500);
 	}
 
     public override void Stop()
     {
         base.Stop();
-        IsReady = true;
+        //IsReady = true;
     }
 
     #endregion

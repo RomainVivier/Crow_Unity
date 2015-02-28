@@ -38,6 +38,7 @@ public class Spoonbill : Gadget
         gameObject.SetActive(false);
         IsReady = true;
         m_state = State.Disengaged;
+        base.Awake();
     }
 
     public override void Update()
@@ -67,7 +68,7 @@ public class Spoonbill : Gadget
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.collider.CompareTag("Obstacle") && m_state != State.Attacking)
+        if (other.collider.CompareTag("Obstacle") && (m_state == State.Engaged || m_state == State.Engaging))
         {
             //(GameObject.FindObjectOfType<CarCollisionsInhibiter>() as CarCollisionsInhibiter)._nbCol++;
             inhibitedCollisions = true;
@@ -78,16 +79,10 @@ public class Spoonbill : Gadget
             _spoonbillAnimator.SetTrigger("Attack");
             m_attackTimer.Reset(1.5f);
             m_state = State.Attacking;
-	Score.Instance._carsDestroyed++;
-			Invoke ("AddToScore", 0.35f);
+            addScore();
         }
         if(!other.isTrigger) FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Gadgets/Spatula/gadgetSpatulaImpact", transform.position);
-
-	}
-	void AddToScore()
-	{
-		Score.Instance.AddToScore(500);
-	}
+    }
 
     #endregion
 
@@ -135,7 +130,6 @@ public class Spoonbill : Gadget
 
     public override void Stop()
     {
-        Debug.Log("spoonbill stopped");
         base.Stop();
         gameObject.SetActive(false);
         _buttonAnim.SetBool("Engage", false);

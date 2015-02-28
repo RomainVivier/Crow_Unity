@@ -12,12 +12,15 @@ public class Gadget : MonoBehaviour
     public bool _isAssign = false;
     public bool _invertGesture = false;
     public Material _cardMaterial;
+    public int _score=500;
+    public int _combo=1;
+    public float _cooldown;
 
     private bool m_isReady = true;
     protected string m_playSound = "event:/SFX/Buttons/ButtonSmall/buttonPushSmallValidated";
     protected string m_cantPlaySound = "event:/SFX/Buttons/ButtonSmall/buttonPushSmallDenied";
     protected GadgetFamily m_gadgetFamily;
-
+    protected Timer m_gadgetCooldownTimer;
     #endregion 
 
     #region Properties
@@ -25,7 +28,16 @@ public class Gadget : MonoBehaviour
     public bool IsReady
 	{
 		get{ return m_isReady; }
-		set{ m_isReady = value; }
+		set
+        {
+            m_isReady = value;
+            if (_buttonAnim != null)
+            {
+                _buttonAnim.speed = 10;
+                _buttonAnim.SetBool("Engage", !value);
+                //_buttonAnim.SetTrigger("Engage");
+            }
+        }
 	}
     public string PlaySound
     {
@@ -42,10 +54,13 @@ public class Gadget : MonoBehaviour
 
     public virtual void Awake()
     {
+        m_gadgetCooldownTimer = new Timer();
     }
 
     public virtual void Update()
     {
+        if (m_gadgetCooldownTimer.IsElapsedOnce) IsReady = true;
+
     }
 
     #endregion
@@ -59,7 +74,7 @@ public class Gadget : MonoBehaviour
         {
             _buttonAnim.speed = 10;
             _buttonAnim.SetBool("Engage", true);
-			Score.Instance._gadgetsUsed++;
+			//Score.Instance._gadgetsUsed++;
             //_buttonAnim.SetTrigger("Engage");
         }
 	}
@@ -67,14 +82,17 @@ public class Gadget : MonoBehaviour
 	public virtual void Stop()
 	{
         GadgetManager.Instance.HasOneGadgetPlaying = false;
-        if (_buttonAnim != null)
-        {
-            _buttonAnim.speed = 10;
-            _buttonAnim.SetBool("Engage", false);
-            //_buttonAnim.SetTrigger("Engage");
-        }
+
+        if(_cooldown>=0) m_gadgetCooldownTimer.Reset(_cooldown);
     }
 
+    #endregion
+
+    #region Functions
+    protected void addScore()
+    {
+        Score.Instance.AddScore(_score,_combo);
+    }
     #endregion
 
 }

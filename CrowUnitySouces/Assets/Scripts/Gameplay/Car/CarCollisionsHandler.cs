@@ -22,9 +22,8 @@ public class CarCollisionsHandler : MonoBehaviour
     private FMOD.Studio.ParameterInstance m_impactConcreteSpeed;
     private Car m_car;
     private Timer cooldownTimer;
-private WindshieldController m_windshield;
-private CameraShake m_cameraShake;
-
+	private WindshieldController m_windshield;
+	private CameraShake m_cameraShake;
 
     #endregion
 
@@ -36,8 +35,8 @@ private CameraShake m_cameraShake;
         m_impactConcreteSound=FMOD_StudioSystem.instance.GetEvent("event:/SFX/Impacts/impactConcrete");
         m_impactConcreteSound.getParameter("Speed", out m_impactConcreteSpeed);
         m_car = transform.parent.gameObject.GetComponent<Car>();
-	m_windshield = GetComponentInChildren<WindshieldController>();
-	m_cameraShake = GetComponentInChildren<CameraShake>();
+		m_windshield = GetComponentInChildren<WindshieldController>();
+		m_cameraShake = GetComponentInChildren<CameraShake>();
         cooldownTimer = new Timer();
         cooldownTimer.Reset(0.01f);
     }
@@ -69,65 +68,21 @@ private CameraShake m_cameraShake;
             float momentum=Mathf.Lerp(_minMomentum,_maxMomentum,m_car.getForwardVelocityKmh()/m_car.maxSpeedKmh);
             oth.rigidbody.AddForce(direc * momentum,ForceMode.Impulse);
             oth.AddComponent<ObstacleDestroyer>();
-			oth.layer = 13; //IgnorePlayer
-           
-			Vector3 force;
-			if(m_windshield._isInvincible)
-			{
-				force = -forward * _ownMomentum * 0.5f;
-				Score.Instance.AddToScore(500);
-			}
-			else
-			{
-				force = -forward * _ownMomentum;
-				m_windshield.Hit ();
-			}
-			rigidbody.AddForce(force, ForceMode.Impulse);
-			m_cameraShake.DoShake();
+            rigidbody.AddForce(-forward * _ownMomentum, ForceMode.Impulse);
+
+			m_windshield.Hit();
+            //Score.Instance.DistanceTravaled += 10000;
+            m_cameraShake.DoShake();
+            Score.Instance.ResetCombo();
         }
     }
-    
 
-/*
     void OnCollisionEnter(Collision collision)
     {
-		if (_dontCollide) return;
-		GameObject oth = collision.gameObject;
-
-		if (oth.name == "Obstacle_Car(Clone)")
-		{
-			if (_dontCollide) return;
-			if (cooldownTimer.IsElapsedLoop)
-			{
-				playSound(null, oth, m_impactVehicleSound, m_impactVehicleSpeed);
-				cooldownTimer.Reset(2f);
-			}
-
-			oth.rigidbody.isKinematic = false;
-			float hAngle = Random.Range(-_maxAngleHDeg, _maxAngleHDeg) * Mathf.Deg2Rad;
-			Vector3 forward = m_car.getForwardVector();
-			Vector3 right = m_car.getRightVector();
-			Vector3 hVector = forward * Mathf.Cos(hAngle) + right * Mathf.Sin(hAngle);
-			float vAngle = Random.Range(_minAngleVDeg, _maxAngleVDeg) * Mathf.Deg2Rad;
-			Vector3 up = m_car.getUpVector();
-			Vector3 direc = hVector * Mathf.Cos(vAngle) + up * Mathf.Sin(vAngle);
-			float momentum=Mathf.Lerp(_minMomentum,_maxMomentum,m_car.getForwardVelocityKmh()/m_car.maxSpeedKmh);
-			oth.rigidbody.AddForce(direc * momentum,ForceMode.Impulse);
-			oth.AddComponent<ObstacleDestroyer>();
-			oth.layer = 13; //IgnorePlayer
-			oth.collider.isTrigger = true;
-			if(m_windshield._isInvincible)
-				Score.Instance._carsDestroyed++;
-			else
-				rigidbody.AddForce(-forward * _ownMomentum, ForceMode.Impulse);
-			m_windshield.Hit ();
-			m_cameraShake.DoShake();
-		}
-        
+        if (_dontCollide) return;
+        GameObject oth = collision.gameObject;
         if (!collision.collider.isTrigger)
         {
-			if(collision.contacts.Length == 0)
-				return;
             Vector3 contactPoint = collision.contacts[0].point;
             Vector3 center = transform.position;
             Vector3 diff = contactPoint - center;
@@ -135,7 +90,6 @@ private CameraShake m_cameraShake;
             if (relDy > -0.7) playSound(collision, oth, m_impactConcreteSound, m_impactConcreteSpeed);
         }
     }
-    */
     #endregion
 
     #region private methods
