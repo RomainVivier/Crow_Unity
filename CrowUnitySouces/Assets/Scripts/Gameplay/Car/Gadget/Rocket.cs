@@ -241,7 +241,7 @@ public class Rocket : Gadget {
 
         m_explosionParticles.transform.position = m_target == null ? m_rocketObject.transform.position : m_target.transform.position;
         m_explosionParticles.GetComponent<ParticleSystem>().Play();
-        var colliders = Physics.OverlapSphere(transform.position, _blastRadius);
+        var colliders = Physics.OverlapSphere(m_rocketObject.transform.position, _blastRadius);
         m_target = null;
         foreach(Collider collider in colliders)
         {
