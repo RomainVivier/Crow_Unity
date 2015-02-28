@@ -175,14 +175,14 @@ public class Car : MonoBehaviour
         wheelObject.transform.localRotation = newRotation;
 		
         // Air control
-        if(!wheels[0].isGrounded & !wheels[1].isGrounded)
+        if(!wheels[0].isGrounded && !wheels[1].isGrounded)
         {
             float rotAngle = inputs.steering * Time.deltaTime * airSteering * getForwardVelocity();
 
             body.velocity = Quaternion.AngleAxis(rotAngle,body.transform.up)*body.velocity;
             body.transform.Rotate(body.transform.up, rotAngle);
         }
-        if(!isOnGround())
+        if (!wheels[2].isGrounded && !wheels[3].isGrounded)
         {
             float damping = Mathf.Lerp(rotationDampingNoThrottle, 1, inputs.throttle);
             float mult = Mathf.Pow(damping, Time.deltaTime);
