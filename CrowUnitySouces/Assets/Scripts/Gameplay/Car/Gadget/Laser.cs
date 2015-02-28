@@ -7,15 +7,15 @@ public class Laser : Gadget
 
     #region constants
     const float VALVE_OPENING_TIME = 0.2f;
-    const float LASER_JUNCTION_TIME = 0.3f;
     const float VALVE_CLOSING_TIME = 0.2f;
     const float RANGE = 500f;
+    const float CONVERGING_INERTIA = 0.05f;
+    const float TEXTURE_SCROLL_SPEED = 5;
     //const float DISPLAY_RANGE = RANGE;
     #endregion
 
     #region members
     public GameObject _laserEffect;
-    public float _convergingDist = 2;
     public float _firingTime = 4;
     public float _particlesSpeed = 100; // units/s
     public float _particlesRotationSpeed = 1; // rad/s
@@ -27,29 +27,28 @@ public class Laser : Gadget
     private float m_laserLength = 0;
     private float m_particlesPos = 0;
     private float m_particlesRot = 0;
-
-    private Transform m_leftLightTransform, m_rightLightTransform;
-    private LineRenderer m_leftLineRenderer, m_rightLineRenderer, m_centerLineRenderer;
-
-    private Transform m_particlesJunctionBoomTransform;
-    private ParticleSystem m_particlesJunctionBoom;
-    private Transform m_particlesJunctionTransform;
-    private ParticleSystem m_particlesJunction;
-    private Transform m_particlesLaserTransform;
-    private ParticleSystem m_particlesLaser;
-
-    private GameObject m_contactObject;
-    private float m_contactTime;
+    private float m_textureScroll;
 
     private enum State
     {
         READY,
         VALVE_OPENING,
-        LASER_JUNCTION,
         FIRING,
         VALVE_CLOSING,
         COOLDOWN
     };
+
+    private struct LaserInfos
+    {
+        public Transform lightTransform;
+        public LineRenderer lineRenderer;
+        public Transform particlesTransform;
+        public ParticleSystem particles;
+        public float angle;
+        public GameObject contactObject;
+        public float contactTime;
+    }
+    private LaserInfos[] m_lasers;
 
     State m_state = State.READY;
 
@@ -57,7 +56,7 @@ public class Laser : Gadget
 
     #region methods
     public override void Awake () {
-
+        _cooldown = 0;
         // Init timers
         m_cooldownTimer = new Timer(0.01f);
         m_stateTimer = new Timer();
@@ -67,27 +66,19 @@ public class Laser : Gadget
 
         // Set references
         Transform valvesPivotTransform=transform.Find("ValvesPivot");
-        m_leftLightTransform= valvesPivotTransform.Find("ValveL");
-        m_rightLightTransform = valvesPivotTransform.Find("ValveR");
+        m_lasers=new LaserInfos[2];
+        m_lasers[0].lightTransform=valvesPivotTransform.Find("ValveL");
+        m_lasers[1].lightTransform=valvesPivotTransform.Find("ValveR");
+        m_lasers[0].particlesTransform = transform.Find("ParticlesLaserL");
+        m_lasers[1].particlesTransform = transform.Find("ParticlesLaserR");
+        for(int i=0;i<2;i++)
+        {
+            m_lasers[i].lineRenderer = m_lasers[i].lightTransform.GetComponent<LineRenderer>();
+            m_lasers[i].particles = m_lasers[i].particlesTransform.GetComponent<ParticleSystem>();
+            m_lasers[i].particles.Stop();
+        }
         m_car = transform.parent.parent.parent.GetComponent<Car>();
-        m_leftLineRenderer = m_leftLightTransform.GetComponent<LineRenderer>();
-        m_rightLineRenderer = m_rightLightTransform.GetComponent<LineRenderer>();
-        m_centerLineRenderer = valvesPivotTransform.GetComponent<LineRenderer>();
-        m_particlesJunctionBoomTransform = transform.Find("ParticlesJunctionBoom");
-        m_particlesJunctionBoom = m_particlesJunctionBoomTransform.GetComponent<ParticleSystem>();
-        m_particlesJunctionTransform = transform.Find("ParticlesJunction");
-        m_particlesJunction = m_particlesJunctionBoomTransform.GetComponent<ParticleSystem>();
-        m_particlesLaserTransform = transform.Find("ParticlesLaser");
-        m_particlesLaser = m_particlesLaserTransform.GetComponent<ParticleSystem>();
-        m_particlesLaser.Stop();
 
-        // = transform.FindChild("ParticlesL").GetComponent<ParticleSystem>();
-
-        // Compute lightsYOffset
-        /*Vector3 leftLightPos = m_lasers[0].lightTransform.position;
-        Vector3 rightLightPos = m_lasers[1].lightTransform.position;
-        Vector3 lightPosCenter = (leftLightPos + rightLightPos) / 2;
-        m_lightsYOffset = (valvesPivotTransform.position - lightPosCenter).magnitude * 2;*/
 
         // Stop explosion
         _laserEffect.GetComponent<ParticleSystem>().Stop();
@@ -104,67 +95,33 @@ public class Laser : Gadget
                 if (m_stateTimer.IsElapsedOnce)
                 {
                     transform.FindChild("ValvesPivot").localEulerAngles=new Vector3(-180, 0, 0);
-                    m_state = State.LASER_JUNCTION;
-                    m_stateTimer.Reset(LASER_JUNCTION_TIME);
-                    m_leftLineRenderer.enabled=true;
-                    m_rightLineRenderer.enabled=true;
-                    m_contactObject=null;
-                    m_laserLength = 0;
-                }
-                else transform.FindChild("ValvesPivot").localEulerAngles=new Vector3(-180+m_stateTimer.CurrentNormalized * 180,0,0);
-                break;
-            case State.LASER_JUNCTION:
-                if(m_stateTimer.IsElapsedOnce)
-                {
-                    // Update state
-                    m_centerLineRenderer.enabled = true;
                     m_state = State.FIRING;
                     m_stateTimer.Reset(_firingTime);
-
-                    // Start particles
-                    m_particlesJunctionBoom.Stop();
-                    m_particlesJunctionBoom.Play();
-                    m_particlesJunction.Play();
-                    m_particlesJunctionTransform.gameObject.SetActive(true);
-                    Vector3 forward=m_car.getForwardVector();
-                    Vector3 pos0l = m_leftLightTransform.position;
-                    Vector3 pos0r = m_rightLightTransform.position;
-                    Vector3 pos1 = (pos0l + pos0r) / 2+forward*_convergingDist*0.9f;
-                    m_particlesJunctionBoomTransform.position = pos1;
-                    m_particlesJunctionTransform.position = pos1;
-                    m_particlesLaser.Play();
+                    for (int i = 0; i < 2;i++)
+                    {
+                        m_lasers[i].lineRenderer.enabled = true;
+                        m_lasers[i].contactObject = null;
+                        m_lasers[i].particlesTransform.position = m_lasers[i].lightTransform.position;
+                        m_lasers[i].particles.Play();
+                        m_lasers[i].angle = 0;
+                    }
+                    m_laserLength = 0;
                     m_particlesPos = 0;
                     m_particlesRot = 0;
+                    m_textureScroll = 0;
                 }
-                else
-                {
-                    Vector3 forward=m_car.getForwardVector();
-                    float progress = 1-(m_stateTimer.Current / LASER_JUNCTION_TIME);
-                    Vector3 pos0l = m_leftLightTransform.position;
-                    Vector3 pos0r = m_rightLightTransform.position;
-                    Vector3 pos1 = (pos0l + pos0r) / 2+forward*_convergingDist;
-                    m_leftLineRenderer.SetPosition(0, pos0l);
-                    m_rightLineRenderer.SetPosition(0, pos0r);
-                    Vector3 pos1l = pos0l + (pos1 - pos0l) * progress;
-                    Vector3 pos1r = pos0r + (pos1 - pos0r) * progress;
-                    m_leftLineRenderer.SetPosition(1, pos1l);
-                    m_rightLineRenderer.SetPosition(1, pos1r);
-                    float length = (pos1l - pos0l).magnitude;
-                    float finalLength = (pos1 - pos0l).magnitude;
-                    m_leftLineRenderer.material.mainTextureScale = new Vector2(finalLength/2*length/finalLength,1);
-                    m_rightLineRenderer.material.mainTextureScale = new Vector2(finalLength/2*length/finalLength,1);
-                }
+                else transform.FindChild("ValvesPivot").localEulerAngles=new Vector3(-180+m_stateTimer.CurrentNormalized * 180,0,0);
                 break;
             case State.FIRING:
                 if(m_stateTimer.IsElapsedOnce)
                 {
                     m_state = State.VALVE_CLOSING;
                     m_stateTimer.Reset(VALVE_CLOSING_TIME);
-                    m_leftLineRenderer.enabled=false;
-                    m_rightLineRenderer.enabled=false;
-                    m_centerLineRenderer.enabled=false;
-                    m_particlesJunctionTransform.gameObject.SetActive(false);
-                    m_particlesLaser.Stop();
+                    for (int i = 0; i < 2;i++)
+                    {
+                        m_lasers[i].lineRenderer.enabled = false;
+                        m_lasers[i].particles.Stop();
+                    }
                 }
                 else
                 {
@@ -175,77 +132,93 @@ public class Laser : Gadget
 
                     // Update laser length
                     m_laserLength += Time.deltaTime * RANGE / _firingTime;
+                    m_textureScroll += Time.deltaTime * TEXTURE_SCROLL_SPEED;
 
-                    // Set converging lasers linerenderers position
-                    Vector3 pos0l = m_leftLightTransform.position;
-                    Vector3 pos0r = m_rightLightTransform.position;
-                    Vector3 pos1 = (pos0l + pos0r) / 2+forward*_convergingDist;
-                    m_leftLineRenderer.SetPosition(0, pos0l);
-                    m_rightLineRenderer.SetPosition(0, pos0r);
-                    m_leftLineRenderer.SetPosition(1, pos1);
-                    m_rightLineRenderer.SetPosition(1, pos1);
+                    // Raycast to detect target
+                    Vector3 centerPoint = (m_lasers[0].lightTransform.position + m_lasers[1].lightTransform.position) / 2;
+                    RaycastHit rh;
+                    float tgtAngle;
+                    float hypothenuse=m_laserLength;
+                    if (Physics.Raycast(centerPoint, forwardTarget, out rh, m_laserLength) && rh.collider.CompareTag("Obstacle"))
+                    {
+                        Vector3 contactPoint = rh.point;
+                        float adjacent = (contactPoint - centerPoint).magnitude;
+                        float opposed = (centerPoint - m_lasers[0].lightTransform.position).magnitude;
+                        hypothenuse = Mathf.Sqrt(adjacent * adjacent + opposed * opposed);
+                        tgtAngle = Mathf.Atan(opposed / adjacent);
+                    }
+                    else tgtAngle = 0;
 
-                    // Update and draw center laser
-                    Vector3 pos2 = pos1 + forwardTarget * m_laserLength;
-                    m_centerLineRenderer.SetPosition(0, pos1);
-                    m_centerLineRenderer.SetPosition(1, pos2);
-                    m_centerLineRenderer.material.mainTextureScale = new Vector2(m_laserLength/25,1);
-                    m_centerLineRenderer.SetWidth(0.2f, 5f);
-                    
-                    // Place particles
+                    // Update particles
                     m_particlesPos += Time.deltaTime * _particlesSpeed;
                     m_particlesRot += Time.deltaTime * _particlesRotationSpeed;
                     float progress = (1 - (m_stateTimer.Current / _firingTime));
                     float dist=0.2f+progress*1f;
-                    m_particlesLaserTransform.position = pos1 + forwardTarget * m_particlesPos + up * dist * Mathf.Cos(m_particlesRot) + right * dist * Mathf.Sin(m_particlesRot);
-                    m_particlesLaser.startColor = new Color(1,1,1,1 - progress);
                     
-                    // Raycast to check damages
-                    RaycastHit rh;
-                    if(Physics.Raycast(pos1,forwardTarget,out rh,m_laserLength))
+                    float mult=Mathf.Pow(CONVERGING_INERTIA,Time.deltaTime);
+                    for(int i=0;i<2;i++)
                     {
-                        //if (!m_lasers[i].particles.isPlaying) m_lasers[i].particles.Play();
-                        //m_lasers[i].particlesTransform.position = rh.point;
-                        if(rh.collider!=null)
-                        {
-                            GameObject go = rh.collider.gameObject;
-                            //Debug.Log(go.name);
-                            if(go!=m_contactObject)
-                            {
-                                m_contactObject = go;
-                                m_contactTime = 0;
-                            }
-                            else
-                            {
-                                m_contactTime += Time.deltaTime;
-                                if(m_contactTime>=_targetContactTime && rh.collider.CompareTag("Obstacle"))
-                                {
-                                    _laserEffect.GetComponent<ParticleSystem>().Play();
-                                    _laserEffect.transform.position = go.transform.position;//rh.point;
-                                    rh.collider.gameObject.SetActive(false);
-                                    addScore();
+                        // Update and draw lasers
+                        m_lasers[i].angle=Mathf.Lerp(tgtAngle,m_lasers[i].angle,mult);
+                        Vector3 direc = Mathf.Cos(m_lasers[i].angle) * forwardTarget + Mathf.Sin(m_lasers[i].angle) * right * (i == 0 ? 1 : -1);
+                        direc.Normalize();
+                        Vector3 startPos = m_lasers[i].lightTransform.position;
+                        Vector3 endPos = startPos + direc * hypothenuse;
+                        m_lasers[i].lineRenderer.SetPosition(0, startPos);
+                        m_lasers[i].lineRenderer.SetPosition(1, endPos);
+                        m_lasers[i].lineRenderer.material.mainTextureScale = new Vector2(hypothenuse / 10, 1);
+                        m_lasers[i].lineRenderer.material.mainTextureOffset = new Vector2(-m_textureScroll, 1);
 
-                                    // Play sound
-                                    FMOD.Studio.EventInstance blowInstance
-                                        = FMOD_StudioSystem.instance.GetEvent("event:/SFX/Gadgets/Rocket/gadgetRocketSuccess");
-                                    blowInstance.start();
-                                    FMOD.Studio.ParameterInstance param;
-                                    blowInstance.getParameter("Position", out param);
-                                    Vector3 dpos = go.transform.position - transform.position;
-                                    Vector3 fwd = transform.forward;
-                                    float position = Vector3.Dot(dpos, fwd);
-                                    param.setValue(position > 0 ? 0 : 1);
-                                    FMOD.Studio._3D_ATTRIBUTES threeDeeAttr = new FMOD.Studio._3D_ATTRIBUTES();
-                                    threeDeeAttr.position = FMOD.Studio.UnityUtil.toFMODVector(go.transform.position);
-                                    threeDeeAttr.up = FMOD.Studio.UnityUtil.toFMODVector(go.transform.up);
-                                    threeDeeAttr.forward = FMOD.Studio.UnityUtil.toFMODVector(go.transform.forward);
-                                    threeDeeAttr.velocity = FMOD.Studio.UnityUtil.toFMODVector(Vector3.zero);
-                                    blowInstance.set3DAttributes(threeDeeAttr);
+                        // Place particles
+                        m_lasers[i].particlesTransform.position = endPos +  direc * m_particlesPos + up * dist * Mathf.Cos(m_particlesRot) + right * dist * Mathf.Sin(m_particlesRot);
+                        m_lasers[i].particles.startColor = new Color(1,1,1,1 - progress);
+                        
+                        // Raycast to check damages
+                        if(Physics.Raycast(startPos,direc,out rh,hypothenuse))
+                        {
+                            if(rh.collider!=null)
+                            {
+                                GameObject go = rh.collider.gameObject;
+                                if(go!=m_lasers[i].contactObject)
+                                {
+                                    m_lasers[i].contactObject = go;
+                                    m_lasers[i].contactTime = 0;
+                                }
+                                else
+                                {
+                                    m_lasers[i].contactTime += Time.deltaTime;
+                                    if(m_lasers[i].contactTime>=_targetContactTime && rh.collider.CompareTag("Obstacle"))
+                                    {
+                                        _laserEffect.GetComponent<ParticleSystem>().Play();
+                                        _laserEffect.transform.position = go.transform.position;//rh.point;
+                                        rh.collider.gameObject.SetActive(false);
+                                        addScore();
+
+                                        // Play sound
+                                        FMOD.Studio.EventInstance blowInstance
+                                            = FMOD_StudioSystem.instance.GetEvent("event:/SFX/Gadgets/Rocket/gadgetRocketSuccess");
+                                        blowInstance.start();
+                                        FMOD.Studio.ParameterInstance param;
+                                        blowInstance.getParameter("Position", out param);
+                                        Vector3 dpos = go.transform.position - transform.position;
+                                        Vector3 fwd = transform.forward;
+                                        float position = Vector3.Dot(dpos, fwd);
+                                        param.setValue(position > 0 ? 0 : 1);
+                                        FMOD.Studio._3D_ATTRIBUTES threeDeeAttr = new FMOD.Studio._3D_ATTRIBUTES();
+                                        threeDeeAttr.position = FMOD.Studio.UnityUtil.toFMODVector(go.transform.position);
+                                        threeDeeAttr.up = FMOD.Studio.UnityUtil.toFMODVector(go.transform.up);
+                                        threeDeeAttr.forward = FMOD.Studio.UnityUtil.toFMODVector(go.transform.forward);
+                                        threeDeeAttr.velocity = FMOD.Studio.UnityUtil.toFMODVector(Vector3.zero);
+                                        blowInstance.set3DAttributes(threeDeeAttr);
+                                    }
                                 }
                             }
+                            else m_lasers[i].contactObject=null;
                         }
-                        else m_contactObject=null;
                     }
+                    
+                    
+
                 }    
                 break;
             case State.VALVE_CLOSING:

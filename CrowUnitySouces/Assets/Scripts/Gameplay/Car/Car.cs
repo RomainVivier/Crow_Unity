@@ -15,6 +15,7 @@ public class Car : MonoBehaviour
 	public float antiRoll=8000;
 	public float downforce=10;
     public float wheelRotation = 180;
+    public float airSteering = 0;
 
 	// Components
 	private Engine engine;
@@ -40,7 +41,7 @@ public class Car : MonoBehaviour
     private Quaternion wheelQuaternion;
     private GameObject wheelObject;
 
-	// Sounds
+    // Sounds
     private FMOD.Studio.EventInstance engineSound;
     private FMOD.Studio.ParameterInstance engineRPM;
     private FMOD.Studio.ParameterInstance engineSpeed;
@@ -170,6 +171,15 @@ public class Car : MonoBehaviour
         newRotation *= Quaternion.Euler(new Vector3(0,wheelRotation*inputs.steering,0));
         wheelObject.transform.localRotation = newRotation;
 		
+        // Air control
+        if(!wheels[0].isGrounded & !wheels[1].isGrounded)
+        {
+            float rotAngle = inputs.steering * Time.deltaTime * airSteering * getForwardVelocity();
+
+            body.velocity = Quaternion.AngleAxis(rotAngle,body.transform.up)*body.velocity;
+            body.transform.Rotate(body.transform.up, rotAngle);
+        }
+
 		// Aerodynamic drag & downforce
 		float force=forwardVelocity*forwardVelocity*dragCoef;
 		body.AddForce(body.transform.forward*-force);
@@ -228,6 +238,7 @@ public class Car : MonoBehaviour
 		{
 			Debug.Log((int)forwardVelocity*3.6+" "+(int)rpm+" "+transmission.getCurrentGear());
 		}*/
+
 	}
 
     void OnValidate()

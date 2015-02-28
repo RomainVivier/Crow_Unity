@@ -28,8 +28,11 @@ public class Rocket : Gadget {
     private float m_railsIndex;
     private float m_railsProgress;
     private float m_railsSpeed;
+    private float m_failProgress;
     private Timer m_cooldownTimer;
     private Obstacle m_target;
+
+
     private GameObject m_rocketObject;
     private FMOD.Studio.EventInstance m_rocketUI;
     private FMOD.Studio.ParameterInstance m_rocketDist;
@@ -99,8 +102,9 @@ public class Rocket : Gadget {
     {
         //Update rails progression
         m_railsProgress += m_railsSpeed * Time.fixedDeltaTime;
+        m_failProgress += _rocketSpeed * Time.deltaTime; 
 
-        if(m_railsProgress > 1f && m_rails != m_target.Rails)
+        if(m_railsProgress > 1f && ( (m_target != null && m_rails != m_target.Rails) || m_target == null ) )
         {
             Rails newRails = m_rails.GetComponent<RoadChunk>().NextChunk._rails;
             m_railsProgress = (m_railsProgress - 1) * (m_rails.Dist / newRails.Dist);
@@ -108,14 +112,27 @@ public class Rocket : Gadget {
             m_railsSpeed = _rocketSpeed / m_rails.Dist;
         }
 
-        if (m_rails == m_target.Rails && m_railsProgress >= m_target.RailsProgress)
+        if (m_target == null)
         {
-            Blow();
-            Stop();
-        }
+            if (m_failProgress < 400f)
+            {
+                m_rocketObject.transform.position = m_rails.getPoint(m_railsIndex, m_rails.correct2Incorrect(m_railsProgress)) + Vector3.Scale(Vector3.up, m_offsetWithParent);
+            }
+            else
+            {
+                Blow();
+            }
+        } 
         else
         {
-            m_rocketObject.transform.position = m_rails.getPoint(m_railsIndex, m_rails.correct2Incorrect(m_railsProgress)) + Vector3.Scale(Vector3.up, m_offsetWithParent);
+            if (m_rails == m_target.Rails && m_railsProgress >= m_target.RailsProgress)
+            {
+                Blow();
+            }
+            else
+            {
+                m_rocketObject.transform.position = m_rails.getPoint(m_railsIndex, m_rails.correct2Incorrect(m_railsProgress)) + Vector3.Scale(Vector3.up, m_offsetWithParent);
+            }
         }
 
     }
@@ -163,25 +180,18 @@ public class Rocket : Gadget {
             }
         }
 
-        if (obstacles.Length == 0 || m_target == null || Vector3.Distance(m_rocketObject.transform.position, m_target.transform.position) > 100) 
+        if (obstacles.Length == 0 || m_target == null || Vector3.Distance(m_rocketObject.transform.position, m_target.transform.position) > 400) 
         {
             //TODO SET A FAKE Obstacle
             //m_target = transform.position + transform.forward * 100;
             m_target = null;
         }
 
-        if(m_target != null)
-        {
-            if(m_railsControl == null)
-            {
-                Debug.LogError("la putin de référence au rails controle est pas bonne");
-            }
-
-            m_rails = m_railsControl.Rails;
-            m_railsProgress = m_railsControl.Progress;
-            m_railsIndex = m_target.RailsIndex;
-            m_state = State.Launching;
-        }
+        m_rails = m_railsControl.Rails;
+        m_railsProgress = m_railsControl.Progress;
+        m_railsIndex = m_target == null ? m_railsControl.currentRail : m_target.RailsIndex;
+        m_state = State.Launching;
+        m_failProgress = 0f;
 
         m_rocketLaunchtimer.Reset(0.6f);
         FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Gadgets/Rocket/gadgetRocketEngage", m_rocketObject.transform.position);
@@ -212,7 +222,7 @@ public class Rocket : Gadget {
     {
         //play visual effect
         m_rocketUI.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
-        m_rocketExecute3D.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);    
+        m_rocketExecute3D.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
         FMOD.Studio.EventInstance m_blowInstance
             = FMOD_StudioSystem.instance.GetEvent("event:/SFX/Gadgets/Rocket/gadgetRocketSuccess");
         m_blowInstance.start();
@@ -228,7 +238,8 @@ public class Rocket : Gadget {
         threeDeeAttr.forward = FMOD.Studio.UnityUtil.toFMODVector(m_rocketObject.transform.forward);
         threeDeeAttr.velocity = FMOD.Studio.UnityUtil.toFMODVector(Vector3.zero);
         m_blowInstance.set3DAttributes(threeDeeAttr);
-		m_explosionParticles.transform.position = m_target.transform.position;
+
+        m_explosionParticles.transform.position = m_target == null ? m_rocketObject.transform.position : m_target.transform.position;
         m_explosionParticles.GetComponent<ParticleSystem>().Play();
         var colliders = Physics.OverlapSphere(transform.position, _blastRadius);
         m_target = null;
@@ -240,6 +251,8 @@ public class Rocket : Gadget {
                 addScore();
             }
         }
+
+        Stop();
     }
 
     void OnDrawGizmos()
