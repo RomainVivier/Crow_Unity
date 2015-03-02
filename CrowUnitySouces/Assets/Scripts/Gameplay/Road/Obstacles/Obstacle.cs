@@ -9,6 +9,7 @@ public abstract class Obstacle : MonoBehaviour
     public float _maxDistVignette;
     public float _fadeDistVignette;
     public float _minDistVignette;
+    public float _activateDistance;
     public SpriteRenderer _vignette;
 
     protected Color m_vignetteColor;
@@ -55,10 +56,15 @@ public abstract class Obstacle : MonoBehaviour
             _vignette.gameObject.transform.rotation = Quaternion.LookRotation(Vector3.Scale(Score.Instance.Body.transform.position - transform.position, Vector3.right));
         }
 
+        if(dist <= _activateDistance)
+        {
+            Activate();
+        }
+
 
     }
 
-    public virtual void Behaviour()
+    public virtual void Activate()
     {
     }
 
