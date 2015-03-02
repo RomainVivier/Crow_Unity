@@ -7,6 +7,7 @@ public class Gadget : MonoBehaviour
 
     #region Members
 
+    public GadgetButton _button;
     public Animator _buttonAnim;
     public GadgetAbility[] _abilities;
     public bool _isAssign = false;
@@ -15,6 +16,7 @@ public class Gadget : MonoBehaviour
     public int _score=500;
     public int _combo=1;
     public float _cooldown;
+    public bool _cooldownStartOnPlay;
 
     private bool m_isReady = true;
     protected string m_playSound = "event:/SFX/Buttons/ButtonSmall/buttonPushSmallValidated";
@@ -76,18 +78,34 @@ public class Gadget : MonoBehaviour
             _buttonAnim.SetBool("Engage", true);
             //_buttonAnim.SetTrigger("Engage");
         }
+        if(_button != null && _cooldownStartOnPlay)
+        {
+            StartCooldown();
+        }
 	}
 
 	public virtual void Stop()
 	{
         GadgetManager.Instance.HasOneGadgetPlaying = false;
 
-        if(_cooldown>=0) m_gadgetCooldownTimer.Reset(_cooldown);
+        if (_button != null && !_cooldownStartOnPlay)
+        {
+            StartCooldown();
+        }
     }
 
     #endregion
 
     #region Functions
+
+    protected void StartCooldown()
+    {
+        if (_cooldown >= 0)
+        {
+            m_gadgetCooldownTimer.Reset(_cooldown);
+            _button.Cooldown = _cooldown;
+        }
+    }
     protected void addScore()
     {
         Score.Instance.AddScore(_score,_combo);
