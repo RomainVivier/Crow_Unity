@@ -48,7 +48,7 @@ public class DialogsManager : MonoBehaviour
         m_dialogInfos = new InternalDialogInfos[m_nbDialogs];
         for(int i=0;i<m_nbDialogs;i++)
         {
-            m_dialogInfos[i].currentCooldown = _dialogInfos[i].forceFirstCooldown ? m_dialogInfos[i].cooldown : 0;
+            m_dialogInfos[i].currentCooldown = _dialogInfos[i].forceFirstCooldown ? _dialogInfos[i].cooldown : 0;
             if (isRandomPlayMode(_dialogInfos[i].playMode)) shufflePlayList(i);
         }
 
@@ -154,7 +154,7 @@ public class DialogsManager : MonoBehaviour
                         m_dialogInfos[dialog].pos = 0;
                         if (_dialogInfos[dialog].playMode == DialogInfos.PlayMode.SHUFFLE_LOOP) shufflePlayList(dialog);
                     }
-                    m_currentEvent=FMOD_StudioSystem.instance.GetEvent("event:/"+_dialogInfos[dialog].sounds[m_dialogInfos[dialog].pos);
+                    m_currentEvent=FMOD_StudioSystem.instance.GetEvent("event:/"+_dialogInfos[dialog].sounds[m_dialogInfos[dialog].pos]);
                     m_afterTimer=_dialogInfos[dialog].postOffset;
                     if(_dialogInfos[dialog].preOffset==0) m_currentEvent.start();
                     else
