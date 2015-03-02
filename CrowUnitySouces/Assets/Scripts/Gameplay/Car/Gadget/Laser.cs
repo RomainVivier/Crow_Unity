@@ -170,9 +170,13 @@ public class Laser : Gadget
                         m_lasers[i].lineRenderer.material.mainTextureOffset = new Vector2(-m_textureScroll, 1);
 
                         // Place particles
-                        m_lasers[i].particlesTransform.position = endPos +  direc * m_particlesPos + up * dist * Mathf.Cos(m_particlesRot) + right * dist * Mathf.Sin(m_particlesRot);
+                        m_lasers[i].particlesTransform.position = startPos;// + /*endPos +  direc * m_particlesPos +*/;// up * dist * Mathf.Cos(m_particlesRot) + right * dist * Mathf.Sin(m_particlesRot);
+                        Vector3 rot=m_lasers[i].particlesTransform.localRotation.eulerAngles;
+                        rot.z=m_particlesRot*Mathf.Rad2Deg;
+                        m_lasers[i].particlesTransform.localRotation=Quaternion.Euler(rot);
                         m_lasers[i].particles.startColor = new Color(1,1,1,1 - progress);
-                        
+                        m_lasers[i].particles.startSpeed = m_car.getForwardVelocity();
+
                         // Raycast to check damages
                         if(Physics.Raycast(startPos,direc,out rh,hypothenuse))
                         {
