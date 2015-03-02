@@ -95,6 +95,7 @@ public class CarCollisionsHandler : MonoBehaviour
     #region private methods
     void playSound(Collision collision, GameObject oth, FMOD.Studio.EventInstance sound, FMOD.Studio.ParameterInstance param)
     {
+		if (param == null) return;
         FMOD.Studio._3D_ATTRIBUTES threeDeeAttr = new FMOD.Studio._3D_ATTRIBUTES();
         threeDeeAttr.up = FMOD.Studio.UnityUtil.toFMODVector(new Vector3(0,1,0));
         if(collision!=null)
