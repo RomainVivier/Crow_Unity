@@ -249,6 +249,8 @@ public class Rocket : Gadget {
             {
                 collider.gameObject.SetActive(false);
                 addScore();
+                DialogsManager._instance.triggerEvent(DialogsManager.DialogInfos.EventType.OBSTACLE_DESTRUCTION, collider.gameObject.name);
+                DialogsManager._instance.triggerEvent(DialogsManager.DialogInfos.EventType.DESTRUCTION_WITH_GADGET, "Rocket");
             }
         }
 

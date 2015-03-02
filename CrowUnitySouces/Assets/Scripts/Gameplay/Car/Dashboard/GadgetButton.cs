@@ -74,7 +74,7 @@ public class GadgetButton : MonoBehaviour
 
     void Update()
     {
-        if (!m_cooldownTimer.IsElapsedLoop && m_isInCooldown)
+        if (_buttonRenderer != null && !m_cooldownTimer.IsElapsedLoop && m_isInCooldown)
         {
             m_tempColor = Vector4.Lerp(_darkColor, _brightColor, (1 - m_cooldownTimer.CurrentNormalized));
             _buttonRenderer.renderer.material.SetColor("_Color", m_tempColor);

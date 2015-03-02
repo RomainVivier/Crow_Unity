@@ -210,6 +210,10 @@ public class Laser : Gadget
                                         threeDeeAttr.forward = FMOD.Studio.UnityUtil.toFMODVector(go.transform.forward);
                                         threeDeeAttr.velocity = FMOD.Studio.UnityUtil.toFMODVector(Vector3.zero);
                                         blowInstance.set3DAttributes(threeDeeAttr);
+                                        
+                                        // Trigger events
+                                        DialogsManager._instance.triggerEvent(DialogsManager.DialogInfos.EventType.OBSTACLE_DESTRUCTION, go.gameObject.name);
+                                        DialogsManager._instance.triggerEvent(DialogsManager.DialogInfos.EventType.DESTRUCTION_WITH_GADGET, "Laser");
                                     }
                                 }
                             }
