@@ -74,6 +74,8 @@ public class CarCollisionsHandler : MonoBehaviour
             //Score.Instance.DistanceTravaled += 10000;
             m_cameraShake.DoShake();
             Score.Instance.ResetCombo();
+            DialogsManager._instance.triggerEvent(DialogsManager.DialogInfos.EventType.CAR_HP, (float) m_windshield._hp);
+            DialogsManager._instance.triggerEvent(DialogsManager.DialogInfos.EventType.CAR_DAMAGE, oth.name);
         }
     }
 

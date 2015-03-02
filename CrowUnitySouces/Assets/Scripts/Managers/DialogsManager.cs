@@ -23,6 +23,7 @@ public class DialogsManager : MonoBehaviour
         public PlayMode playMode;
     }
 
+    public static DialogsManager _instance;
     public DialogInfos[] _dialogInfos;
     
     private class InternalDialogInfos
@@ -55,7 +56,7 @@ public class DialogsManager : MonoBehaviour
         // Init other things
         m_currentEvent = null;
         m_timer = null;
-
+        _instance = this;
 	}
 	
 	void Update ()
@@ -77,12 +78,12 @@ public class DialogsManager : MonoBehaviour
     #endregion
 
     #region public methods
-    public void triggetEvent(DialogInfos.EventType type, int numberParam=0)
+    public void triggerEvent(DialogInfos.EventType type, float numberParam=0)
     {
         triggerEvent(type, "", numberParam);
     }
     
-    public void triggerEvent(DialogInfos.EventType type, string stringParam, int numberParam=0)
+    public void triggerEvent(DialogInfos.EventType type, string stringParam, float numberParam=0)
     {
         for(int i=0;i<m_nbDialogs;i++)
         {
