@@ -10,6 +10,7 @@ public class Laser : Gadget
     const float VALVE_CLOSING_TIME = 0.2f;
     const float RANGE = 500f;
     const float CONVERGING_INERTIA = 0.05f;
+    const float TEXTURE_SCROLL_SPEED = 5;
     //const float DISPLAY_RANGE = RANGE;
     #endregion
 
@@ -26,7 +27,7 @@ public class Laser : Gadget
     private float m_laserLength = 0;
     private float m_particlesPos = 0;
     private float m_particlesRot = 0;
-
+    private float m_textureScroll;
 
     private enum State
     {
@@ -55,6 +56,7 @@ public class Laser : Gadget
 
     #region methods
     public override void Awake () {
+        _cooldown = 0;
         // Init timers
         m_cooldownTimer = new Timer(0.01f);
         m_stateTimer = new Timer();
@@ -106,6 +108,7 @@ public class Laser : Gadget
                     m_laserLength = 0;
                     m_particlesPos = 0;
                     m_particlesRot = 0;
+                    m_textureScroll = 0;
                 }
                 else transform.FindChild("ValvesPivot").localEulerAngles=new Vector3(-180+m_stateTimer.CurrentNormalized * 180,0,0);
                 break;
@@ -129,19 +132,23 @@ public class Laser : Gadget
 
                     // Update laser length
                     m_laserLength += Time.deltaTime * RANGE / _firingTime;
+                    m_textureScroll += Time.deltaTime * TEXTURE_SCROLL_SPEED;
 
                     // Raycast to detect target
                     Vector3 centerPoint = (m_lasers[0].lightTransform.position + m_lasers[1].lightTransform.position) / 2;
                     RaycastHit rh;
                     float tgtAngle;
+                    float hypothenuse=m_laserLength;
                     if (Physics.Raycast(centerPoint, forwardTarget, out rh, m_laserLength) && rh.collider.CompareTag("Obstacle"))
                     {
                         Vector3 contactPoint = rh.point;
                         float adjacent = (contactPoint - centerPoint).magnitude;
                         float opposed = (centerPoint - m_lasers[0].lightTransform.position).magnitude;
+                        hypothenuse = Mathf.Sqrt(adjacent * adjacent + opposed * opposed);
                         tgtAngle = Mathf.Atan(opposed / adjacent);
                     }
                     else tgtAngle = 0;
+
                     // Update particles
                     m_particlesPos += Time.deltaTime * _particlesSpeed;
                     m_particlesRot += Time.deltaTime * _particlesRotationSpeed;
@@ -156,17 +163,18 @@ public class Laser : Gadget
                         Vector3 direc = Mathf.Cos(m_lasers[i].angle) * forwardTarget + Mathf.Sin(m_lasers[i].angle) * right * (i == 0 ? 1 : -1);
                         direc.Normalize();
                         Vector3 startPos = m_lasers[i].lightTransform.position;
-                        Vector3 endPos = startPos + direc * m_laserLength;
+                        Vector3 endPos = startPos + direc * hypothenuse;
                         m_lasers[i].lineRenderer.SetPosition(0, startPos);
                         m_lasers[i].lineRenderer.SetPosition(1, endPos);
-                        m_lasers[i].lineRenderer.material.mainTextureScale = new Vector2(m_laserLength / 25, 1);
+                        m_lasers[i].lineRenderer.material.mainTextureScale = new Vector2(hypothenuse / 10, 1);
+                        m_lasers[i].lineRenderer.material.mainTextureOffset = new Vector2(-m_textureScroll, 1);
 
                         // Place particles
                         m_lasers[i].particlesTransform.position = endPos +  direc * m_particlesPos + up * dist * Mathf.Cos(m_particlesRot) + right * dist * Mathf.Sin(m_particlesRot);
                         m_lasers[i].particles.startColor = new Color(1,1,1,1 - progress);
                         
                         // Raycast to check damages
-                        if(Physics.Raycast(startPos,direc,out rh,m_laserLength))
+                        if(Physics.Raycast(startPos,direc,out rh,hypothenuse))
                         {
                             if(rh.collider!=null)
                             {

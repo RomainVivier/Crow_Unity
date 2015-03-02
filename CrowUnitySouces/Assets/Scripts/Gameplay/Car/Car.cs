@@ -16,6 +16,10 @@ public class Car : MonoBehaviour
 	public float downforce=10;
     public float wheelRotation = 180;
 
+    [Header("Air control")]
+    public float airSteering = 0;
+    public float rotationDampingNoThrottle = 0.1f;
+
 	// Components
 	private Engine engine;
 	private CarControl control;
@@ -40,7 +44,7 @@ public class Car : MonoBehaviour
     private Quaternion wheelQuaternion;
     private GameObject wheelObject;
 
-	// Sounds
+    // Sounds
     private FMOD.Studio.EventInstance engineSound;
     private FMOD.Studio.ParameterInstance engineRPM;
     private FMOD.Studio.ParameterInstance engineSpeed;
@@ -170,6 +174,23 @@ public class Car : MonoBehaviour
         newRotation *= Quaternion.Euler(new Vector3(0,wheelRotation*inputs.steering,0));
         wheelObject.transform.localRotation = newRotation;
 		
+        // Air control
+        if(!wheels[0].isGrounded && !wheels[1].isGrounded)
+        {
+            float rotAngle = inputs.steering * Time.deltaTime * airSteering * getForwardVelocity();
+
+            body.velocity = Quaternion.AngleAxis(rotAngle,body.transform.up)*body.velocity;
+            body.transform.Rotate(body.transform.up, rotAngle);
+        }
+        if (!wheels[2].isGrounded && !wheels[3].isGrounded)
+        {
+            float damping = Mathf.Lerp(rotationDampingNoThrottle, 1, inputs.throttle);
+            float mult = Mathf.Pow(damping, Time.deltaTime);
+            Vector3 angularVelocity = body.angularVelocity;
+            angularVelocity *= mult;
+            body.angularVelocity = angularVelocity;
+        }
+
 		// Aerodynamic drag & downforce
 		float force=forwardVelocity*forwardVelocity*dragCoef;
 		body.AddForce(body.transform.forward*-force);
@@ -223,11 +244,13 @@ public class Car : MonoBehaviour
         engineSpeed.setValue(forwardVelocity*3.6f);
         rumbleSpeed.setValue(forwardVelocity * 3.6f);
         engineLoad.setValue(inputs.throttle>0.5 ? 1 : 0);
+        
         //Debug print
 		/*if(nbUpdates%10==0)
 		{
 			Debug.Log((int)forwardVelocity*3.6+" "+(int)rpm+" "+transmission.getCurrentGear());
 		}*/
+
 	}
 
     void OnValidate()
@@ -286,14 +309,15 @@ public class Car : MonoBehaviour
 		body.centerOfMass=centerOfMass;
 	}
 
-	// Private methods
-    private bool isOnGround()
+	
+    public bool isOnGround()
     {
         bool ret = false;
         for (int i = 0; i < 4; i++) if (wheels[i].isGrounded) ret = true;
         return ret;
     }
 
+    // Private methods
     public void InstantSetSpeedKmh(float speedKmh)
     {
         InstantSetSpeed(speedKmh / 3.6f);
