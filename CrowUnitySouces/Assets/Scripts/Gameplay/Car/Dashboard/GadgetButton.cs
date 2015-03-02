@@ -13,6 +13,7 @@ public class GadgetButton : MonoBehaviour
     public Vector2 _swipeVector=Vector2.zero;
     public bool _activatedOnStart = false;
 
+	private GameObject m_cooldownPanel;
     private Vector2 m_startPoint;
     private float m_tgtAngle;
     private Gadget m_gadget;
@@ -43,8 +44,9 @@ public class GadgetButton : MonoBehaviour
     {
         m_tgtAngle=Mathf.Atan2(_swipeVector.y,_swipeVector.x);
         m_gadget = GadgetManager.Instance.GetGadget(_gadgetID);
-        
-        if(_activatedOnStart)
+		m_cooldownPanel = Resources.Load ("CooldownMark") as GameObject;
+		
+		if(_activatedOnStart)
         {
             Init();
         }
@@ -57,17 +59,24 @@ public class GadgetButton : MonoBehaviour
             return;
         }
 
-        if (_swipeVector == Vector2.zero) GadgetManager.Instance.PlayGadget(_gadgetID);
-        else m_startPoint = new Vector2(Input.mousePosition.x, Input.mousePosition.y) / Screen.height;
+        if (_swipeVector == Vector2.zero) {
+			GadgetManager.Instance.PlayGadget (_gadgetID);
+			Gadget gad = GadgetManager.Instance.getGadgetById(_gadgetID);
+
+			GameObject cooldownPanel = GameObject.Instantiate(m_cooldownPanel) as GameObject;
+			cooldownPanel.GetComponent<FakeCooldown>()._lengthInSeconds = gad._cooldown;
+			cooldownPanel.transform.parent = transform;
+			//cooldownPanel.transform.localScale = Vector3.one;
+			cooldownPanel.transform.localPosition = new Vector3(0, 0.25f, 0);
+			cooldownPanel.transform.localEulerAngles = new Vector3(90f, 0, 0);
+		}
+		else m_startPoint = new Vector2(Input.mousePosition.x, Input.mousePosition.y) / Screen.height;
     }
 
     public void OnLeftClickRelease()
     {
-        
         if(_gadgetID == null)
-        {
             return;
-        }
 
         if(_swipeVector!=Vector2.zero)
         {
@@ -76,6 +85,7 @@ public class GadgetButton : MonoBehaviour
             {
                 if (m_gadget && m_gadget._invertGesture) vec = -vec;
                 float angle = Mathf.Atan2(vec.y, vec.x);
+			
                 if( (angle>m_tgtAngle-SWIPE_TOLERANCE_DEG*Mathf.Deg2Rad && angle<m_tgtAngle+SWIPE_TOLERANCE_DEG*Mathf.Deg2Rad))
                     //|| (angle>m_tgtAngle-(SWIPE_TOLERANCE_DEG+360)*Mathf.Deg2Rad && angle<m_tgtAngle+(SWIPE_TOLERANCE_DEG+360)*Mathf.Deg2Rad)
                     //|| (angle>m_tgtAngle-(SWIPE_TOLERANCE_DEG-360)*Mathf.Deg2Rad && angle<m_tgtAngle+(SWIPE_TOLERANCE_DEG-360)*Mathf.Deg2Rad))

@@ -14,6 +14,7 @@ public class Gadget : MonoBehaviour
     public Material _cardMaterial;
     public int _score=500;
     public int _combo=1;
+	//public int _heatValue = 1;
     public float _cooldown;
 
     private bool m_isReady = true;
@@ -69,7 +70,7 @@ public class Gadget : MonoBehaviour
 
     public virtual void Play()
 	{
-        GadgetManager.Instance.HasOneGadgetPlaying = true;
+		//HeatBar.Instance.AddHeatUnits (_heatValue);
         if (_buttonAnim != null)
         {
             _buttonAnim.speed = 10;

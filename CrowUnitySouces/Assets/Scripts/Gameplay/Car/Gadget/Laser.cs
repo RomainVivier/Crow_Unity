@@ -56,7 +56,6 @@ public class Laser : Gadget
 
     #region methods
     public override void Awake () {
-        _cooldown = 0;
         // Init timers
         m_cooldownTimer = new Timer(0.01f);
         m_stateTimer = new Timer();
