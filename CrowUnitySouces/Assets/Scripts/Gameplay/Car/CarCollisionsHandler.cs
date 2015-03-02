@@ -24,7 +24,7 @@ public class CarCollisionsHandler : MonoBehaviour
     private Timer cooldownTimer;
 	private WindshieldController m_windshield;
 	private CameraShake m_cameraShake;
-
+    private GameObject m_lastObject;
     #endregion
 
     #region MonoBehaviour
@@ -39,6 +39,7 @@ public class CarCollisionsHandler : MonoBehaviour
 		m_cameraShake = GetComponentInChildren<CameraShake>();
         cooldownTimer = new Timer();
         cooldownTimer.Reset(0.01f);
+        m_lastObject = null;
     }
     #endregion
 
@@ -54,10 +55,11 @@ public class CarCollisionsHandler : MonoBehaviour
             Vector3 diff = oth.transform.position - m_car.transform.Find("Body").position;
             float fPos = Vector3.Dot(diff, forward); 
             if (fPos<2 || fPos>5) return;
-            if (cooldownTimer.IsElapsedLoop)
+            if (cooldownTimer.IsElapsedLoop || oth!=m_lastObject)
             {
                 playSound(null, oth, m_impactVehicleSound, m_impactVehicleSpeed);
                 cooldownTimer.Reset(2f);
+                m_lastObject = oth;
             }
             float hAngle = Random.Range(-_maxAngleHDeg, _maxAngleHDeg) * Mathf.Deg2Rad;
             Vector3 right = m_car.getRightVector();
