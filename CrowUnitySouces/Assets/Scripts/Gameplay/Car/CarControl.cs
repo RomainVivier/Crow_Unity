@@ -17,6 +17,7 @@ public abstract class CarControl : MonoBehaviour
 
 	public abstract CarInputs getInputs();
     public abstract Vector3 getForwardTarget();
+    public abstract Vector3 getTarget();
 
 	public void init(int pos) // Position in the chain
 	{

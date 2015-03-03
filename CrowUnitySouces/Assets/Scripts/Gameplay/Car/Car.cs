@@ -251,8 +251,9 @@ public class Car : MonoBehaviour
         //Debug print
 		/*if(nbUpdates%10==0)
 		{
-			Debug.Log((int)forwardVelocity*3.6+" "+(int)rpm+" "+transmission.getCurrentGear());
-		}*/
+			//Debug.Log((int)forwardVelocity*3.6+" "+(int)rpm+" "+transmission.getCurrentGear());
+            Debug.Log(getDeltaTarget());
+        }*/
 
 	}
 
@@ -348,6 +349,7 @@ public class Car : MonoBehaviour
 		Vector3 velocity=body.GetRelativePointVelocity(new Vector3(0,0,0));
 		return Vector3.Dot(velocity,body.transform.forward);
 	}
+
 	public float getForwardVelocityKmh()
 	{
         return getForwardVelocity() * 3.6f;
@@ -378,6 +380,21 @@ public class Car : MonoBehaviour
         return body.transform.up;
     }
 	
+    public Vector3 getTarget()
+    {
+        Vector3 ret = control.getTarget();
+        if (ret == Vector3.zero) ret=body.transform.position;
+        return ret;
+    }
+
+    public Vector3 getDeltaTarget()
+    {
+        
+        Vector3 ret = control.getTarget();
+        if (ret == Vector3.zero) return ret;
+        return ret - body.transform.position;
+    }
+
     public bool isSteering()
     {
         return oldInputs.steering > 0.1 || oldInputs.steering<-0.1;
