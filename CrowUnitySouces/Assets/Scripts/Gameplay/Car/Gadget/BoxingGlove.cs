@@ -71,6 +71,8 @@ public class BoxingGlove : Gadget
             other.rigidbody.AddForce(forceDirection * _punchPower);
             other.gameObject.AddComponent<ObstacleDestroyer>();
             addScore();
+            DialogsManager._instance.triggerEvent(DialogsManager.DialogInfos.EventType.OBSTACLE_DESTRUCTION, other.gameObject.name);
+            DialogsManager._instance.triggerEvent(DialogsManager.DialogInfos.EventType.DESTRUCTION_WITH_GADGET, "BoxingGlove");
         }
         
     }
