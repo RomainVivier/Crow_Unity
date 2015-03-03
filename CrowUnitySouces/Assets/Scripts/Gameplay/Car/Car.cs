@@ -60,20 +60,11 @@ public class Car : MonoBehaviour
     private float oldSpeed=0;
     private bool dontMove = false;
 
-    private Car m_instance;
-    public Car Instance
+    private static Car m_instance;
+    public static Car Instance
     {
         get
         {
-            if (m_instance == null)
-            {
-                m_instance = this;
-            }
-            else if (this != m_instance)
-            {
-                Destroy(this.gameObject);
-            }
-
             return m_instance;
         }
     }
@@ -97,7 +88,8 @@ public class Car : MonoBehaviour
         tiresSound.start();
         wheelObject = transform.FindChild("Body/CarModel/RootWheel/Wheel").gameObject;
         wheelQuaternion = wheelObject.transform.localRotation;
-	}
+        m_instance = this;
+    }
 
     void FixedUpdate ()
 	{
