@@ -21,7 +21,7 @@ public class TurretProjectile : MonoBehaviour {
         m_threeDeeAttr.position = UnityUtil.toFMODVector(transform.position);
         m_threeDeeAttr.up = UnityUtil.toFMODVector(transform.up);
         m_threeDeeAttr.forward = UnityUtil.toFMODVector(transform.forward);
-        m_threeDeeAttr.velocity = UnityUtil.toFMODVector(Vector3.right*_speed-Car.Instance.transform.FindChild("Body").gameObject.rigidbody.velocity);
+        m_threeDeeAttr.velocity = UnityUtil.toFMODVector(-Vector3.right*_speed+Car.Instance.transform.FindChild("Body").gameObject.rigidbody.velocity);
         m_event.set3DAttributes(m_threeDeeAttr);
 	}
 

@@ -95,9 +95,10 @@ public class Spring : Gadget
                     forwardTarget.y = 0;
                     forwardTarget.Normalize();
                     m_addPos += forwardTarget * Time.fixedDeltaTime * _fallParameters[m_nbBounces].dist / _fallParameters[m_nbBounces].time;
-                    if (m_addPos.y <= 0)
+                    if (m_addPos.y <= 0 || m_car.isOnGround())
                     {
-                        m_addPos.y = 0;
+                        if (!m_car.isOnGround()) m_addPos.y = 0;
+                        else Debug.Log("isOnGround");
                         m_nbBounces++;
                         if (m_nbBounces >= _fallParameters.Length) Stop();
                         else
@@ -118,15 +119,15 @@ public class Spring : Gadget
 
     private void setRot()
     {
-        /*Vector3 forwardTarget = m_car.getForwardTarget();
+        Vector3 forwardTarget = m_car.getForwardTarget();
         forwardTarget.y = 0;
         forwardTarget.Normalize();
         //Debug.Log(forwardTarget);
         Vector3 rot = m_carBodyTransform.rotation.eulerAngles;
-        float mult = Mathf.Pow(0.1, Time.fixedDeltaTime);
+        float mult = Mathf.Pow(0.2f, Time.fixedDeltaTime);
+        rot.y=Mathf.LerpAngle(-Mathf.Atan2(forwardTarget.z, forwardTarget.x)*Mathf.Rad2Deg+90,rot.y,mult);
 
-        rot.y = -Mathf.Atan2(forwardTarget.z, forwardTarget.x)*Mathf.Rad2Deg+90;
-        m_carBodyTransform.rotation = Quaternion.Euler(rot);*/
+        m_carBodyTransform.rotation = Quaternion.Euler(rot);
 
     }
     public override void Play()
