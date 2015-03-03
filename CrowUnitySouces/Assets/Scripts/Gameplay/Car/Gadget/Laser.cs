@@ -20,7 +20,6 @@ public class Laser : Gadget
     public float _particlesSpeed = 100; // units/s
     public float _particlesRotationSpeed = 1; // rad/s
     public float _targetContactTime = 0.2f;
-    private Timer m_cooldownTimer;
     private Timer m_stateTimer;
     private Car m_car;
     private float m_lightsYOffset;
@@ -56,9 +55,8 @@ public class Laser : Gadget
 
     #region methods
     public override void Awake () {
-        _cooldown = 0;
+
         // Init timers
-        m_cooldownTimer = new Timer(0.01f);
         m_stateTimer = new Timer();
 
         // Register gadget
@@ -129,6 +127,9 @@ public class Laser : Gadget
                     Vector3 forwardTarget = m_car.getForwardTarget();
                     Vector3 right = m_car.getRightVector();
                     Vector3 up = m_car.getUpVector();
+                    float hAngle = Mathf.Acos(Vector3.Dot(forward, forwardTarget));
+                    if (Vector3.Dot(forwardTarget, right) < 0) hAngle = -hAngle;
+                    if (float.IsNaN(hAngle)) hAngle = 0;
 
                     // Update laser length
                     m_laserLength += Time.deltaTime * RANGE / _firingTime;
@@ -170,9 +171,16 @@ public class Laser : Gadget
                         m_lasers[i].lineRenderer.material.mainTextureOffset = new Vector2(-m_textureScroll, 1);
 
                         // Place particles
-                        m_lasers[i].particlesTransform.position = endPos +  direc * m_particlesPos + up * dist * Mathf.Cos(m_particlesRot) + right * dist * Mathf.Sin(m_particlesRot);
+                        m_lasers[i].particlesTransform.position = startPos;// + /*endPos +  direc * m_particlesPos +*/;// up * dist * Mathf.Cos(m_particlesRot) + right * dist * Mathf.Sin(m_particlesRot);
+                        /*Vector3 rot=m_lasers[i].particlesTransform.localRotation.eulerAngles;
+                        rot.z=m_particlesRot*Mathf.Rad2Deg%360;
+                        rot.y = hAngle*Mathf.Rad2Deg;
+                        rot.x = 0;
+                        m_lasers[i].particlesTransform.localRotation.=Quaternion.Euler(rot);*/
+                        m_lasers[i].particlesTransform.localEulerAngles = new Vector3(0, hAngle * Mathf.Rad2Deg, m_particlesRot * Mathf.Rad2Deg%360);
                         m_lasers[i].particles.startColor = new Color(1,1,1,1 - progress);
-                        
+                        m_lasers[i].particles.startSpeed = m_car.getForwardVelocity();
+
                         // Raycast to check damages
                         if(Physics.Raycast(startPos,direc,out rh,hypothenuse))
                         {
@@ -234,12 +242,12 @@ public class Laser : Gadget
                 else transform.FindChild("ValvesPivot").localEulerAngles=new Vector3(m_stateTimer.CurrentNormalized*-180,0,0);
                 break;
             case State.COOLDOWN:
-                if (m_cooldownTimer.IsElapsedOnce)
+                /*if (m_gadgetCooldownTimer.IsElapsedOnce)
                 {
                     m_state = State.READY;
                     Stop();
                     m_cooldownTimer.Reset(0);
-                }
+                }*/
                 break;
         }
         base.Update();
@@ -247,6 +255,7 @@ public class Laser : Gadget
 
     public override void Play()
     {
+        if (IsReady) m_state = State.READY;
         if(m_state!=State.READY)
         {
             Debug.LogError("Error : gadget laser is not ready");
@@ -256,7 +265,7 @@ public class Laser : Gadget
 			FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Gadgets/Laser/gadgetLaserExecute",transform.position);
 		    _laserEffect.GetComponent<ParticleSystem>().Stop();
             IsReady = false;
-            m_cooldownTimer.Reset(_cooldown);
+            //m_gadgetCooldownTimer.Reset(_cooldown);
             m_state = State.VALVE_OPENING;
             m_stateTimer.Reset(VALVE_OPENING_TIME);
         }

@@ -68,10 +68,12 @@ public class CarCollisionsHandler : MonoBehaviour
             Vector3 up = m_car.getUpVector();
             Vector3 direc = hVector * Mathf.Cos(vAngle) + up * Mathf.Sin(vAngle);
             float momentum=Mathf.Lerp(_minMomentum,_maxMomentum,m_car.getForwardVelocityKmh()/m_car.maxSpeedKmh);
-            oth.rigidbody.AddForce(direc * momentum,ForceMode.Impulse);
-            oth.AddComponent<ObstacleDestroyer>();
-            rigidbody.AddForce(-forward * _ownMomentum, ForceMode.Impulse);
-
+            if(oth.rigidbody != null)
+            {
+                oth.rigidbody.AddForce(direc * momentum,ForceMode.Impulse);
+                oth.AddComponent<ObstacleDestroyer>();
+                rigidbody.AddForce(-forward * _ownMomentum, ForceMode.Impulse);
+            }
 			m_windshield.Hit();
             //Score.Instance.DistanceTravaled += 10000;
             m_cameraShake.DoShake();

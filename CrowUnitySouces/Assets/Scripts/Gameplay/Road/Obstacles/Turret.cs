@@ -9,7 +9,6 @@ public class Turret : Obstacle
     public GameObject _projectile;
 
     private Timer m_timer;
-    private bool m_activated = false;
 
 
     public override void Start()
@@ -38,6 +37,7 @@ public class Turret : Obstacle
         base.Activate();
         _anim.SetTrigger("Engage");
         m_timer.Reset(_fireRate);
+        m_activated = true;
     }
 
     void Fire()
