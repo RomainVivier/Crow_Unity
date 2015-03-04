@@ -10,7 +10,6 @@ public class Turret : Obstacle
 
     private Timer m_timer;
 
-
     public override void Start()
     {
         base.Start();

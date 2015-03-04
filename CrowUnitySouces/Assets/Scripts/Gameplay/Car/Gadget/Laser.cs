@@ -55,7 +55,6 @@ public class Laser : Gadget
 
     #region methods
     public override void Awake () {
-
         // Init timers
         m_stateTimer = new Timer();
 
@@ -101,6 +100,7 @@ public class Laser : Gadget
                         m_lasers[i].contactObject = null;
                         m_lasers[i].particlesTransform.position = m_lasers[i].lightTransform.position;
                         m_lasers[i].particles.Play();
+                        m_lasers[i].particles.active = true;
                         m_lasers[i].angle = 0;
                     }
                     m_laserLength = 0;
@@ -119,6 +119,7 @@ public class Laser : Gadget
                     {
                         m_lasers[i].lineRenderer.enabled = false;
                         m_lasers[i].particles.Stop();
+                        m_lasers[i].particles.active = false;
                     }
                 }
                 else
@@ -179,7 +180,7 @@ public class Laser : Gadget
                         m_lasers[i].particlesTransform.localRotation.=Quaternion.Euler(rot);*/
                         m_lasers[i].particlesTransform.localEulerAngles = new Vector3(0, hAngle * Mathf.Rad2Deg, m_particlesRot * Mathf.Rad2Deg%360);
                         m_lasers[i].particles.startColor = new Color(1,1,1,1 - progress);
-                        m_lasers[i].particles.startSpeed = m_car.getForwardVelocity();
+                        //m_lasers[i].particles.startSpeed = m_car.getForwardVelocity();
 
                         // Raycast to check damages
                         if(Physics.Raycast(startPos,direc,out rh,hypothenuse))

@@ -281,4 +281,9 @@ public class RailsControl : CarControl
         return rails.getForward(currentRail, chunkProgress);
     }
 
+    public override Vector3 getTarget()
+    {
+        return target;
+    }
+
 }
