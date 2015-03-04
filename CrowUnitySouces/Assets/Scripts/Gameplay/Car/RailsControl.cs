@@ -29,7 +29,8 @@ public class RailsControl : CarControl
 	private int nbUpdates=0;
     private FMOD.Studio.EventInstance playerPosEvent;
     private FMOD.Studio.ParameterInstance playerPosParameter;
-    
+    private float previousRail = 0;
+
     //Keybinding
     private float m_steering;
     private float m_brake;
@@ -259,6 +260,7 @@ public class RailsControl : CarControl
     {
         if(stickToRails)
         {
+            previousRail = Mathf.RoundToInt(currentRail);
             targetRail+=(int)delta;
             if(targetRail<0) targetRail=0;
             if (targetRail > rails.getNbRails() - 1) targetRail = rails.getNbRails() - 1;
@@ -269,6 +271,11 @@ public class RailsControl : CarControl
             if(currentRail<0) currentRail=0;
 			if(currentRail>rails.getNbRails()-1) currentRail=rails.getNbRails()-1;
         }
+    }
+
+    public void ShiftToPreviousRail()
+    {
+        if (stickToRails) targetRail = Mathf.FloorToInt(previousRail);
     }
 
     public int getCurrentNbRails()

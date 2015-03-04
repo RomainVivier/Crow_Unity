@@ -13,7 +13,6 @@ public class CarCollisionsHandler : MonoBehaviour
     public float _ownMomentum = 10000;
     public static bool _dontCollide = false;
     public Spring _spring;
-
     #endregion
 
     #region private members
@@ -22,10 +21,13 @@ public class CarCollisionsHandler : MonoBehaviour
     private FMOD.Studio.EventInstance m_impactConcreteSound;
     private FMOD.Studio.ParameterInstance m_impactConcreteSpeed;
     private Car m_car;
+    private RailsControl m_railsControl;
     private Timer cooldownTimer;
 	private WindshieldController m_windshield;
 	private CameraShake m_cameraShake;
     private GameObject m_lastObject;
+    private Collider m_collider;
+
     #endregion
 
     #region MonoBehaviour
@@ -36,11 +38,13 @@ public class CarCollisionsHandler : MonoBehaviour
         m_impactConcreteSound=FMOD_StudioSystem.instance.GetEvent("event:/SFX/Impacts/impactConcrete");
         m_impactConcreteSound.getParameter("Speed", out m_impactConcreteSpeed);
         m_car = transform.parent.gameObject.GetComponent<Car>();
+        m_railsControl = m_car.gameObject.GetComponent<RailsControl>();
 		m_windshield = GetComponentInChildren<WindshieldController>();
 		m_cameraShake = GetComponentInChildren<CameraShake>();
         cooldownTimer = new Timer();
         cooldownTimer.Reset(0.01f);
         m_lastObject = null;
+        m_collider = collider;
     }
     #endregion
 
@@ -83,6 +87,12 @@ public class CarCollisionsHandler : MonoBehaviour
             DialogsManager._instance.triggerEvent(DialogsManager.DialogInfos.EventType.CAR_DAMAGE, oth.name);
             _spring.collide();
         }
+        else if (oth.tag == "Barrier")
+        {
+            //Vector3 diff = oth.transform.position - m_car.transform.Find("Body").position;
+            //float rPos = Vector3.Dot(diff, m_car.getRightVector());
+            m_railsControl.ShiftToPreviousRail();
+        } 
     }
 
     void OnCollisionEnter(Collision collision)
@@ -97,6 +107,7 @@ public class CarCollisionsHandler : MonoBehaviour
             float relDy = Vector3.Dot(transform.up, diff);
             if (relDy > -0.7) playSound(collision, oth, m_impactConcreteSound, m_impactConcreteSpeed);
         }
+
     }
     #endregion
 
