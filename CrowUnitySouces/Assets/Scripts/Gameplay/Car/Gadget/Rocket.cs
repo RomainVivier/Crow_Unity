@@ -125,6 +125,7 @@ public class Rocket : Gadget {
         } 
         else
         {
+            //Debug.Log(m_railsProgress + " " + m_target.RailsProgress);
             if (m_rails == m_target.Rails && m_railsProgress >= m_target.RailsProgress)
             {
                 Blow();
@@ -175,10 +176,11 @@ public class Rocket : Gadget {
             {
                 if (go.transform.position.x - m_rocketObject.transform.position.x > 20  && (m_target == null || Vector3.Distance(m_rocketObject.transform.position, m_target.transform.position) > Vector3.Distance(m_rocketObject.transform.position, go.transform.position)))
                 {
-                    m_target = go.GetComponent<Obstacle>();
+                    if(go.GetComponent<Obstacle>()!=null) m_target = go.GetComponent<Obstacle>();
                 }
             }
         }
+
 
         if (obstacles.Length == 0 || m_target == null || Vector3.Distance(m_rocketObject.transform.position, m_target.transform.position) > 400) 
         {
