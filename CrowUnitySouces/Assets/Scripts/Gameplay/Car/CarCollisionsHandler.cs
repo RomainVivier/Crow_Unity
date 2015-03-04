@@ -12,6 +12,7 @@ public class CarCollisionsHandler : MonoBehaviour
     public float _maxMomentum = 30000;
     public float _ownMomentum = 10000;
     public static bool _dontCollide = false;
+    public Spring _spring;
 
     #endregion
 
@@ -80,6 +81,7 @@ public class CarCollisionsHandler : MonoBehaviour
             Score.Instance.ResetCombo();
             DialogsManager._instance.triggerEvent(DialogsManager.DialogInfos.EventType.CAR_HP, (float) m_windshield._hp);
             DialogsManager._instance.triggerEvent(DialogsManager.DialogInfos.EventType.CAR_DAMAGE, oth.name);
+            _spring.collide();
         }
     }
 

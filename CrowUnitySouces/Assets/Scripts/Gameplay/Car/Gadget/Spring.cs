@@ -5,7 +5,7 @@ public class Spring : Gadget
 {
 
     #region attribures
-    private enum State { NOT_PLAYING, ASCENDING, GLIDING, FALLING}
+    private enum State { NOT_PLAYING, ASCENDING, GLIDING, FALLING, IMMEDIATE_FALL}
 
     [System.Serializable]
     public class FallParameters
@@ -34,6 +34,8 @@ public class Spring : Gadget
     private Transform m_carBodyTransform;
     private Vector3 m_addPos;
     private State m_state;
+    private bool m_isBroken = false;
+
     #endregion
 
     #region methods
@@ -118,7 +120,30 @@ public class Spring : Gadget
 
                     m_carBodyTransform.position = m_basePos + m_addPos;
                     setRot();
-
+                }
+                break;
+            case State.IMMEDIATE_FALL:
+                {
+                    float oldVSpeed = m_vSpeed;
+                    m_vSpeed += m_vAccel * Time.fixedDeltaTime;
+                    float avgVSpeed = (oldVSpeed + m_vSpeed) / 2;
+                    m_addPos.y -= m_vSpeed * Time.fixedDeltaTime;
+                    if (m_addPos.y <= 0 || m_car.isOnGround())
+                    {
+                        if (!m_car.isOnGround()) m_addPos.y = 0;
+                        else
+                        {
+                            int nbTries = 0;
+                            while (m_car.isOnGround() && nbTries < 10)
+                            {
+                                m_addPos.y += 0.05f;
+                                nbTries++;
+                            }
+                        }
+                        m_carBodyTransform.position = m_basePos + m_addPos;
+                        setRot();
+                        Stop();
+                    }
                 }
                 break;
 
@@ -137,21 +162,66 @@ public class Spring : Gadget
         if (Mathf.Abs(rot.y - newRot) < 5) mult = 1;
         rot.y=Mathf.LerpAngle(newRot,rot.y,mult);
         m_carBodyTransform.rotation = Quaternion.Euler(rot);
-
     }
+
+   
+    /*void OnCollisionEnter(Collision collision)
+    {
+        Debug.Log("ccc");
+        if(m_state!=State.NOT_PLAYING && m_state!=State.IMMEDIATE_FALL)
+        {
+            Debug.Log("aaa");
+            foreach(ContactPoint cp in collision.contacts)
+            {
+                if(cp.thisCollider==m_carBodyTransform.rigidbody.collider)
+                {
+                    Debug.Log("collision");
+                    m_state = State.IMMEDIATE_FALL;
+                    if(Physics.R)
+                }
+            }
+        }
+    }*/
+
+    public void collide()
+    {
+        if(m_state!=State.NOT_PLAYING && m_state!=State.IMMEDIATE_FALL)
+        {
+            if(m_state==State.FALLING)
+            {
+                if (m_vSpeed < 0) m_vSpeed = 0;
+                if (m_vAccel < 2 * _jumpHeight / 0.2f) m_vAccel = 2 * _jumpHeight / 0.2f;
+            }
+            else
+            {
+                m_vSpeed = 0;
+                m_vAccel = 2 * _jumpHeight / 0.2f;
+            }
+            m_state = State.IMMEDIATE_FALL;
+        }
+        if(m_state==State.IMMEDIATE_FALL)
+        {
+            m_isBroken = true;
+        }
+    }
+
     public override void Play()
     {
         base.Play();
-        m_basePos = m_carBodyTransform.position;
-        m_state = State.ASCENDING;
-        m_timer.Reset(_ascendingTime);
-        m_oldSpeed = m_car.getForwardVelocity();
-        //m_car.InstantSetSpeed(0);
-        m_car.setDontMove(true);
-        m_basePos = m_carBodyTransform.position;
-        m_addPos = Vector3.zero;
-        //m_carBodyTransform.gameObject.rigidbody.isKinematic = true;
-        m_carBodyTransform.gameObject.rigidbody.constraints = RigidbodyConstraints.FreezeAll;
+        if (!m_isBroken)
+        {
+            m_basePos = m_carBodyTransform.position;
+            m_state = State.ASCENDING;
+            m_timer.Reset(_ascendingTime);
+            m_oldSpeed = m_car.getForwardVelocity();
+            //m_car.InstantSetSpeed(0);
+            m_car.setDontMove(true);
+            m_basePos = m_carBodyTransform.position;
+            m_addPos = Vector3.zero;
+            //m_carBodyTransform.gameObject.rigidbody.isKinematic = true;
+            m_carBodyTransform.gameObject.rigidbody.constraints = RigidbodyConstraints.FreezeAll;
+        }
+        else base.Stop();
     }
 
     public override void Stop()
