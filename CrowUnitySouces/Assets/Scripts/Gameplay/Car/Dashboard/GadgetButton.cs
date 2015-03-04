@@ -14,6 +14,13 @@ public class GadgetButton : MonoBehaviour
     public bool _activatedOnStart = false;
 
 	private GameObject m_cooldownPanel;
+    public MeshRenderer _buttonRenderer;
+    public Color _darkColor;
+    public Color _brightColor;
+
+    private Color m_tempColor;
+    private Timer m_cooldownTimer;
+    private bool m_isInCooldown;
     private Vector2 m_startPoint;
     private float m_tgtAngle;
     private Gadget m_gadget;
@@ -22,6 +29,16 @@ public class GadgetButton : MonoBehaviour
     private Animator m_anim;
     #endregion 
     
+    
+    public float Cooldown
+    {
+        set
+        {
+            m_cooldownTimer.Reset(value);
+            m_isInCooldown = true;
+        }
+    }
+
     #region GagdetButton Functions
 
 	public void AssignRandomGadget()
@@ -36,19 +53,35 @@ public class GadgetButton : MonoBehaviour
         {
             gadget._buttonAnim = GetComponent<Animator>();
             gadget._buttonAnim.SetTrigger("Activate");
+            gadget._button = this;
         }
         _abilities = GadgetManager.Instance.GadgetAbilities(_gadgetID);
     }
 
-    public void Start()
+    void Start()
     {
         m_tgtAngle=Mathf.Atan2(_swipeVector.y,_swipeVector.x);
         m_gadget = GadgetManager.Instance.GetGadget(_gadgetID);
 		m_cooldownPanel = Resources.Load ("CooldownMark") as GameObject;
-		
-		if(_activatedOnStart)
+        m_cooldownTimer = new Timer();
+        m_isInCooldown = false;
+        
+        if(_activatedOnStart)
         {
             Init();
+        }
+    }
+
+    void Update()
+    {
+        if (_buttonRenderer != null && !m_cooldownTimer.IsElapsedLoop && m_isInCooldown)
+        {
+            m_tempColor = Vector4.Lerp(_darkColor, _brightColor, (1 - m_cooldownTimer.CurrentNormalized));
+            _buttonRenderer.renderer.material.SetColor("_Color", m_tempColor);
+        }
+        else
+        {
+            m_isInCooldown = false;
         }
     }
 
@@ -60,7 +93,9 @@ public class GadgetButton : MonoBehaviour
         }
 
         if (_swipeVector == Vector2.zero) {
-			GadgetManager.Instance.PlayGadget (_gadgetID);
+			bool result = GadgetManager.Instance.PlayGadget (_gadgetID);
+			if(!result)
+			   return;
 			Gadget gad = GadgetManager.Instance.getGadgetById(_gadgetID);
 
 			GameObject cooldownPanel = GameObject.Instantiate(m_cooldownPanel) as GameObject;

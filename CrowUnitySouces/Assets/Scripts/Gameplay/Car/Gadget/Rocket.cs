@@ -241,7 +241,7 @@ public class Rocket : Gadget {
 
         m_explosionParticles.transform.position = m_target == null ? m_rocketObject.transform.position : m_target.transform.position;
         m_explosionParticles.GetComponent<ParticleSystem>().Play();
-        var colliders = Physics.OverlapSphere(transform.position, _blastRadius);
+        var colliders = Physics.OverlapSphere(m_rocketObject.transform.position, _blastRadius);
         m_target = null;
         foreach(Collider collider in colliders)
         {
@@ -249,6 +249,8 @@ public class Rocket : Gadget {
             {
                 collider.gameObject.SetActive(false);
                 addScore();
+                DialogsManager._instance.triggerEvent(DialogsManager.DialogInfos.EventType.OBSTACLE_DESTRUCTION, collider.gameObject.name);
+                DialogsManager._instance.triggerEvent(DialogsManager.DialogInfos.EventType.DESTRUCTION_WITH_GADGET, "Rocket");
             }
         }
 
