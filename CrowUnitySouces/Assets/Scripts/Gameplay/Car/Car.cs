@@ -241,11 +241,12 @@ public class Car : MonoBehaviour
         engineLoad.setValue(inputs.throttle>0.5 ? 1 : 0);
         
         //Debug print
-		/*if(nbUpdates%10==0)
+		if(nbUpdates%10==0)
 		{
 			//Debug.Log((int)forwardVelocity*3.6+" "+(int)rpm+" "+transmission.getCurrentGear());
-            Debug.Log(getDeltaTarget());
-        }*/
+            //Debug.Log(getDeltaTarget());
+			//Debug.Log (forwardVelocity*3.6f);
+        }
 
 	}
 

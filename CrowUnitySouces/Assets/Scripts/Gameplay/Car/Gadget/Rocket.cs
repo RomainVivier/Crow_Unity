@@ -78,11 +78,12 @@ public class Rocket : Gadget {
                 if (m_rocketLaunchtimer.IsElapsedOnce)
                 {
                     Launch();
-                }
+					_rocketExecute.Play();
+					m_rocketExecute3D.start();
+				}
                 else if (!m_rocketLaunchtimer.IsElapsedLoop && m_rocketLaunchtimer.Current > 0.5f)
                 {
-                    _rocketExecute.Play();
-                    m_rocketExecute3D.start();
+
                 }
 
                 break;
@@ -91,7 +92,7 @@ public class Rocket : Gadget {
                 UpdateProgress();
 
                 UpdateSound();
-
+			Debug.Log ((Car.Instance.transform.FindChild("Body").position-m_rocketObject.transform.position).magnitude);
                 break;
         }
 
@@ -155,7 +156,7 @@ public class Rocket : Gadget {
         m_rocketExecute3D.set3DAttributes(threeDeeAttr);
 
         float dist = (m_rocketObject.transform.position - m_carTransform.position).magnitude;
-        dist = Mathf.Clamp(dist, 10, 200);
+        //dist = Mathf.Clamp(dist, 10, 200);
         m_rocketExecute3DDist.setValue(dist);
     }
 
@@ -196,7 +197,7 @@ public class Rocket : Gadget {
         m_failProgress = 0f;
 
         m_rocketLaunchtimer.Reset(0.6f);
-        FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Gadgets/Rocket/gadgetRocketEngage", m_rocketObject.transform.position);
+		FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Gadgets/Rocket/gadgetRocketEngage", m_rocketObject.transform.position);
 
     }
 
