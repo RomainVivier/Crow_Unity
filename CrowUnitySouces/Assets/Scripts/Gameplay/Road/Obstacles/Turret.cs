@@ -7,6 +7,8 @@ public class Turret : Obstacle
     public float _fireRate;
     public Transform _canon;
     public GameObject _projectile;
+    public Color _color;
+    public Color _shootColor;
 
     private Timer m_timer;
 
@@ -25,9 +27,15 @@ public class Turret : Obstacle
             return;
         }
 
+        if(m_timer.Current < _fireRate/3)
+        {
+            renderer.material.color = _shootColor;
+        }
+
         if(m_timer.IsElapsedOnce)
         {
             Fire();
+            renderer.material.color = _color;
         }
     }
 
