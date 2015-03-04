@@ -98,7 +98,15 @@ public class Spring : Gadget
                     if (m_addPos.y <= 0 || m_car.isOnGround())
                     {
                         if (!m_car.isOnGround()) m_addPos.y = 0;
-                        else Debug.Log("isOnGround");
+                        else
+                        {
+                            int nbTries = 0;
+                            while (m_car.isOnGround() && nbTries < 10)
+                            {
+                                m_addPos.y += 0.05f;
+                                nbTries++;
+                            }
+                        }
                         m_nbBounces++;
                         if (m_nbBounces >= _fallParameters.Length) Stop();
                         else
@@ -124,9 +132,10 @@ public class Spring : Gadget
         forwardTarget.Normalize();
         //Debug.Log(forwardTarget);
         Vector3 rot = m_carBodyTransform.rotation.eulerAngles;
+        float newRot = -Mathf.Atan2(forwardTarget.z, forwardTarget.x) * Mathf.Rad2Deg + 90;
         float mult = Mathf.Pow(0.2f, Time.fixedDeltaTime);
-        rot.y=Mathf.LerpAngle(-Mathf.Atan2(forwardTarget.z, forwardTarget.x)*Mathf.Rad2Deg+90,rot.y,mult);
-
+        if (Mathf.Abs(rot.y - newRot) < 5) mult = 1;
+        rot.y=Mathf.LerpAngle(newRot,rot.y,mult);
         m_carBodyTransform.rotation = Quaternion.Euler(rot);
 
     }
@@ -141,12 +150,14 @@ public class Spring : Gadget
         m_car.setDontMove(true);
         m_basePos = m_carBodyTransform.position;
         m_addPos = Vector3.zero;
-        m_carBodyTransform.gameObject.rigidbody.isKinematic = true;
+        //m_carBodyTransform.gameObject.rigidbody.isKinematic = true;
+        m_carBodyTransform.gameObject.rigidbody.constraints = RigidbodyConstraints.FreezeAll;
     }
 
     public override void Stop()
     {
-        m_carBodyTransform.gameObject.rigidbody.isKinematic = false;
+        //m_carBodyTransform.gameObject.rigidbody.isKinematic = false;
+        m_carBodyTransform.gameObject.rigidbody.constraints = RigidbodyConstraints.None;
         m_car.setDontMove(false);
         m_car.InstantSetSpeed(m_oldSpeed,true);
         m_state = State.NOT_PLAYING;
