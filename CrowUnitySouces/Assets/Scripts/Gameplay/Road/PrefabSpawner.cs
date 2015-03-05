@@ -6,6 +6,7 @@ public class PrefabSpawner : MonoBehaviour
     #region members
     public GameObject prefab;
     public Vector3 _offset = new Vector3(0, 1, 0);
+    public Vector3 _scale = new Vector3(1, 1, 1);
     public Rails _rail;
     public float _railIndex;
     public float _railProgress;
@@ -31,6 +32,8 @@ public class PrefabSpawner : MonoBehaviour
 
 			if(_rail != null)
 				m_spawnedObject.transform.position = _rail.getPoint(_railIndex, _railProgress)+ _offset;
+
+            m_spawnedObject.transform.localScale = _scale;
 		}
 		
         m_spawnedObject.transform.parent = transform;

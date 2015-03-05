@@ -18,5 +18,10 @@ public class DirectCarControl : CarControl {
     {
         return Vector3.zero;
     }
+
+    public override Vector3 getTarget()
+    {
+        return Vector3.zero;
+    }
 }
 

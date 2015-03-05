@@ -18,6 +18,7 @@ public abstract class Obstacle : MonoBehaviour
     protected Rails m_rails;
     protected float m_railsIndex;
     protected float m_railsProgress;
+    protected bool m_activated = false;
     #endregion
 
     public Rails Rails
@@ -56,7 +57,7 @@ public abstract class Obstacle : MonoBehaviour
             _vignette.gameObject.transform.rotation = Quaternion.LookRotation(Vector3.Scale(Score.Instance.Body.transform.position - transform.position, Vector3.right));
         }
 
-        if(dist <= _activateDistance)
+        if(dist <= _activateDistance && !m_activated)
         {
             Activate();
         }

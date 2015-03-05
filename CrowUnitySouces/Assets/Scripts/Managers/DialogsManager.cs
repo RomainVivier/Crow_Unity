@@ -26,18 +26,19 @@ public class DialogsManager : MonoBehaviour
     public static DialogsManager _instance;
     public DialogInfos[] _dialogInfos;
     
-    private class InternalDialogInfos
+    private struct InternalDialogInfos
     {
         public int currentCooldown;
         public int[] playList;
-        public int pos = 0;
+        public int pos;
     }
+
     private InternalDialogInfos[] m_dialogInfos;
     private int m_nbDialogs;
     private FMOD.Studio.EventInstance m_currentEvent;
     private Timer m_timer;
     private float m_afterTimer;
-
+    private Transform m_carTransform=null;
     #endregion
 
     #region mono
@@ -51,7 +52,12 @@ public class DialogsManager : MonoBehaviour
         {
             m_dialogInfos[i].currentCooldown = _dialogInfos[i].forceFirstCooldown ? _dialogInfos[i].cooldown : 0;
             if (isRandomPlayMode(_dialogInfos[i].playMode)) shufflePlayList(i);
+            m_dialogInfos[i].pos = 0;
+
         }
+
+
+
 
         // Init other things
         m_currentEvent = null;
@@ -92,6 +98,20 @@ public class DialogsManager : MonoBehaviour
                 && (!usesNumberParam(type) || _dialogInfos[i].eventNumberParam == numberParam))
                 triggerEvent(i);
 
+        }
+    }
+
+    public void triggerProximityEvent(string name, Vector3 pos)
+    {
+        if(m_carTransform==null) m_carTransform = GameObject.FindObjectOfType<Car>().transform.Find("Body");
+        for(int i=0;i<m_nbDialogs;i++)
+        {
+            if (_dialogInfos[i].eventType == DialogInfos.EventType.OBJECT_PROXIMITY
+                && _dialogInfos[i].eventStringParam == name)
+            {
+                float dist = (m_carTransform.position - pos).magnitude;
+                if (dist <= _dialogInfos[i].eventNumberParam) triggerEvent(i);
+            }
         }
     }
     #endregion
