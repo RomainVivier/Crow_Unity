@@ -163,10 +163,10 @@ public class DialogsManager : MonoBehaviour
 
     private void triggerEvent(int dialog)
     {
-        if(m_timer!=null && m_currentEvent!=null)
+        if(m_timer==null && m_currentEvent==null)
         {
             if(m_dialogInfos[dialog].currentCooldown>0) m_dialogInfos[dialog].currentCooldown--;
-            else if(m_currentEvent==null && m_timer==null && Random.Range(0f,1f)<=_dialogInfos[dialog].probability)
+            else if(Random.Range(0f,1f)<=_dialogInfos[dialog].probability)
             {
                 if(isOnce(_dialogInfos[dialog].playMode) || m_dialogInfos[dialog].pos<_dialogInfos[dialog].sounds.Length)
                 {
@@ -176,6 +176,9 @@ public class DialogsManager : MonoBehaviour
                         if (_dialogInfos[dialog].playMode == DialogInfos.PlayMode.SHUFFLE_LOOP) shufflePlayList(dialog);
                     }
                     m_currentEvent=FMOD_StudioSystem.instance.GetEvent("event:/"+_dialogInfos[dialog].sounds[m_dialogInfos[dialog].pos]);
+                    Debug.Log("Play "+_dialogInfos[dialog].sounds[m_dialogInfos[dialog].pos]);
+                    m_dialogInfos[dialog].pos++;
+                    m_dialogInfos[dialog].currentCooldown = _dialogInfos[dialog].cooldown;
                     m_afterTimer=_dialogInfos[dialog].postOffset;
                     if(_dialogInfos[dialog].preOffset==0) m_currentEvent.start();
                     else
