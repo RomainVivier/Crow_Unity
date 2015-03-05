@@ -52,6 +52,20 @@ public class SwattingBuilding : MonoBehaviour
         // Regenerate the building with height=4
         m_usedBuildingGenerator._minHeight = 4;
         m_usedBuildingGenerator._maxHeight = 4;
+        m_usedBuildingGenerator.regenerate();
+
+        // Add a collider to the building
+        BoxCollider bc=m_usedBuildingGenerator.gameObject.AddComponent<BoxCollider>();
+        bc.center = new Vector3(0, 90, 0);
+        bc.size = new Vector3(32, 180, 45);
+
+        // Change layer and tag
+        m_usedBuildingGenerator.gameObject.tag = "Obstacle";
+        m_usedBuildingGenerator.gameObject.layer = LayerMask.NameToLayer("Obstacle");
+
+        // Attach collision handler
+        SwattingBuildingCollisionHandler sbch= m_usedBuildingGenerator.gameObject.AddComponent<SwattingBuildingCollisionHandler>();
+        sbch._swattingBuilding = this;
 
         // Create a new gameobject to have the right pivot
         m_buildingGameObject = new GameObject();
@@ -124,10 +138,27 @@ public class SwattingBuilding : MonoBehaviour
                 {
                     // Rotate the building
                     Vector3 rot = m_buildingGameObject.transform.localRotation.eulerAngles;
-                    rot.z = -90*m_timer.Current/_riseTime;
+                    rot.z = -90 * m_timer.Current / _riseTime;
                     m_buildingGameObject.transform.localRotation=Quaternion.Euler(rot);
                 }
                 break;
+        }
+    }
+
+    public void handleCollision(Collision collision)
+    {
+        if (collision.gameObject.transform.parent.gameObject.GetComponent<Car>() != null)
+        {
+            Debug.Log("car");
+            // Instant kill if it swats the player
+            /*if(m_state==State.FALLING)
+            {
+
+            }
+
+            // Rise the building
+            m_state = State.RISING;
+            m_timer.Reset(_riseTime);*/
         }
     }
     #endregion

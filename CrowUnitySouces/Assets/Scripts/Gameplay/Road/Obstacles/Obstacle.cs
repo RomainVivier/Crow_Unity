@@ -42,22 +42,26 @@ public abstract class Obstacle : MonoBehaviour
     public virtual void Start()
     {
         m_weaknesses = new List<GadgetAbility>();
-        m_vignetteColor = _vignette.color;
-        m_vignetteColor.a = 0f;
-        _vignette.color = m_vignetteColor;
+        if(_vignette != null)
+        {
+            m_vignetteColor = _vignette.color;
+            m_vignetteColor.a = 0f;
+            _vignette.color = m_vignetteColor;
+        }
+        
     }
 
     public virtual void Update()
     {
         float dist = Vector3.Distance(Score.Instance.Body.transform.position, transform.position);
-        if( dist < _maxDistVignette && dist > _minDistVignette)
+        if (dist < _maxDistVignette && dist > _minDistVignette)
         {
             m_vignetteColor.a = Mathf.Lerp(0f, 1f, (dist - _minDistVignette) / (_fadeDistVignette - _minDistVignette) );
             _vignette.color = m_vignetteColor;
             _vignette.gameObject.transform.rotation = Quaternion.LookRotation(Vector3.Scale(Score.Instance.Body.transform.position - transform.position, Vector3.right));
         }
 
-        if(dist <= _activateDistance && !m_activated)
+        if (dist <= _activateDistance && !m_activated && Score.Instance.Body.transform.position.x < transform.position.x)
         {
             Activate();
         }

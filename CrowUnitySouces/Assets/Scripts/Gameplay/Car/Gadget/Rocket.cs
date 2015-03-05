@@ -92,7 +92,6 @@ public class Rocket : Gadget {
                 UpdateProgress();
 
                 UpdateSound();
-			Debug.Log ((Car.Instance.transform.FindChild("Body").position-m_rocketObject.transform.position).magnitude);
                 break;
         }
 

@@ -220,6 +220,7 @@ public class Spring : Gadget
             m_addPos = Vector3.zero;
             //m_carBodyTransform.gameObject.rigidbody.isKinematic = true;
             m_carBodyTransform.gameObject.rigidbody.constraints = RigidbodyConstraints.FreezeAll;
+            IsReady = false;
         }
         else base.Stop();
     }
