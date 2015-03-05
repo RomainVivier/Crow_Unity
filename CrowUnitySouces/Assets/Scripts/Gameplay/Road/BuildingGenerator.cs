@@ -10,6 +10,24 @@ public class BuildingGenerator : MonoBehaviour {
 
 	void Start()
     {
+        generate();
+	}
+
+
+    void OnDrawGizmos()
+    {
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireCube(transform.position + Vector3.up * (_maxHeight * transform.localScale.y * 30 / 2), Vector3.Scale(new Vector3(50, 30 * _maxHeight, 50), transform.localScale));
+    }
+
+    public void regenerate()
+    {
+        for(int i=0;i<transform.childCount;i++) GameObject.Destroy(transform.GetChild(i));
+        generate();
+    }
+
+    private void generate()
+    {
 	    if(_minHeight < 1 || (_maxHeight < 1 || _maxHeight < _minHeight) || _enviro=="")
         {
             Debug.Log("Some parameters are wrong. Correct it and try again.");
@@ -53,12 +71,5 @@ public class BuildingGenerator : MonoBehaviour {
                 sp._soundNameExitRight="SFX/Env Objects/envSwooshBuildingExitRight";
             }
         }
-	}
-
-
-    void OnDrawGizmos()
-    {
-        Gizmos.color = Color.blue;
-        Gizmos.DrawWireCube(transform.position + Vector3.up * (_maxHeight * transform.localScale.y * 30 / 2), Vector3.Scale(new Vector3(50, 30 * _maxHeight, 50), transform.localScale));
     }
 }
