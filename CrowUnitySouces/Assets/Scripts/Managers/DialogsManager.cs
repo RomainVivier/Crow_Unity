@@ -168,7 +168,7 @@ public class DialogsManager : MonoBehaviour
             if(m_dialogInfos[dialog].currentCooldown>0) m_dialogInfos[dialog].currentCooldown--;
             else if(Random.Range(0f,1f)<=_dialogInfos[dialog].probability)
             {
-                if(isOnce(_dialogInfos[dialog].playMode) || m_dialogInfos[dialog].pos<_dialogInfos[dialog].sounds.Length)
+                if(!isOnce(_dialogInfos[dialog].playMode) || m_dialogInfos[dialog].pos<_dialogInfos[dialog].sounds.Length)
                 {
                     if(m_dialogInfos[dialog].pos>=_dialogInfos[dialog].sounds.Length)
                     {
