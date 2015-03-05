@@ -7,6 +7,7 @@ public class PrefabSpawner : MonoBehaviour
     public GameObject prefab;
     public Vector3 _offset = new Vector3(0, 1, 0);
     public Vector3 _scale = new Vector3(1, 1, 1);
+    public Vector3 _euler = new Vector3(0, 0, 0);
     public Rails _rail;
     public float _railIndex;
     public float _railProgress;
@@ -21,7 +22,7 @@ public class PrefabSpawner : MonoBehaviour
     public void spawnPrefab()
     {
         if (m_spawnedObject != null) GameObject.Destroy(m_spawnedObject);
-        m_spawnedObject=(GameObject) GameObject.Instantiate(prefab, transform.position + _offset, transform.rotation);
+        m_spawnedObject=(GameObject) GameObject.Instantiate(prefab, transform.position + _offset, Quaternion.Euler(_euler));
         Obstacle obstacle = m_spawnedObject.GetComponent<Obstacle>();
 
         if(obstacle != null)
