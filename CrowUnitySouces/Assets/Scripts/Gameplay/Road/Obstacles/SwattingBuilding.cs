@@ -149,16 +149,16 @@ public class SwattingBuilding : MonoBehaviour
     {
         if (collision.gameObject.transform.parent.gameObject.GetComponent<Car>() != null)
         {
-            Debug.Log("car");
             // Instant kill if it swats the player
-            /*if(m_state==State.FALLING)
+            if (m_state == State.FALLING)
             {
-
+                Car.Instance.getWindshieldController().Kill();
             }
-
+            else Car.Instance.getWindshieldController().Hit();
             // Rise the building
             m_state = State.RISING;
-            m_timer.Reset(_riseTime);*/
+            m_timer.Reset(_riseTime);
+            
         }
     }
     #endregion
