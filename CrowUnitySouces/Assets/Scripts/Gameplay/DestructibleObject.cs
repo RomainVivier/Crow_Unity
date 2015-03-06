@@ -21,7 +21,6 @@ public class DestructibleObject : MonoBehaviour
     {
         GameObject oth = other.gameObject;
         Car car = oth.transform.root.GetComponent<Car>();
-        Debug.Log(oth.name);
         if(car!=null)
         {
             int nbChild=transform.childCount;
