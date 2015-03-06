@@ -201,7 +201,7 @@ public class Laser : Gadget
                                         _laserEffect.GetComponent<ParticleSystem>().Play();
                                         _laserEffect.transform.position = go.transform.position;//rh.point;
                                         rh.collider.gameObject.SetActive(false);
-                                        addScore();
+                                        addScore(rh.collider.transform.position);
 
                                         // Play sound
                                         FMOD.Studio.EventInstance blowInstance
