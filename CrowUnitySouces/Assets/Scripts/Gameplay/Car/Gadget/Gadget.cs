@@ -108,9 +108,9 @@ public class Gadget : MonoBehaviour
             _button.Cooldown = _cooldown;
         }
     }
-    protected void addScore()
+    protected void addScore(Vector3 pos)
     {
-        Score.Instance.AddScore(_score,_combo);
+        Score.Instance.AddScore(_score,pos, _combo);
     }
     #endregion
 

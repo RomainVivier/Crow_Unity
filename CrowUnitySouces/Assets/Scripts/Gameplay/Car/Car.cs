@@ -20,6 +20,10 @@ public class Car : MonoBehaviour
     public float airSteering = 0;
     public float rotationDampingNoThrottle = 0.1f;
 
+
+    [Header("Misc")]
+    public float limitRotation = 15;
+
 	// Components
 	private Engine engine;
 	private CarControl control;
@@ -60,6 +64,7 @@ public class Car : MonoBehaviour
 
     private float oldSpeed=0;
     private bool dontMove = false;
+    private float lastForwardVelocity;
 
     private static Car m_instance;
     public static Car Instance
@@ -184,6 +189,16 @@ public class Car : MonoBehaviour
                 Vector3 angularVelocity = body.angularVelocity;
                 angularVelocity *= mult;
                 body.angularVelocity = angularVelocity;
+            }
+
+            // Limit rotation
+            float zRot = body.transform.rotation.eulerAngles.z;
+            if((zRot>limitRotation && zRot<180) || (zRot>180 && zRot<360-limitRotation))
+            {
+                zRot = zRot < 180 ? limitRotation : 360 - limitRotation;
+                Vector3 rot = body.transform.rotation.eulerAngles;
+                rot.z = zRot;
+                body.transform.rotation = Quaternion.Euler(rot);
             }
 
             // Aerodynamic drag & downforce
@@ -320,6 +335,7 @@ public class Car : MonoBehaviour
     public void setDontMove(bool b)
     {
         dontMove = b;
+        lastForwardVelocity = getForwardVelocity();
     }
 
     // Private methods
@@ -342,6 +358,7 @@ public class Car : MonoBehaviour
 
 	public float getForwardVelocity()
 	{
+        if (dontMove) return 25;
 		Vector3 velocity=body.GetRelativePointVelocity(new Vector3(0,0,0));
 		return Vector3.Dot(velocity,body.transform.forward);
 	}

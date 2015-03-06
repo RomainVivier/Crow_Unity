@@ -21,7 +21,6 @@ public class DestructibleObject : MonoBehaviour
     {
         GameObject oth = other.gameObject;
         Car car = oth.transform.root.GetComponent<Car>();
-        Debug.Log(oth.name);
         if(car!=null)
         {
             int nbChild=transform.childCount;
@@ -30,7 +29,7 @@ public class DestructibleObject : MonoBehaviour
                 GameObject go = transform.GetChild(i).gameObject;
                 go.AddComponent<FragmentDestroyer>();
             }
-            Score.Instance.AddScore(_bonus, _comboBonus);
+            Score.Instance.AddScore(_bonus, transform.position, _comboBonus);
         }
     }
     #endregion
