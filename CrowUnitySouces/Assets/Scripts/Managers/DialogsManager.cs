@@ -175,8 +175,10 @@ public class DialogsManager : MonoBehaviour
                         m_dialogInfos[dialog].pos = 0;
                         if (_dialogInfos[dialog].playMode == DialogInfos.PlayMode.SHUFFLE_LOOP) shufflePlayList(dialog);
                     }
-                    m_currentEvent=FMOD_StudioSystem.instance.GetEvent("event:/"+_dialogInfos[dialog].sounds[m_dialogInfos[dialog].pos]);
-                    Debug.Log("Play "+_dialogInfos[dialog].sounds[m_dialogInfos[dialog].pos]);
+                    int playedDialog = m_dialogInfos[dialog].pos;
+                    if(isRandomPlayMode(_dialogInfos[dialog].playMode)) playedDialog=m_dialogInfos[dialog].playList[playedDialog];
+                    m_currentEvent=FMOD_StudioSystem.instance.GetEvent("event:/"+_dialogInfos[dialog].sounds[playedDialog]);
+                    Debug.Log("Play "+_dialogInfos[dialog].sounds[playedDialog]);
                     m_dialogInfos[dialog].pos++;
                     m_dialogInfos[dialog].currentCooldown = _dialogInfos[dialog].cooldown;
                     m_afterTimer=_dialogInfos[dialog].postOffset;

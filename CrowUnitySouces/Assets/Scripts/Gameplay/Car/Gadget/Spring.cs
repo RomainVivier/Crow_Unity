@@ -80,7 +80,6 @@ public class Spring : Gadget
                 else
                 {
                     Vector3 forwardTarget = m_car.getDeltaTarget();
-                    Debug.Log(forwardTarget);
                     forwardTarget.y = 0;
                     forwardTarget.Normalize();
                     m_addPos += forwardTarget * Time.fixedDeltaTime * _glidingDist / _glidingTime;
