@@ -43,6 +43,7 @@ public class Car : MonoBehaviour
 	private Vector3 centerOfMass;
     private Quaternion wheelQuaternion;
     private GameObject wheelObject;
+    private WindshieldController windshieldController;
 
     // Sounds
     private FMOD.Studio.EventInstance engineSound;
@@ -241,11 +242,12 @@ public class Car : MonoBehaviour
         engineLoad.setValue(inputs.throttle>0.5 ? 1 : 0);
         
         //Debug print
-		/*if(nbUpdates%10==0)
+		if(nbUpdates%10==0)
 		{
 			//Debug.Log((int)forwardVelocity*3.6+" "+(int)rpm+" "+transmission.getCurrentGear());
-            Debug.Log(getDeltaTarget());
-        }*/
+            //Debug.Log(getDeltaTarget());
+			//Debug.Log (forwardVelocity*3.6f);
+        }
 
 	}
 
@@ -287,6 +289,8 @@ public class Car : MonoBehaviour
 		wheels[3]=transform.FindChild("Body").FindChild("WheelRR").GetComponent<WheelCollider>();
 		centerOfMass=transform.FindChild("Body").FindChild("CenterOfMass").transform.localPosition;
 		
+        windshieldController=GetComponentInChildren<WindshieldController>();
+
 		// Compute values
 		float maxPower=engine.getMaxPower();
 		maxSpeed=maxSpeedKmh/3.6f;
@@ -390,6 +394,11 @@ public class Car : MonoBehaviour
     public bool isSteering()
     {
         return oldInputs.steering > 0.1 || oldInputs.steering<-0.1;
+    }
+
+    public WindshieldController getWindshieldController()
+    {
+        return windshieldController;
     }
 }
 
