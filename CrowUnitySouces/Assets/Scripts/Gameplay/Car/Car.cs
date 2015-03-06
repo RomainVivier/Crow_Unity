@@ -20,6 +20,10 @@ public class Car : MonoBehaviour
     public float airSteering = 0;
     public float rotationDampingNoThrottle = 0.1f;
 
+
+    [Header("Misc")]
+    public float limitRotation = 15;
+
 	// Components
 	private Engine engine;
 	private CarControl control;
@@ -184,6 +188,16 @@ public class Car : MonoBehaviour
                 Vector3 angularVelocity = body.angularVelocity;
                 angularVelocity *= mult;
                 body.angularVelocity = angularVelocity;
+            }
+
+            // Limit rotation
+            float zRot = body.transform.rotation.eulerAngles.z;
+            if((zRot>limitRotation && zRot<180) || (zRot>180 && zRot<360-limitRotation))
+            {
+                zRot = zRot < 180 ? limitRotation : 360 - limitRotation;
+                Vector3 rot = body.transform.rotation.eulerAngles;
+                rot.z = zRot;
+                body.transform.rotation = Quaternion.Euler(rot);
             }
 
             // Aerodynamic drag & downforce

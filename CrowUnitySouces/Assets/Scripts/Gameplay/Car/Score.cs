@@ -182,12 +182,19 @@ public class Score : MonoBehaviour
         }
     }
 
-    public void AddScore(int value,int combo=1)
+    private/*public*/ void AddScore(int value,int combo=1)
     {
         m_score += m_combo * value;
         m_combo+=combo;
         float diff = m_score - m_displayScore;
         m_augmentSpeed = diff / SCORE_DISPLAY_LAG;
+    }
+
+    public void AddScore(int value, Vector3 pos, int combo=1)
+    {
+        GameObject go = GameObject.Instantiate(Resources.Load("ScoreFeedback")) as GameObject;
+        go.GetComponent<ScoreFeedback>().init(pos+new Vector3(0,2,0), value, combo);
+        AddScore(value, combo);
     }
 
     public void ResetCombo()
