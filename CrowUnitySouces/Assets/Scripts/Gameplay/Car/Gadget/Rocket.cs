@@ -135,7 +135,6 @@ public class Rocket : Gadget {
                 m_rocketObject.transform.position = m_rails.getPoint(m_railsIndex, m_rails.correct2Incorrect(m_railsProgress)) + Vector3.Scale(Vector3.up, m_offsetWithParent);
             }
         }
-
     }
 
     void UpdateSound()
