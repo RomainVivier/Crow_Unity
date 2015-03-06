@@ -64,6 +64,7 @@ public class Car : MonoBehaviour
 
     private float oldSpeed=0;
     private bool dontMove = false;
+    private float lastForwardVelocity;
 
     private static Car m_instance;
     public static Car Instance
@@ -334,6 +335,7 @@ public class Car : MonoBehaviour
     public void setDontMove(bool b)
     {
         dontMove = b;
+        lastForwardVelocity = getForwardVelocity();
     }
 
     // Private methods
@@ -356,6 +358,7 @@ public class Car : MonoBehaviour
 
 	public float getForwardVelocity()
 	{
+        if (dontMove) return 25;
 		Vector3 velocity=body.GetRelativePointVelocity(new Vector3(0,0,0));
 		return Vector3.Dot(velocity,body.transform.forward);
 	}
