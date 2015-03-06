@@ -65,13 +65,12 @@ public class BoxingGlove : Gadget
 
     void OnTriggerEnter(Collider other)
     {
-        Debug.Log(other.collider.tag);
-        if (other.collider.CompareTag("Obstacle"))
+        if (other.collider.CompareTag("Obstacle") && other.rigidbody!=null)
         {
             Vector3 forceDirection = (m_car.getForwardVector() + Vector3.up).normalized;
             other.rigidbody.AddForce(forceDirection * _punchPower);
             other.gameObject.AddComponent<ObstacleDestroyer>();
-            addScore();
+            addScore(other.transform.position);
             FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Gadgets/boxingGlove/gadgetBoxingGloveSuccess", transform.position);
             DialogsManager._instance.triggerEvent(DialogsManager.DialogInfos.EventType.OBSTACLE_DESTRUCTION, other.gameObject.name);
             DialogsManager._instance.triggerEvent(DialogsManager.DialogInfos.EventType.DESTRUCTION_WITH_GADGET, "BoxingGlove");

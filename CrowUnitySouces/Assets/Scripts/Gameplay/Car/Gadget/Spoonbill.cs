@@ -68,7 +68,7 @@ public class Spoonbill : Gadget
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.collider.CompareTag("Obstacle") && (m_state == State.Engaged || m_state == State.Engaging))
+        if (other.collider.CompareTag("Obstacle") && (m_state == State.Engaged || m_state == State.Engaging) && other.rigidbody!=null)
         {
             //(GameObject.FindObjectOfType<CarCollisionsInhibiter>() as CarCollisionsInhibiter)._nbCol++;
             inhibitedCollisions = true;
@@ -79,7 +79,7 @@ public class Spoonbill : Gadget
             _spoonbillAnimator.SetTrigger("Attack");
             m_attackTimer.Reset(1.5f);
             m_state = State.Attacking;
-            addScore();
+            addScore(other.transform.position);
             DialogsManager._instance.triggerEvent(DialogsManager.DialogInfos.EventType.OBSTACLE_DESTRUCTION, other.gameObject.name);
             DialogsManager._instance.triggerEvent(DialogsManager.DialogInfos.EventType.DESTRUCTION_WITH_GADGET, "SpoonBill");
         }

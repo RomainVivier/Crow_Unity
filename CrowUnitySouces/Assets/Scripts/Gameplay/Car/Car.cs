@@ -20,6 +20,10 @@ public class Car : MonoBehaviour
     public float airSteering = 0;
     public float rotationDampingNoThrottle = 0.1f;
 
+
+    [Header("Misc")]
+    public float limitRotation = 15;
+
 	// Components
 	private Engine engine;
 	private CarControl control;
@@ -43,6 +47,7 @@ public class Car : MonoBehaviour
 	private Vector3 centerOfMass;
     private Quaternion wheelQuaternion;
     private GameObject wheelObject;
+    private WindshieldController windshieldController;
 
     // Sounds
     private FMOD.Studio.EventInstance engineSound;
@@ -185,6 +190,16 @@ public class Car : MonoBehaviour
                 body.angularVelocity = angularVelocity;
             }
 
+            // Limit rotation
+            float zRot = body.transform.rotation.eulerAngles.z;
+            if((zRot>limitRotation && zRot<180) || (zRot>180 && zRot<360-limitRotation))
+            {
+                zRot = zRot < 180 ? limitRotation : 360 - limitRotation;
+                Vector3 rot = body.transform.rotation.eulerAngles;
+                rot.z = zRot;
+                body.transform.rotation = Quaternion.Euler(rot);
+            }
+
             // Aerodynamic drag & downforce
             float force = forwardVelocity * forwardVelocity * dragCoef;
             body.AddForce(body.transform.forward * -force);
@@ -288,6 +303,8 @@ public class Car : MonoBehaviour
 		wheels[3]=transform.FindChild("Body").FindChild("WheelRR").GetComponent<WheelCollider>();
 		centerOfMass=transform.FindChild("Body").FindChild("CenterOfMass").transform.localPosition;
 		
+        windshieldController=GetComponentInChildren<WindshieldController>();
+
 		// Compute values
 		float maxPower=engine.getMaxPower();
 		maxSpeed=maxSpeedKmh/3.6f;
@@ -391,6 +408,11 @@ public class Car : MonoBehaviour
     public bool isSteering()
     {
         return oldInputs.steering > 0.1 || oldInputs.steering<-0.1;
+    }
+
+    public WindshieldController getWindshieldController()
+    {
+        return windshieldController;
     }
 }
 
