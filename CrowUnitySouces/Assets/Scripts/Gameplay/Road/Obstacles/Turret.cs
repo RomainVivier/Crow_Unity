@@ -9,6 +9,7 @@ public class Turret : Obstacle
     public GameObject _projectile;
     public Color _color;
     public Color _shootColor;
+    public ParticleSystem _particle;
 
     private Timer m_timer;
 
@@ -22,7 +23,7 @@ public class Turret : Obstacle
     {
         base.Update();
 
-        if(!m_activated)
+        if(m_state != State.Activated)
         {
             return;
         }
@@ -30,6 +31,7 @@ public class Turret : Obstacle
         if(m_timer.Current < _fireRate/3)
         {
             renderer.material.color = _shootColor;
+            _particle.Stop();
         }
 
         if(m_timer.IsElapsedOnce)
@@ -37,6 +39,7 @@ public class Turret : Obstacle
             Fire();
             renderer.material.color = _color;
         }
+
     }
 
     public override void Activate()
@@ -44,7 +47,11 @@ public class Turret : Obstacle
         base.Activate();
         _anim.SetTrigger("Engage");
         m_timer.Reset(_fireRate);
-        m_activated = true;
+    }
+
+    public override void Disactivate()
+    {
+        _anim.SetTrigger("Disengage");
     }
 
     void Fire()
@@ -52,5 +59,6 @@ public class Turret : Obstacle
         GameObject go = GameObject.Instantiate(_projectile, _canon.position, _canon.rotation) as GameObject;
         Destroy(go, 5f);
         m_timer.Reset(_fireRate);
+        _particle.Play();
     }
 }
