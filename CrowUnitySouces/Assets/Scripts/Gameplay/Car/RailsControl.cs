@@ -207,7 +207,9 @@ public class RailsControl : CarControl
 	private void updateProgress()
 	{
 		Vector3 carPos=car.getPosition();
+        //carPos.y = 0;
 		Vector3 forward=car.getForwardVector();
+        //target.y = 0;
 		Vector3 diff=target-carPos;
 		float wantedTargetDist=car.getForwardVelocity()*targetDistMultiplier;
 		float currentTargetDist=Vector3.Dot (diff,forward);;
