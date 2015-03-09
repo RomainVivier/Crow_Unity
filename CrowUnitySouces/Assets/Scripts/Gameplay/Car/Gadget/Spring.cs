@@ -98,7 +98,7 @@ public class Spring : Gadget
                     forwardTarget.y = 0;
                     forwardTarget.Normalize();
                     m_addPos += forwardTarget * Time.fixedDeltaTime * _fallParameters[m_nbBounces].dist / _fallParameters[m_nbBounces].time;
-                    if (m_addPos.y <= 0 || m_car.isOnGround())
+                    if (/*m_addPos.y <= 0 ||*/ m_car.isOnGround())
                     {
                         if (!m_car.isOnGround()) m_addPos.y = 0;
                         else
