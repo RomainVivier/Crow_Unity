@@ -222,6 +222,7 @@ public class Spring : Gadget
             //m_carBodyTransform.gameObject.rigidbody.isKinematic = true;
             m_carBodyTransform.gameObject.rigidbody.constraints = RigidbodyConstraints.FreezeAll;
             IsReady = false;
+			FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Gadgets/Jump/gadgetJumpExecute",transform.position);
         }
         else base.Stop();
     }
