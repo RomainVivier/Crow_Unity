@@ -6,6 +6,8 @@ public class DialogsManager : MonoBehaviour
 {
 
     #region attributes
+    static const int NB_SEGMENTS=6;
+    
     [System.Serializable]
     public class DialogInfos
     {
@@ -40,6 +42,7 @@ public class DialogsManager : MonoBehaviour
     private float m_afterTimer;
     private Transform m_carTransform=null;
     private FMOD.DSP m_dsp;
+    private MeshRenderer segmentRenderers;
     #endregion
 
     #region mono
@@ -64,6 +67,8 @@ public class DialogsManager : MonoBehaviour
 	
 	void Update ()
     {
+    	float volume=0;
+    	
     	// Start event if pre-offset finished
         if(m_timer!=null && m_timer.IsElapsedOnce)
         {
@@ -84,16 +89,16 @@ public class DialogsManager : MonoBehaviour
             }
             else if(m_timer!=null)
             {
+            	volume=Mathf.PerlinNoise(Time.timeSinceLevelLoad*4,0);
 				// Update bow tie
-				if(m_dsp==null)
+				/*if(m_dsp==null)
 				{
-					FMOD.ChannelGroup cg;				
+					FMOD.ChannelGroup cg=null;				
 					FMOD.Studio.System sys=FMOD_StudioSystem.instance.System;
 					FMOD.Studio.Bus bus;
 					
 					sys.getBus("bus:/PreMaster/Voice",out bus);
 					if(bus!=null) bus.getChannelGroup(out cg);
-					
 					if(cg!=null)
 					{
 						System.Text.StringBuilder name=new System.Text.StringBuilder();
@@ -109,7 +114,8 @@ public class DialogsManager : MonoBehaviour
 					FMOD.DSP_METERING_INFO infos;
 					m_dsp.getMeteringInfo(out infos);
             		Debug.Log (infos.numchannels);
-            	}
+            	}*/
+            	
             }
         }
        
