@@ -78,11 +78,12 @@ public class Rocket : Gadget {
                 if (m_rocketLaunchtimer.IsElapsedOnce)
                 {
                     Launch();
-                }
+					_rocketExecute.Play();
+					m_rocketExecute3D.start();
+				}
                 else if (!m_rocketLaunchtimer.IsElapsedLoop && m_rocketLaunchtimer.Current > 0.5f)
                 {
-                    _rocketExecute.Play();
-                    m_rocketExecute3D.start();
+
                 }
 
                 break;
@@ -91,7 +92,6 @@ public class Rocket : Gadget {
                 UpdateProgress();
 
                 UpdateSound();
-
                 break;
         }
 
@@ -125,6 +125,7 @@ public class Rocket : Gadget {
         } 
         else
         {
+            //Debug.Log(m_railsProgress + " " + m_target.RailsProgress);
             if (m_rails == m_target.Rails && m_railsProgress >= m_target.RailsProgress)
             {
                 Blow();
@@ -154,7 +155,7 @@ public class Rocket : Gadget {
         m_rocketExecute3D.set3DAttributes(threeDeeAttr);
 
         float dist = (m_rocketObject.transform.position - m_carTransform.position).magnitude;
-        dist = Mathf.Clamp(dist, 10, 200);
+        //dist = Mathf.Clamp(dist, 10, 200);
         m_rocketExecute3DDist.setValue(dist);
     }
 
@@ -175,10 +176,11 @@ public class Rocket : Gadget {
             {
                 if (go.transform.position.x - m_rocketObject.transform.position.x > 20  && (m_target == null || Vector3.Distance(m_rocketObject.transform.position, m_target.transform.position) > Vector3.Distance(m_rocketObject.transform.position, go.transform.position)))
                 {
-                    m_target = go.GetComponent<Obstacle>();
+                    if(go.GetComponent<Obstacle>()!=null) m_target = go.GetComponent<Obstacle>();
                 }
             }
         }
+
 
         if (obstacles.Length == 0 || m_target == null || Vector3.Distance(m_rocketObject.transform.position, m_target.transform.position) > 400) 
         {
@@ -194,7 +196,7 @@ public class Rocket : Gadget {
         m_failProgress = 0f;
 
         m_rocketLaunchtimer.Reset(0.6f);
-        FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Gadgets/Rocket/gadgetRocketEngage", m_rocketObject.transform.position);
+		FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Gadgets/Rocket/gadgetRocketEngage", m_rocketObject.transform.position);
 
     }
 
@@ -241,14 +243,16 @@ public class Rocket : Gadget {
 
         m_explosionParticles.transform.position = m_target == null ? m_rocketObject.transform.position : m_target.transform.position;
         m_explosionParticles.GetComponent<ParticleSystem>().Play();
-        var colliders = Physics.OverlapSphere(transform.position, _blastRadius);
+        var colliders = Physics.OverlapSphere(m_rocketObject.transform.position, _blastRadius);
         m_target = null;
         foreach(Collider collider in colliders)
         {
             if (collider.CompareTag("Obstacle"))
             {
                 collider.gameObject.SetActive(false);
-                addScore();
+                addScore(collider.transform.position);
+                DialogsManager._instance.triggerEvent(DialogsManager.DialogInfos.EventType.OBSTACLE_DESTRUCTION, collider.gameObject.name);
+                DialogsManager._instance.triggerEvent(DialogsManager.DialogInfos.EventType.DESTRUCTION_WITH_GADGET, "Rocket");
             }
         }
 

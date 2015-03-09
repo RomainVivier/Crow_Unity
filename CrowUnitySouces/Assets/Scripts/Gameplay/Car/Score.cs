@@ -10,7 +10,6 @@ public class Score : MonoBehaviour
 
     private const int NB_DIGITS = 6;
 
-    public Text _text;
     public float _timeToReset = 5f;
     public float _incrementDist = 1;
     public int _incrementValue = 1;
@@ -71,10 +70,6 @@ public class Score : MonoBehaviour
         get { return m_hideScore; }
         set
         {
-            if (!value)
-            {
-                _text.text = "";
-            }
             m_hideScore = value;
         }
     }
@@ -172,7 +167,6 @@ public class Score : MonoBehaviour
 
         if (!HideScore)
         {
-            _text.text = "";// ((int)(m_displayScore)).ToString();
             //float[] digitPos=new float[NB_DIGITS];
             //digitPos[0] = (displayScore % 10)*0.1f;
             m_digits[0].GetComponent<MeshRenderer>().material.mainTextureOffset= new Vector2(0, 1-((m_displayScore) % 10)*0.1f);
@@ -188,12 +182,19 @@ public class Score : MonoBehaviour
         }
     }
 
-    public void AddScore(int value,int combo=1)
+    private/*public*/ void AddScore(int value,int combo=1)
     {
         m_score += m_combo * value;
         m_combo+=combo;
         float diff = m_score - m_displayScore;
         m_augmentSpeed = diff / SCORE_DISPLAY_LAG;
+    }
+
+    public void AddScore(int value, Vector3 pos, int combo=1)
+    {
+        GameObject go = GameObject.Instantiate(Resources.Load("ScoreFeedback")) as GameObject;
+        go.GetComponent<ScoreFeedback>().init(pos+new Vector3(0,2,0), value, combo);
+        AddScore(value, combo);
     }
 
     public void ResetCombo()

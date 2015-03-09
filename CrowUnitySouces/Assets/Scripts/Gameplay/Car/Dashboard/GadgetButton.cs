@@ -13,6 +13,14 @@ public class GadgetButton : MonoBehaviour
     public Vector2 _swipeVector=Vector2.zero;
     public bool _activatedOnStart = false;
 
+	private GameObject m_cooldownPanel;
+    public MeshRenderer _buttonRenderer;
+    public Color _darkColor;
+    public Color _brightColor;
+
+    private Color m_tempColor;
+    private Timer m_cooldownTimer;
+    private bool m_isInCooldown;
     private Vector2 m_startPoint;
     private float m_tgtAngle;
     private Gadget m_gadget;
@@ -21,6 +29,16 @@ public class GadgetButton : MonoBehaviour
     private Animator m_anim;
     #endregion 
     
+    
+    public float Cooldown
+    {
+        set
+        {
+            m_cooldownTimer.Reset(value);
+            m_isInCooldown = true;
+        }
+    }
+
     #region GagdetButton Functions
 
 	public void AssignRandomGadget()
@@ -30,24 +48,40 @@ public class GadgetButton : MonoBehaviour
 
     public void Init()
     {
-        
         var gadget = GadgetManager.Instance.getGadgetById(_gadgetID);
         if(gadget != null)
         {
             gadget._buttonAnim = GetComponent<Animator>();
             gadget._buttonAnim.SetTrigger("Activate");
+            gadget._button = this;
         }
         _abilities = GadgetManager.Instance.GadgetAbilities(_gadgetID);
     }
 
-    public void Start()
+    void Start()
     {
         m_tgtAngle=Mathf.Atan2(_swipeVector.y,_swipeVector.x);
         m_gadget = GadgetManager.Instance.GetGadget(_gadgetID);
+		m_cooldownPanel = Resources.Load ("CooldownMark") as GameObject;
+        m_cooldownTimer = new Timer();
+        m_isInCooldown = false;
         
         if(_activatedOnStart)
         {
             Init();
+        }
+    }
+
+    void Update()
+    {
+        if (_buttonRenderer != null && !m_cooldownTimer.IsElapsedLoop && m_isInCooldown)
+        {
+            m_tempColor = Vector4.Lerp(_darkColor, _brightColor, (1 - m_cooldownTimer.CurrentNormalized));
+            _buttonRenderer.renderer.material.SetColor("_Color", m_tempColor);
+        }
+        else
+        {
+            m_isInCooldown = false;
         }
     }
 
@@ -58,17 +92,26 @@ public class GadgetButton : MonoBehaviour
             return;
         }
 
-        if (_swipeVector == Vector2.zero) GadgetManager.Instance.PlayGadget(_gadgetID);
-        else m_startPoint = new Vector2(Input.mousePosition.x, Input.mousePosition.y) / Screen.height;
+        if (_swipeVector == Vector2.zero) {
+			bool result = GadgetManager.Instance.PlayGadget (_gadgetID);
+			if(!result)
+			   return;
+			Gadget gad = GadgetManager.Instance.getGadgetById(_gadgetID);
+
+			GameObject cooldownPanel = GameObject.Instantiate(m_cooldownPanel) as GameObject;
+			cooldownPanel.GetComponent<FakeCooldown>()._lengthInSeconds = gad._cooldown;
+			cooldownPanel.transform.parent = transform;
+			//cooldownPanel.transform.localScale = Vector3.one;
+			cooldownPanel.transform.localPosition = new Vector3(0, 0.25f, 0);
+			cooldownPanel.transform.localEulerAngles = new Vector3(90f, 0, 0);
+		}
+		else m_startPoint = new Vector2(Input.mousePosition.x, Input.mousePosition.y) / Screen.height;
     }
 
     public void OnLeftClickRelease()
     {
-        
         if(_gadgetID == null)
-        {
             return;
-        }
 
         if(_swipeVector!=Vector2.zero)
         {
@@ -77,6 +120,7 @@ public class GadgetButton : MonoBehaviour
             {
                 if (m_gadget && m_gadget._invertGesture) vec = -vec;
                 float angle = Mathf.Atan2(vec.y, vec.x);
+			
                 if( (angle>m_tgtAngle-SWIPE_TOLERANCE_DEG*Mathf.Deg2Rad && angle<m_tgtAngle+SWIPE_TOLERANCE_DEG*Mathf.Deg2Rad))
                     //|| (angle>m_tgtAngle-(SWIPE_TOLERANCE_DEG+360)*Mathf.Deg2Rad && angle<m_tgtAngle+(SWIPE_TOLERANCE_DEG+360)*Mathf.Deg2Rad)
                     //|| (angle>m_tgtAngle-(SWIPE_TOLERANCE_DEG-360)*Mathf.Deg2Rad && angle<m_tgtAngle+(SWIPE_TOLERANCE_DEG-360)*Mathf.Deg2Rad))

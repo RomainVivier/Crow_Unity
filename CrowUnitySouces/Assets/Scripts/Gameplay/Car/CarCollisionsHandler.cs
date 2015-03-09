@@ -12,7 +12,7 @@ public class CarCollisionsHandler : MonoBehaviour
     public float _maxMomentum = 30000;
     public float _ownMomentum = 10000;
     public static bool _dontCollide = false;
-
+    public Spring _spring;
     #endregion
 
     #region private members
@@ -21,9 +21,12 @@ public class CarCollisionsHandler : MonoBehaviour
     private FMOD.Studio.EventInstance m_impactConcreteSound;
     private FMOD.Studio.ParameterInstance m_impactConcreteSpeed;
     private Car m_car;
+    private RailsControl m_railsControl;
     private Timer cooldownTimer;
 	private WindshieldController m_windshield;
 	private CameraShake m_cameraShake;
+    private GameObject m_lastObject;
+    private Collider m_collider;
 
     #endregion
 
@@ -35,10 +38,13 @@ public class CarCollisionsHandler : MonoBehaviour
         m_impactConcreteSound=FMOD_StudioSystem.instance.GetEvent("event:/SFX/Impacts/impactConcrete");
         m_impactConcreteSound.getParameter("Speed", out m_impactConcreteSpeed);
         m_car = transform.parent.gameObject.GetComponent<Car>();
+        m_railsControl = m_car.gameObject.GetComponent<RailsControl>();
 		m_windshield = GetComponentInChildren<WindshieldController>();
 		m_cameraShake = GetComponentInChildren<CameraShake>();
         cooldownTimer = new Timer();
         cooldownTimer.Reset(0.01f);
+        m_lastObject = null;
+        m_collider = collider;
     }
     #endregion
 
@@ -54,10 +60,11 @@ public class CarCollisionsHandler : MonoBehaviour
             Vector3 diff = oth.transform.position - m_car.transform.Find("Body").position;
             float fPos = Vector3.Dot(diff, forward); 
             if (fPos<2 || fPos>5) return;
-            if (cooldownTimer.IsElapsedLoop)
+            if (cooldownTimer.IsElapsedLoop || oth!=m_lastObject)
             {
                 playSound(null, oth, m_impactVehicleSound, m_impactVehicleSpeed);
                 cooldownTimer.Reset(2f);
+                m_lastObject = oth;
             }
             float hAngle = Random.Range(-_maxAngleHDeg, _maxAngleHDeg) * Mathf.Deg2Rad;
             Vector3 right = m_car.getRightVector();
@@ -66,15 +73,26 @@ public class CarCollisionsHandler : MonoBehaviour
             Vector3 up = m_car.getUpVector();
             Vector3 direc = hVector * Mathf.Cos(vAngle) + up * Mathf.Sin(vAngle);
             float momentum=Mathf.Lerp(_minMomentum,_maxMomentum,m_car.getForwardVelocityKmh()/m_car.maxSpeedKmh);
-            oth.rigidbody.AddForce(direc * momentum,ForceMode.Impulse);
-            oth.AddComponent<ObstacleDestroyer>();
-            rigidbody.AddForce(-forward * _ownMomentum, ForceMode.Impulse);
-
+            if(oth.rigidbody != null)
+            {
+                oth.rigidbody.AddForce(direc * momentum,ForceMode.Impulse);
+                oth.AddComponent<ObstacleDestroyer>();
+                rigidbody.AddForce(-forward * _ownMomentum, ForceMode.Impulse);
+            }
 			m_windshield.Hit();
             //Score.Instance.DistanceTravaled += 10000;
             m_cameraShake.DoShake();
             Score.Instance.ResetCombo();
+            DialogsManager._instance.triggerEvent(DialogsManager.DialogInfos.EventType.CAR_HP, (float) m_windshield._hp);
+            DialogsManager._instance.triggerEvent(DialogsManager.DialogInfos.EventType.CAR_DAMAGE, oth.name);
+            _spring.collide();
         }
+        else if (oth.tag == "Barrier")
+        {
+            //Vector3 diff = oth.transform.position - m_car.transform.Find("Body").position;
+            //float rPos = Vector3.Dot(diff, m_car.getRightVector());
+            m_railsControl.ShiftToPreviousRail();
+        } 
     }
 
     void OnCollisionEnter(Collision collision)
@@ -89,12 +107,14 @@ public class CarCollisionsHandler : MonoBehaviour
             float relDy = Vector3.Dot(transform.up, diff);
             if (relDy > -0.7) playSound(collision, oth, m_impactConcreteSound, m_impactConcreteSpeed);
         }
+
     }
     #endregion
 
     #region private methods
     void playSound(Collision collision, GameObject oth, FMOD.Studio.EventInstance sound, FMOD.Studio.ParameterInstance param)
     {
+		if (param == null) return;
         FMOD.Studio._3D_ATTRIBUTES threeDeeAttr = new FMOD.Studio._3D_ATTRIBUTES();
         threeDeeAttr.up = FMOD.Studio.UnityUtil.toFMODVector(new Vector3(0,1,0));
         if(collision!=null)

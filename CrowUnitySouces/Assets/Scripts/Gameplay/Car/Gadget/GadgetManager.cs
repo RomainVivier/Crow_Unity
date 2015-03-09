@@ -87,12 +87,12 @@ public class GadgetManager : MonoBehaviour {
 		m_gadgets.Add(name, gadget);
 	}
 
-	public void PlayGadget(string name)
+	public bool PlayGadget(string name)
 	{
         if(!m_timer.IsElapsedLoop/* && HasOneGadgetPlaying && m_lastGadget != name*/)
         {
             Debug.Log("Can't play button, timer elapsed = " + m_timer.IsElapsedLoop + ", gadget playing = " + HasOneGadgetPlaying + ", last gagdet : " + m_lastGadget);
-            return;
+            return false;
         }
 
 		if(m_gadgets.ContainsKey(name) && m_gadgets[name].IsReady)
@@ -102,9 +102,12 @@ public class GadgetManager : MonoBehaviour {
             m_lastGadget = name;
             m_timer.Reset(0.5f);
             if(m_gadgets[name].PlaySound!="") FMOD_StudioSystem.instance.PlayOneShot(m_gadgets[name].PlaySound,transform.position);
+            DialogsManager._instance.triggerEvent(DialogsManager.DialogInfos.EventType.GADGET_USE, name);
+			return true;
         }else{
             if(m_gadgets[name].CantPlaySound!="") FMOD_StudioSystem.instance.PlayOneShot(m_gadgets[name].CantPlaySound,transform.position);
 			Debug.Log("no gadget has been registered to this name or gadget is not ready !");
+			return false;
 		}
 	}
     

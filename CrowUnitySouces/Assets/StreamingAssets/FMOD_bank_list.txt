@@ -2,3 +2,4 @@ Radio.bank
 Radio.strings.bank
 SFX_carMechanics.bank
 SFX_Other.bank
+VX.bank

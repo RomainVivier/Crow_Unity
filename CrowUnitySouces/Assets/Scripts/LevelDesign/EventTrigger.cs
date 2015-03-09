@@ -4,10 +4,8 @@ using UnityEngine.Events;
 
 public class EventTrigger : MonoBehaviour {
 
-	public string _triggererTag;
+	public string _triggererName = "Body";
 	public UnityEvent _event;
-	public bool _fireOnce = true;
-	private bool _firedOnce = false;
 
 	// Use this for initialization
 	void Start () {
@@ -21,16 +19,9 @@ public class EventTrigger : MonoBehaviour {
 
 	void OnTriggerEnter(Collider other)
 	{
-		if(!other.gameObject.CompareTag(_triggererTag))
-			return;
-
-		if(_fireOnce && _firedOnce == true)
-			return;
-
-		Debug.Log(other.gameObject.name);
-
-		_event.Invoke();
-
-		_firedOnce = false;
+		if (other.gameObject.name == _triggererName) {
+			_event.Invoke ();
+			collider.enabled = false;
+		}
 	}
 }

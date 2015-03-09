@@ -80,6 +80,7 @@ public class Rails : MonoBehaviour
             swapArrays(railsIndex);
             sortRails = false;
         }
+        computePositions();
         //updateDist();
 	}
 
@@ -337,7 +338,8 @@ public class Rails : MonoBehaviour
     }
 
 #if UNITY_EDITOR
-	void OnDrawGizmos()
+    
+    void OnDrawGizmos()
 	{
 		if(needToComputePositions) computePositions();
 		for(int r=0;r<nbRails;r++)

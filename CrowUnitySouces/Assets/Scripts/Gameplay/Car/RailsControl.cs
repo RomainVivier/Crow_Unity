@@ -29,7 +29,8 @@ public class RailsControl : CarControl
 	private int nbUpdates=0;
     private FMOD.Studio.EventInstance playerPosEvent;
     private FMOD.Studio.ParameterInstance playerPosParameter;
-    
+    private float previousRail = 0;
+
     //Keybinding
     private float m_steering;
     private float m_brake;
@@ -116,7 +117,8 @@ public class RailsControl : CarControl
 			wantThrottleBrake=-brakeCommand;
 		}
 		else wantThrottleBrake=1;
-		
+        if (!car.isOnGround()) throttleBrake = 0;
+
 		// Move smoothly the pedals
 		float percent=Mathf.Pow(pedalsInertia,Time.fixedDeltaTime);
 		throttleBrake=Mathf.Lerp(wantThrottleBrake,throttleBrake,percent);
@@ -205,7 +207,9 @@ public class RailsControl : CarControl
 	private void updateProgress()
 	{
 		Vector3 carPos=car.getPosition();
+        //carPos.y = 0;
 		Vector3 forward=car.getForwardVector();
+        //target.y = 0;
 		Vector3 diff=target-carPos;
 		float wantedTargetDist=car.getForwardVelocity()*targetDistMultiplier;
 		float currentTargetDist=Vector3.Dot (diff,forward);;
@@ -258,6 +262,7 @@ public class RailsControl : CarControl
     {
         if(stickToRails)
         {
+            previousRail = Mathf.RoundToInt(currentRail);
             targetRail+=(int)delta;
             if(targetRail<0) targetRail=0;
             if (targetRail > rails.getNbRails() - 1) targetRail = rails.getNbRails() - 1;
@@ -270,6 +275,11 @@ public class RailsControl : CarControl
         }
     }
 
+    public void ShiftToPreviousRail()
+    {
+        if (stickToRails) targetRail = Mathf.FloorToInt(previousRail);
+    }
+
     public int getCurrentNbRails()
     {
         return rails.nbRails;
@@ -278,6 +288,11 @@ public class RailsControl : CarControl
     public override Vector3 getForwardTarget()
     {
         return rails.getForward(currentRail, chunkProgress);
+    }
+
+    public override Vector3 getTarget()
+    {
+        return target;
     }
 
 }

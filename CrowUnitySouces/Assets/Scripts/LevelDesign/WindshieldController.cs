@@ -34,4 +34,18 @@ public class WindshieldController : MonoBehaviour {
 			m_lightAnimator.SetTrigger("Blink");
 	
 	}
+
+    public void Kill()
+    {
+		if (_isInvincible)
+			return;
+
+		_hp=0;
+
+	    //GameOverController.Instance.Show();
+        for (int i = 0; i < m_impacts.Length; i++) m_impacts[i].enabled = true;
+
+        if (_hp == 0)
+            m_lightAnimator.SetTrigger("Blink");
+    }
 }
