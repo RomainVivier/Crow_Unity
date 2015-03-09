@@ -31,6 +31,11 @@ public class Radio : MonoBehaviour {
         }
     }
 
+	public int Frequency
+	{
+		get { return m_targetFrequency;}
+	}
+	
 	void Start()
     {
         m_timer = new Timer();
@@ -52,13 +57,13 @@ public class Radio : MonoBehaviour {
 	void Update()
     {
 
-        if (Input.GetKeyDown(KeyCode.Return))
+        /*if (Input.GetKeyDown(KeyCode.Return))
         {
             if (RadioState == 1)
                 RadioState = 0;
             else
                 RadioState = 1;
-        }
+        }*/
 
         if(m_timer.IsElapsedOnce)
         {
