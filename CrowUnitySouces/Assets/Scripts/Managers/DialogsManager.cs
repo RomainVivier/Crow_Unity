@@ -6,7 +6,7 @@ public class DialogsManager : MonoBehaviour
 {
 
     #region attributes
-    static const int NB_SEGMENTS=6;
+    const int NB_SEGMENTS=6;
     
     [System.Serializable]
     public class DialogInfos
@@ -42,7 +42,7 @@ public class DialogsManager : MonoBehaviour
     private float m_afterTimer;
     private Transform m_carTransform=null;
     private FMOD.DSP m_dsp;
-    private MeshRenderer segmentRenderers;
+    private MeshRenderer[] m_segmentRenderers;
     #endregion
 
     #region mono
@@ -57,8 +57,12 @@ public class DialogsManager : MonoBehaviour
             m_dialogInfos[i].currentCooldown = _dialogInfos[i].forceFirstCooldown ? _dialogInfos[i].cooldown : 0;
             if (isRandomPlayMode(_dialogInfos[i].playMode)) shufflePlayList(i);
             m_dialogInfos[i].pos = 0;
-
         }
+        
+        // Get segment renderers
+        m_segmentRenderers=new MeshRenderer[6];
+        for(int i=0;i<NB_SEGMENTS;i++) m_segmentRenderers[i]=GameObject.Find ("Screen_0"+i).GetComponent<MeshRenderer>();
+       
         // Init other things
         m_currentEvent = null;
         m_timer = null;
@@ -89,7 +93,7 @@ public class DialogsManager : MonoBehaviour
             }
             else if(m_timer!=null)
             {
-            	volume=Mathf.PerlinNoise(Time.timeSinceLevelLoad*4,0);
+				volume=Mathf.PerlinNoise(Time.timeSinceLevelLoad*4,Time.timeSinceLevelLoad*2);
 				// Update bow tie
 				/*if(m_dsp==null)
 				{
@@ -116,6 +120,12 @@ public class DialogsManager : MonoBehaviour
             		Debug.Log (infos.numchannels);
             	}*/
             	
+            }
+            
+            // Update bow-tie
+            for(int i=0;i<NB_SEGMENTS;i++)
+            {
+            	m_segmentRenderers[i].material.color= volume > i/((float) NB_SEGMENTS) ? new Color(255,0,0) : new Color(0,0,0);
             }
         }
        
