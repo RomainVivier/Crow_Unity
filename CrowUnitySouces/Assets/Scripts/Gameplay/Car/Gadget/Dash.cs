@@ -25,7 +25,8 @@ public class Dash : Gadget
     public float _hornsDuration=2.5f;
     public float _increaseFovInertia = 0.1f;
     public float _decreaseFovInertia = 0.01f;
-
+	public CarCollisionsHandler _carCollisionsHandler;
+	
     private Timer m_timer;
     private Timer m_hornsTimer;
     private float m_cameraPos = 0;
@@ -125,11 +126,13 @@ public class Dash : Gadget
         m_hornsTimer.Reset(_hornsDuration);
         IsReady = false;
         m_targetHorns=1;
+        _carCollisionsHandler.setProjectObstacles(true);
     }
 
 	
     public override void Stop()
     {
+    	_carCollisionsHandler.setProjectObstacles(false);
         base.Stop();
     }
 }
