@@ -28,11 +28,16 @@ public class RadioButton : Gadget {
 
         if (_switchUp)
         {
-            _radio.SwitchFrequencyUp();
+        	if(_radio.RadioState==0) _radio.RadioState=1;
+        	else
+        	{
+        		_radio.SwitchFrequencyUp();
+        		if(_radio.Frequency==6) _radio.RadioState=0;
+        	}
         }
-        else
+        /*else
         {
             _radio.SwitchFrequencyDown();
-        }
+        }*/
     }
 }
