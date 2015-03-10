@@ -22,12 +22,17 @@ public class Dash : Gadget
     public Car _car;
     public float _speedCoeff;
     public float _duration = 1f;
+    public float _hornsDuration=2.5f;
     public float _increaseFovInertia = 0.1f;
     public float _decreaseFovInertia = 0.01f;
 
     private Timer m_timer;
+    private Timer m_hornsTimer;
     private float m_cameraPos = 0;
-
+	private float m_hornsPos=0; // 0=off, 1=on
+	private float m_hornsSpeed=4;
+	private float m_targetHorns=0;
+	private Transform m_hornsTransform;
     #endregion
 
     #region MonoBehaviour
@@ -36,6 +41,7 @@ public class Dash : Gadget
     {
         GadgetManager.Instance.Register("Dash", this);
         m_timer = new Timer();
+        m_hornsTimer=new Timer();
         for (int i = 0; i < _cameraParameters.Length;i++)
         {
             CameraParameters cp=_cameraParameters[i];
@@ -45,12 +51,31 @@ public class Dash : Gadget
         base.Awake();
     }
 
+	public void Start()
+	{
+		m_hornsTransform=transform.Find("horns");
+		m_hornsTransform.localPosition=new Vector3(-0.3f,-0.75f,5.5f);
+	}
+	
     public override void Update()
     {
         if (m_timer.IsElapsedOnce)
         {
-            Stop();
+			_rc.setSpeedKmh /= _speedCoeff;
+			_car.gameObject.GetComponent<PolynomialEngine>().maxPowerKw /= 100;
+			_car.gameObject.GetComponent<PolynomialEngine>().powerMinRpmKw/= 100;
+			_car.gameObject.GetComponent<Transmission>().lockGear(1);
+			_car.gameObject.GetComponent<Transmission>().lockGear(-1);
+			_car.maxSpeedKmh /= _speedCoeff;
+			_car.updateValues();
+			if (_car.getForwardVelocityKmh() > _car.maxSpeedKmh) _car.InstantSetSpeedKmh(_car.maxSpeedKmh);	
         }
+        if(m_hornsTimer.IsElapsedOnce)
+        {
+        	m_targetHorns=0;
+        }
+        
+        // Update camera
         float pos = Mathf.Pow(IsReady ? _decreaseFovInertia : _increaseFovInertia, Time.deltaTime);
         m_cameraPos = Mathf.Lerp(m_timer.IsElapsedLoop ? 0 : 1, m_cameraPos, pos);
         for (int i = 0; i < _cameraParameters.Length;i++)
@@ -60,6 +85,23 @@ public class Dash : Gadget
             cp.camera.transform.localPosition = cp.startPos + m_cameraPos * cp.displacement;
         }
 
+		// Update horns
+		if(m_hornsPos<m_targetHorns)
+		{
+			m_hornsPos+=m_hornsSpeed*Time.deltaTime;
+			if(m_hornsPos>m_targetHorns) m_hornsPos=m_targetHorns;
+		}
+		else if(m_hornsPos>m_targetHorns)
+		{
+			m_hornsPos-=m_hornsSpeed*Time.deltaTime;
+			if(m_hornsPos<m_targetHorns)
+			{
+				m_hornsPos=m_targetHorns;
+				Stop();
+			}
+		}
+		m_hornsTransform.localPosition=new Vector3(-0.3f,-0.75f+1.5f*m_hornsPos,5.5f);
+		
         base.Update();
     }
 
@@ -80,21 +122,14 @@ public class Dash : Gadget
         _car.maxSpeedKmh *= _speedCoeff;
         _car.updateValues();
         m_timer.Reset(_duration);
+        m_hornsTimer.Reset(_hornsDuration);
         IsReady = false;
+        m_targetHorns=1;
     }
 
+	
     public override void Stop()
     {
         base.Stop();
-
-        _rc.setSpeedKmh /= _speedCoeff;
-        _car.gameObject.GetComponent<PolynomialEngine>().maxPowerKw /= 100;
-        _car.gameObject.GetComponent<PolynomialEngine>().powerMinRpmKw/= 100;
-        _car.gameObject.GetComponent<Transmission>().lockGear(1);
-        _car.gameObject.GetComponent<Transmission>().lockGear(-1);
-        //_car.gameObject.transform.FindChild("Body/CenterOfMass").localPosition -= new Vector3(0, -0.25f, 0);
-        _car.maxSpeedKmh /= _speedCoeff;
-        _car.updateValues();
-        if (_car.getForwardVelocityKmh() > _car.maxSpeedKmh) _car.InstantSetSpeedKmh(_car.maxSpeedKmh);
     }
 }
