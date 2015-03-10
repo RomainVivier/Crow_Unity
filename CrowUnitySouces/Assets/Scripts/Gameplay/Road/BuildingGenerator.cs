@@ -7,7 +7,10 @@ public class BuildingGenerator : MonoBehaviour {
     public int _maxHeight;
 
     public string _enviro;
-
+	public BuildingGenerator _nextBuildingGenerator=null;
+	
+	private int m_maxLength=-1;
+	
 	void Start()
     {
         generate();
@@ -28,6 +31,7 @@ public class BuildingGenerator : MonoBehaviour {
 
     private void generate()
     {
+		getMaxLength();    
 	    if(_minHeight < 1 || (_maxHeight < 1 || _maxHeight < _minHeight) || _enviro=="")
         {
             Debug.Log("Some parameters are wrong. Correct it and try again.");
@@ -36,7 +40,7 @@ public class BuildingGenerator : MonoBehaviour {
         int height = Random.Range(_minHeight, _maxHeight);
         BuildingGeneratorParameters.RandomBuilding rb = GameObject.Find(_enviro)//(Resources.Load("Enviros/"+_enviro) as GameObject)
                     .GetComponent<BuildingGeneratorParameters>()
-                    .getRandomBuilding(height);
+                    .getRandomBuilding(height,m_maxLength);
 
         GameObject building;
 
@@ -71,5 +75,15 @@ public class BuildingGenerator : MonoBehaviour {
                 sp._soundNameExitRight="SFX/Env Objects/envSwooshBuildingExitRight";
             }
         }
+    }
+    
+    private int getMaxLength()
+    {
+    	if(m_maxLength==-1)
+    	{
+    		if(_nextBuildingGenerator==null) m_maxLength=1;
+    		else m_maxLength=_nextBuildingGenerator.getMaxLength()+1;
+    	}
+    	return m_maxLength;
     }
 }

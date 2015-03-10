@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: c777e0116aedc2d45ad8365b4bd285a5
+guid: 3ca46ed77684c9e4785193ae95ff885b
 ModelImporter:
   serializedVersion: 16
   fileIDToRecycleName:
@@ -16,10 +16,7 @@ ModelImporter:
     400008: Cylinder
     400010: root
     4300000: Cylinder
-    7400000: Armature|HemiAction
-    7400002: Punch
-    7400004: Cylinder|HemiAction
-    7400006: Idle
+    7400000: Armature|ArmatureAction
     9500000: //RootNode
     13700000: Cylinder
   materials:
@@ -37,83 +34,7 @@ ModelImporter:
     animationScaleError: .5
     animationWrapMode: 0
     extraExposedTransformPaths: []
-    clipAnimations:
-    - serializedVersion: 16
-      name: Punch
-      takeName: Armature|Punch
-      firstFrame: 0
-      lastFrame: 29
-      wrapMode: 0
-      orientationOffsetY: 0
-      level: 0
-      cycleOffset: 0
-      loop: 0
-      loopTime: 0
-      loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
-      keepOriginalOrientation: 0
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
-      mirror: 0
-      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
-      curves: []
-      events: []
-      transformMask:
-      - path: 
-        weight: 1
-      - path: Armature
-        weight: 1
-      - path: Armature/root
-        weight: 1
-      - path: Armature/root/arm
-        weight: 1
-      - path: Armature/root/arm/arm_end
-        weight: 1
-      - path: Cylinder
-        weight: 1
-      maskType: 0
-      maskSource: {instanceID: 0}
-    - serializedVersion: 16
-      name: Idle
-      takeName: Armature|Punch
-      firstFrame: 0
-      lastFrame: .100000009
-      wrapMode: 0
-      orientationOffsetY: 0
-      level: 0
-      cycleOffset: 0
-      loop: 0
-      loopTime: 0
-      loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
-      keepOriginalOrientation: 0
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
-      mirror: 0
-      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
-      curves: []
-      events: []
-      transformMask:
-      - path: 
-        weight: 1
-      - path: Armature
-        weight: 1
-      - path: Armature/root
-        weight: 1
-      - path: Armature/root/arm
-        weight: 1
-      - path: Armature/root/arm/arm_end
-        weight: 1
-      - path: Cylinder
-        weight: 1
-      maskType: 0
-      maskSource: {instanceID: 0}
+    clipAnimations: []
     isReadable: 1
   meshes:
     lODScreenPercentages: []

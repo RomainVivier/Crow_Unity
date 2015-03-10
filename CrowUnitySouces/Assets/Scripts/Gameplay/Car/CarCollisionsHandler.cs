@@ -97,8 +97,6 @@ public class CarCollisionsHandler : MonoBehaviour
         }
         else if (oth.tag == "Barrier")
         {
-            //Vector3 diff = oth.transform.position - m_car.transform.Find("Body").position;
-            //float rPos = Vector3.Dot(diff, m_car.getRightVector());
             m_railsControl.ShiftToPreviousRail();
         } 
     }
