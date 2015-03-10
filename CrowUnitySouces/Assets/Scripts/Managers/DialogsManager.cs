@@ -6,6 +6,8 @@ public class DialogsManager : MonoBehaviour
 {
 
     #region attributes
+    const int NB_SEGMENTS=6;
+    
     [System.Serializable]
     public class DialogInfos
     {
@@ -39,6 +41,8 @@ public class DialogsManager : MonoBehaviour
     private Timer m_timer;
     private float m_afterTimer;
     private Transform m_carTransform=null;
+    private FMOD.DSP m_dsp;
+    private MeshRenderer[] m_segmentRenderers;
     #endregion
 
     #region mono
@@ -53,12 +57,12 @@ public class DialogsManager : MonoBehaviour
             m_dialogInfos[i].currentCooldown = _dialogInfos[i].forceFirstCooldown ? _dialogInfos[i].cooldown : 0;
             if (isRandomPlayMode(_dialogInfos[i].playMode)) shufflePlayList(i);
             m_dialogInfos[i].pos = 0;
-
         }
-
-
-
-
+        
+        // Get segment renderers
+        m_segmentRenderers=new MeshRenderer[6];
+        for(int i=0;i<NB_SEGMENTS;i++) m_segmentRenderers[i]=GameObject.Find ("Screen_0"+i).GetComponent<MeshRenderer>();
+       
         // Init other things
         m_currentEvent = null;
         m_timer = null;
@@ -67,19 +71,84 @@ public class DialogsManager : MonoBehaviour
 	
 	void Update ()
     {
+    	float volume=0;
+    	
+    	// Start event if pre-offset finished
         if(m_timer!=null && m_timer.IsElapsedOnce)
         {
-            if (m_currentEvent != null) m_currentEvent.start();
+            if (m_currentEvent != null) startEvent();
             else m_timer = null;
         }
         if(m_currentEvent!=null)
-        {
+        {	
+			// Delete event and start post-offset if it's finished
             FMOD.Studio.PLAYBACK_STATE state;
             m_currentEvent.getPlaybackState(out state);
-            if (state == FMOD.Studio.PLAYBACK_STATE.STOPPED) m_currentEvent.release();
-            if (m_afterTimer != 0) m_timer = null;
-            else m_timer.Reset(m_afterTimer);
+            if (state == FMOD.Studio.PLAYBACK_STATE.STOPPED)
+           	{
+           		m_currentEvent.release();
+           		m_currentEvent=null;
+            	if (m_afterTimer != 0) m_timer = null;
+            	else m_timer.Reset(m_afterTimer);
+            }
+            else if(m_timer!=null)
+            {
+				volume=Mathf.PerlinNoise(Time.timeSinceLevelLoad*4,Time.timeSinceLevelLoad*2);
+				// Update bow tie
+				/*if(m_dsp==null)
+				{
+					FMOD.ChannelGroup cg=null;				
+					FMOD.Studio.System sys=FMOD_StudioSystem.instance.System;
+					FMOD.Studio.Bus bus;
+					
+					sys.getBus("bus:/PreMaster/Voice",out bus);
+					if(bus!=null) bus.getChannelGroup(out cg);
+					if(cg!=null)
+					{
+						System.Text.StringBuilder name=new System.Text.StringBuilder();
+						cg.getName(name,100);
+						Debug.Log (name);
+						cg.getDSP(0,out m_dsp);
+						m_dsp.setMeteringEnabled(false,true);
+					}
+				}
+				
+				if(m_dsp!=null)
+				{
+					FMOD.DSP_METERING_INFO infos;
+					m_dsp.getMeteringInfo(out infos);
+            		Debug.Log (infos.numchannels);
+            	}*/
+            	
+            }
+            
+            // Update bow-tie
+            for(int i=0;i<NB_SEGMENTS;i++)
+            {
+            	m_segmentRenderers[i].material.color= volume > i/((float) NB_SEGMENTS) ? new Color(255,0,0) : new Color(0,0,0);
+            }
         }
+       
+		// on veut get le groupe VX (pas le master)
+		
+		//		// Get the master channel group
+		//		FMOD::ChannelGroup* master;
+		//		system->getMasterChannelGroup(&master);
+		//		
+		//		// Get the DSP unit that is at the head of the DSP chain of the master channel group
+		//		FMOD::DSP* masterHead;
+		//		master->getDSP(FMOD_CHANNELCONTROL_DSP_HEAD, &masterHead);
+		//		// enable output metering
+		//		masterHead->setMeteringEnabled(false, true);
+		//		
+		//		// Call this at regular intervals to fetch the output meter
+		//		FMOD_DSP_METERING_INFO outputmeter = {};
+		//		masterHead->getMeteringInfo(0, &outputmeter);
+		//		
+		//		// stereo on iOS
+		//		assert(outputmeter.numchannels == 2);
+		//		printf("Power over the last %d samples: left = %f, right = %f \n", outputmeter.numsamples, outputmeter.rmslevel[0], outputmeter.rmslevel[1]);
+		
     }
     #endregion
 
@@ -177,20 +246,32 @@ public class DialogsManager : MonoBehaviour
                     }
                     int playedDialog = m_dialogInfos[dialog].pos;
                     if(isRandomPlayMode(_dialogInfos[dialog].playMode)) playedDialog=m_dialogInfos[dialog].playList[playedDialog];
+                    
+                    // Get event
                     m_currentEvent=FMOD_StudioSystem.instance.GetEvent("event:/"+_dialogInfos[dialog].sounds[playedDialog]);
-                    Debug.Log("Play "+_dialogInfos[dialog].sounds[playedDialog]);
+					
+					// Update playlist pos
                     m_dialogInfos[dialog].pos++;
                     m_dialogInfos[dialog].currentCooldown = _dialogInfos[dialog].cooldown;
-                    m_afterTimer=_dialogInfos[dialog].postOffset;
-                    if(_dialogInfos[dialog].preOffset==0) m_currentEvent.start();
+
+					// Start pre-offset timer
+					m_afterTimer=_dialogInfos[dialog].postOffset;
+					m_timer=new Timer();
+					if(_dialogInfos[dialog].preOffset==0) startEvent();
                     else
                     {
-                        m_timer=new Timer();
                         m_timer.Reset(_dialogInfos[dialog].preOffset);
                     }
                 }
             }
         }
     }
-    #endregion
-}
+    
+    private void startEvent()
+    {
+		m_currentEvent.start();
+		m_dsp=null;
+	}
+	
+	#endregion
+}	

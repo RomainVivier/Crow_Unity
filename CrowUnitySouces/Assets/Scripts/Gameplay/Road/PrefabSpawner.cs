@@ -34,7 +34,11 @@ public class PrefabSpawner : MonoBehaviour
 			if(_rail != null)
 				m_spawnedObject.transform.position = _rail.getPoint(_railIndex, _railProgress)+ _offset;
 
-            m_spawnedObject.transform.localScale = _scale;
+			Vector3 localScale=m_spawnedObject.transform.localScale;
+			localScale.x *=_scale.x;
+			localScale.y *=_scale.y;
+			localScale.z *=_scale.z;
+            m_spawnedObject.transform.localScale = localScale;
 		}
 		
         m_spawnedObject.transform.parent = transform;

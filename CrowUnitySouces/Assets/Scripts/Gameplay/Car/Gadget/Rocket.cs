@@ -34,6 +34,8 @@ public class Rocket : Gadget {
 
 
     private GameObject m_rocketObject;
+	private GameObject m_pointLight;
+	
     private FMOD.Studio.EventInstance m_rocketUI;
     private FMOD.Studio.ParameterInstance m_rocketDist;
     private FMOD.Studio.EventInstance m_rocketExecute3D;
@@ -61,16 +63,23 @@ public class Rocket : Gadget {
         m_rocketLaunchtimer = new Timer();
         m_rocketObject = transform.Find("Object").gameObject;
         m_rocketObject.gameObject.SetActive(false);
-        m_explosionParticles = GameObject.Find("RocketExplosion");
-
+		
         m_carTransform = transform.parent.parent;
         m_railsControl = FindObjectOfType<RailsControl>();
 
         base.Awake();
     }
 
+	public void Start()
+	{
+		m_explosionParticles = GameObject.Find("RocketExplosion");
+		m_explosionParticles.GetComponent<ParticleEmitter>().emit=false;
+		m_pointLight=m_explosionParticles.transform.FindChild("PointLight").gameObject;
+	}
+	
     public override void Update()
     {
+    	m_explosionParticles.GetComponent<ParticleEmitter>().emit=false;
         switch(m_state)
         {
             case State.Launching :
@@ -135,7 +144,6 @@ public class Rocket : Gadget {
                 m_rocketObject.transform.position = m_rails.getPoint(m_railsIndex, m_rails.correct2Incorrect(m_railsProgress)) + Vector3.Scale(Vector3.up, m_offsetWithParent);
             }
         }
-
     }
 
     void UpdateSound()
@@ -242,7 +250,12 @@ public class Rocket : Gadget {
         m_blowInstance.set3DAttributes(threeDeeAttr);
 
         m_explosionParticles.transform.position = m_target == null ? m_rocketObject.transform.position : m_target.transform.position;
-        m_explosionParticles.GetComponent<ParticleSystem>().Play();
+        //m_explosionParticles.GetComponent<ParticleSystem>().Play();
+		m_explosionParticles.GetComponent<ParticleEmitter>().emit=true;
+		
+		m_pointLight.transform.position=m_target == null ? m_rocketObject.transform.position : m_target.transform.position;
+		m_pointLight.GetComponent<RainbowPointLight>().Reset();
+		
         var colliders = Physics.OverlapSphere(m_rocketObject.transform.position, _blastRadius);
         m_target = null;
         foreach(Collider collider in colliders)

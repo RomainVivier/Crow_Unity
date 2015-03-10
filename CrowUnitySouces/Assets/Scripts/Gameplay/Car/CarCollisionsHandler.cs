@@ -27,7 +27,8 @@ public class CarCollisionsHandler : MonoBehaviour
 	private CameraShake m_cameraShake;
     private GameObject m_lastObject;
     private Collider m_collider;
-
+	private bool m_projectObstacles=false;
+	
     #endregion
 
     #region MonoBehaviour
@@ -79,13 +80,20 @@ public class CarCollisionsHandler : MonoBehaviour
                 oth.AddComponent<ObstacleDestroyer>();
                 rigidbody.AddForce(-forward * _ownMomentum, ForceMode.Impulse);
             }
-			m_windshield.Hit();
-            //Score.Instance.DistanceTravaled += 10000;
-            m_cameraShake.DoShake();
-            Score.Instance.ResetCombo();
-            DialogsManager._instance.triggerEvent(DialogsManager.DialogInfos.EventType.CAR_HP, (float) m_windshield._hp);
-            DialogsManager._instance.triggerEvent(DialogsManager.DialogInfos.EventType.CAR_DAMAGE, oth.name);
-            _spring.collide();
+			m_cameraShake.DoShake();
+			
+            if(!m_projectObstacles)
+            {
+				m_windshield.Hit();
+    	        Score.Instance.ResetCombo();
+        	    DialogsManager._instance.triggerEvent(DialogsManager.DialogInfos.EventType.CAR_HP, (float) m_windshield._hp);
+            	DialogsManager._instance.triggerEvent(DialogsManager.DialogInfos.EventType.CAR_DAMAGE, oth.name);
+            	_spring.collide();
+            }
+            else
+            {
+            	Score.Instance.AddScore(0,transform.position,1);
+            }
         }
         else if (oth.tag == "Barrier")
         {
@@ -110,7 +118,14 @@ public class CarCollisionsHandler : MonoBehaviour
 
     }
     #endregion
-
+	
+	#region public methods
+	public void setProjectObstacles(bool projectObstacles)
+	{
+		m_projectObstacles=projectObstacles;
+	}
+	#endregion
+	
     #region private methods
     void playSound(Collision collision, GameObject oth, FMOD.Studio.EventInstance sound, FMOD.Studio.ParameterInstance param)
     {
