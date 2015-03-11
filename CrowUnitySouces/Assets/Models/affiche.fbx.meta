@@ -1,24 +1,14 @@
 fileFormatVersion: 2
-guid: 3ca46ed77684c9e4785193ae95ff885b
+guid: 87361bed9e875ea40ba7577e89c038a1
 ModelImporter:
   serializedVersion: 16
   fileIDToRecycleName:
-    100000: arm
-    100002: arm_end
-    100004: Armature
-    100006: //RootNode
-    100008: Cylinder
-    100010: root
-    400000: arm
-    400002: arm_end
-    400004: Armature
-    400006: //RootNode
-    400008: Cylinder
-    400010: root
-    4300000: Cylinder
-    7400000: Armature|ArmatureAction
+    100000: //RootNode
+    400000: //RootNode
+    2300000: //RootNode
+    3300000: //RootNode
+    4300000: Cube.001
     9500000: //RootNode
-    13700000: Cylinder
   materials:
     importMaterials: 1
     materialName: 0
