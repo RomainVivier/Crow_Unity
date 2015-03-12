@@ -29,7 +29,7 @@ public class DestructibleObject : MonoBehaviour
                 GameObject go = transform.GetChild(i).gameObject;
                 go.AddComponent<FragmentDestroyer>();
             }
-            Score.Instance.AddScore(_bonus, transform.position, _comboBonus);
+            Score.Instance.AddScore(Score.ScoreType.STUFF,_bonus, transform.position, _comboBonus);
         }
     }
     #endregion

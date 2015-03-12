@@ -263,7 +263,7 @@ public class Rocket : Gadget {
             if (collider.CompareTag("Obstacle"))
             {
                 collider.gameObject.SetActive(false);
-                addScore(collider.transform.position);
+                addScore(collider.gameObject.rigidbody==null ? Score.ScoreType.EVENT : Score.ScoreType.MINOR_OBSTACLE, collider.transform.position);
                 DialogsManager._instance.triggerEvent(DialogsManager.DialogInfos.EventType.OBSTACLE_DESTRUCTION, collider.gameObject.name);
                 DialogsManager._instance.triggerEvent(DialogsManager.DialogInfos.EventType.DESTRUCTION_WITH_GADGET, "Rocket");
             }
