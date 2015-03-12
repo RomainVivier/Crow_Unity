@@ -24,7 +24,7 @@ public class WindshieldController : MonoBehaviour {
 
 		if(_hp < 0)
 		{
-			Application.LoadLevel("GameOver");
+			//Application.LoadLevel("GameOver");
 			//GameOverController.Instance.Show();
 			return;
 		}
