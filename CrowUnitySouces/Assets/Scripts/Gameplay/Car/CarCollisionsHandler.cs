@@ -77,9 +77,10 @@ public class CarCollisionsHandler : MonoBehaviour
             if(oth.rigidbody != null)
             {
                 oth.rigidbody.AddForce(direc * momentum,ForceMode.Impulse);
-                oth.AddComponent<ObstacleDestroyer>();
+                oth.transform.parent.gameObject.AddComponent<ObstacleDestroyer>();
                 rigidbody.AddForce(-forward * _ownMomentum, ForceMode.Impulse);
             }
+            else GameObject.Destroy(oth.transform.parent.gameObject);
 			m_cameraShake.DoShake();
 			
             if(!m_projectObstacles)
