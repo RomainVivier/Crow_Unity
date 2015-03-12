@@ -17,4 +17,16 @@ public class Burger : MonoBehaviour
 		_ps.Stop();
 		_ps.Play ();
 	}
+
+	void OnTriggerEnter(Collider other)
+	{
+		if (other.collider.name == "SpoonBill")
+		{
+			Debug.Log("prout");
+			Destroy(GetComponent<Animator>());
+			Destroy(this);
+		}
+
+	}
 }
+	
