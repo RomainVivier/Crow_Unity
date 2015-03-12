@@ -7,11 +7,13 @@ public class Turret : Obstacle
     public float _fireRate;
     public Transform _canon;
     public GameObject _projectile;
-    public Color _color;
+	public Renderer[] _WarmSignals;
+    public Color _WarmColor;
     public Color _shootColor;
     public ParticleSystem _particle;
 
     private Timer m_timer;
+	private int m_numberSignals;
 
     public override void Start()
     {
@@ -30,15 +32,27 @@ public class Turret : Obstacle
 
         if(m_timer.Current < _fireRate/3)
         {
-            renderer.material.color = _shootColor;
             _particle.Stop();
         }
 
         if(m_timer.IsElapsedOnce)
         {
             Fire();
-            renderer.material.color = _color;
         }
+
+		m_numberSignals = (int)((1 - m_timer.CurrentNormalized) / (_fireRate / _WarmSignals.Length));
+
+		for(int i =0; i < _WarmSignals.Length; i++)
+		{
+			if(m_numberSignals < _WarmSignals.Length - 1)
+			{
+				_WarmSignals[i].material.color = i <= m_numberSignals ? _shootColor : _WarmColor;
+			}
+			else
+			{
+				_WarmSignals[i].material.color = Color.white;
+			}
+		}
 
     }
 
