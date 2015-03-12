@@ -42,7 +42,25 @@ public class GameInfos
 	
 	public GameInfos()
 	{
+		load();
 		reset();
 	}
 	
+	public void load()
+	{
+		for(int i=0;i<10;i++)
+		{
+			scores[i]=PlayerPrefs.GetInt ("Scores"+i,scores[i]);
+			names[i]=PlayerPrefs.GetString("Names"+i,names[i]);
+		}
+	}
+	
+	public void save()
+	{
+		for(int i=0;i<10;i++)
+		{
+			PlayerPrefs.SetInt("Scores"+i,scores[i]);
+			PlayerPrefs.SetString("Names"+i,names[i]);
+		}
+	}
 }
