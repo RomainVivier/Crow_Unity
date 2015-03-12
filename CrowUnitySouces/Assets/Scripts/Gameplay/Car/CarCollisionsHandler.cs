@@ -92,7 +92,7 @@ public class CarCollisionsHandler : MonoBehaviour
             }
             else
             {
-            	Score.Instance.AddScore(0,transform.position,1);
+            	Score.Instance.AddScore(Score.ScoreType.MINOR_OBSTACLE,0,transform.position,1);
             }
         }
         else if (oth.tag == "Barrier")

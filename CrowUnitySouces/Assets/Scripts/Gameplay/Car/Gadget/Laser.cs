@@ -201,7 +201,8 @@ public class Laser : Gadget
                                         _laserEffect.GetComponent<ParticleSystem>().Play();
                                         _laserEffect.transform.position = go.transform.position;//rh.point;
                                         rh.collider.gameObject.SetActive(false);
-                                        addScore(rh.collider.transform.position);
+                                        Score.ScoreType type=rh.collider.gameObject.name.Contains("Obstacle") ? Score.ScoreType.MINOR_OBSTACLE : Score.ScoreType.EVENT;
+                                        addScore(type,rh.collider.transform.position);
 
                                         // Play sound
                                         FMOD.Studio.EventInstance blowInstance

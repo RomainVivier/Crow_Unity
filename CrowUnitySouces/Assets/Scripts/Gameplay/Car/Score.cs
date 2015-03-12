@@ -5,6 +5,11 @@ using System.Collections;
 public class Score : MonoBehaviour
 {
     #region members
+	public enum ScoreType
+	{
+		EVENT,MINOR_OBSTACLE,STUFF
+	}
+    
     private const float SCORE_DISPLAY_LAG = 1;
     private const float DIST_DISPLAY_LAG = 0.2f;
 
@@ -185,19 +190,35 @@ public class Score : MonoBehaviour
         if(m_combo>GameInfos.Instance.maxCombo) GameInfos.Instance.maxCombo=m_combo;
     }
 
-    private/*public*/ void AddScore(int value,int combo=1)
+    public void AddScore(ScoreType type, int value,int combo=1)
     {
         m_score += m_combo * value;
         m_combo+=combo;
         float diff = m_score - m_displayScore;
         m_augmentSpeed = diff / SCORE_DISPLAY_LAG;
+        GameInfos gi=GameInfos.Instance;
+        switch(type)
+        {
+        	case ScoreType.EVENT:
+				gi.nbEvents++;
+				gi.eventsCombo+=combo;
+			break;
+			case ScoreType.MINOR_OBSTACLE:
+				gi.nbMinorObstacles++;
+				gi.minorObstaclesCombo+=combo;
+			break;
+			case ScoreType.STUFF:
+				gi.nbStuff++;
+				gi.stuffPoints+=value;
+			break;
+        }
     }
 
-    public void AddScore(int value, Vector3 pos, int combo=1)
+    public void AddScore(ScoreType type, int value, Vector3 pos, int combo=1)
     {
         GameObject go = GameObject.Instantiate(Resources.Load("ScoreFeedback")) as GameObject;
         go.GetComponent<ScoreFeedback>().init(pos+new Vector3(0,2,0), value, combo);
-        AddScore(value, combo);
+        AddScore(type, value, combo);
     }
 
     public void ResetCombo()
