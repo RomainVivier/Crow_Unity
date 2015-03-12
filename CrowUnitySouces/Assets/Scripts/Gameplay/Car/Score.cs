@@ -180,6 +180,9 @@ public class Score : MonoBehaviour
                 m_digits[i].GetComponent<MeshRenderer>().material.mainTextureOffset = new Vector2(0, 1-digitPos*0.1f);
             }
         }
+        GameInfos.Instance.score=(int)m_score;
+        GameInfos.Instance.dist=(int)DistanceTravaled;
+        if(m_combo>GameInfos.Instance.maxCombo) GameInfos.Instance.maxCombo=m_combo;
     }
 
     private/*public*/ void AddScore(int value,int combo=1)

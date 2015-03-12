@@ -123,6 +123,7 @@ public class DialogsManager : MonoBehaviour
             }
             
             // Update bow-tie
+            Debug.Log (volume);
             for(int i=0;i<NB_SEGMENTS;i++)
             {
             	m_segmentRenderers[i].material.color= volume > i/((float) NB_SEGMENTS) ? new Color(255,0,0) : new Color(0,0,0);
