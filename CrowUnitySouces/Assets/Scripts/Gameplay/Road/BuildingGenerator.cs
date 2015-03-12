@@ -7,10 +7,14 @@ public class BuildingGenerator : MonoBehaviour {
     public int _maxHeight;
 
     public string _enviro;
-
+	public BuildingGenerator _nextBuildingGenerator=null;
+	
+	private int m_maxLength=-1;
+	private bool m_dontGenerate=false;
+	
 	void Start()
     {
-        generate();
+        if(!m_dontGenerate) generate();
 	}
 
 
@@ -22,12 +26,13 @@ public class BuildingGenerator : MonoBehaviour {
 
     public void regenerate()
     {
-        for(int i=0;i<transform.childCount;i++) GameObject.Destroy(transform.GetChild(i));
+        for(int i=0;i<transform.childCount;i++) GameObject.Destroy(transform.GetChild(i).gameObject);
         generate();
     }
 
     private void generate()
     {
+		getMaxLength();    
 	    if(_minHeight < 1 || (_maxHeight < 1 || _maxHeight < _minHeight) || _enviro=="")
         {
             Debug.Log("Some parameters are wrong. Correct it and try again.");
@@ -36,10 +41,12 @@ public class BuildingGenerator : MonoBehaviour {
         int height = Random.Range(_minHeight, _maxHeight);
         BuildingGeneratorParameters.RandomBuilding rb = GameObject.Find(_enviro)//(Resources.Load("Enviros/"+_enviro) as GameObject)
                     .GetComponent<BuildingGeneratorParameters>()
-                    .getRandomBuilding(height);
+                    .getRandomBuilding(height,m_maxLength);
 
         GameObject building;
-
+		
+		if(rb.length>1) _nextBuildingGenerator.noBuilding(rb.length-2);
+		
         for (int i = 0; i < height ; i++)
         {
             if(i==0) building = PoolManager.Instance.GetUnusedObject(rb.baseObject.name);
@@ -47,7 +54,7 @@ public class BuildingGenerator : MonoBehaviour {
             else building=PoolManager.Instance.GetUnusedObject(rb.middleObject.name);
             if(rb.material!=null) building.GetComponent<MeshRenderer>().material = rb.material;
             building.SetActive(true);
-            building.transform.position = transform.position + Vector3.up * 30 * i * transform.localScale.y;
+            building.transform.position = transform.position + Vector3.up * 30 * i * transform.localScale.y + (rb.length-1)*new Vector3(6,0,0);
             building.transform.rotation = Quaternion.Euler(new Vector3(-90, 90 + transform.rotation.eulerAngles.y, 0));
             building.transform.localScale = Vector3.Scale(building.transform.localScale, transform.localScale);
             building.transform.parent = transform;
@@ -71,5 +78,22 @@ public class BuildingGenerator : MonoBehaviour {
                 sp._soundNameExitRight="SFX/Env Objects/envSwooshBuildingExitRight";
             }
         }
+    }
+    
+    private int getMaxLength()
+    {
+    	if(m_maxLength==-1)
+    	{
+    		if(_nextBuildingGenerator==null) m_maxLength=1;
+    		else m_maxLength=_nextBuildingGenerator.getMaxLength()+1;
+    	}
+    	return m_maxLength;
+    }
+    
+    private void noBuilding(int length)
+    {
+    	m_dontGenerate=true;
+		for(int i=0;i<transform.childCount;i++) GameObject.Destroy(transform.GetChild(i).gameObject);
+		if(length>0) _nextBuildingGenerator.noBuilding(length-1);
     }
 }

@@ -21,7 +21,7 @@ public class ScoreFeedback : MonoBehaviour
         m_cameraTransform = Car.Instance.gameObject.transform.FindChild("Body/CameraRoot/CameraDashboard/CameraEnvironment").transform;
 
         // Set text
-        GetComponent<Text>().text = score + " x " + combo;
+        GetComponent<Text>().text = "";//score + " x " + combo;
 
         // Start timer
         m_timer = new Timer(DISPLAY_TIME);
