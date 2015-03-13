@@ -31,7 +31,7 @@ public class DestructibleObject : MonoBehaviour
             {
                 GameObject go = transform.GetChild(i).gameObject;
                 FragmentDestroyer fd=go.AddComponent<FragmentDestroyer>();
-                fd.AddSpeed(car.getForwardVector()*car.getForwardVelocity()*0.5f);
+                fd.AddSpeed(car.getForwardVector()*car.getForwardVelocity()*1f);
             }
             _particles.gameObject.SetActive(true);
             _particles.Play();
