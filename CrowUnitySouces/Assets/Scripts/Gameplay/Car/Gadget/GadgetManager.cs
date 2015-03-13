@@ -19,6 +19,9 @@ public class GadgetManager : MonoBehaviour {
     private Timer m_timer;
 
     private CardPopup m_cardPopup;
+
+	public List<string> _gadgets;
+	
 	#endregion
 
     #region Properties
@@ -121,9 +124,19 @@ public class GadgetManager : MonoBehaviour {
     public string RandomUnassignGadget()
     {
         string gadgetID;
-
-        var gadgets = m_gadgets.Where(g => g.Value._isAssign == false).Select(g => g.Key).ToList();
-
+		
+        List<string> gadgets;
+		if(_gadgets.Count>0)
+		{
+			gadgets=new List<string>();
+			gadgets.Add (_gadgets[0]);
+			_gadgets.RemoveAt(0);
+		}
+		else
+		{
+			gadgets = m_gadgets.Where(g => g.Value._isAssign == false).Select(g => g.Key).ToList();
+		}
+		
         if (gadgets.Count == 0)
         {
             return null;
