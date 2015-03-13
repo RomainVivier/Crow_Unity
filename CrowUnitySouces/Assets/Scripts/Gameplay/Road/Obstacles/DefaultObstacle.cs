@@ -3,11 +3,11 @@ using System.Collections;
 
 public class DefaultObstacle : Obstacle {
 
-	override void Start()
+	public override void Start()
 	{
 	}
 	
-	override void Update()
+	public override void Update()
 	{
 	}
 }
