@@ -8,6 +8,7 @@ public class Rocket : Gadget {
 
     public float _blastRadius;
     public float _rocketSpeed;
+    public float _proximityFuse;
     public float _rocketUIMax;
 
     enum State
@@ -135,7 +136,15 @@ public class Rocket : Gadget {
         else
         {
             //Debug.Log(m_railsProgress + " " + m_target.RailsProgress);
-            if (m_rails == m_target.Rails && m_railsProgress >= m_target.RailsProgress)
+			Ray ray=new Ray();
+			ray.origin=m_rocketObject.transform.position;
+			ray.direction=m_rocketObject.transform.forward;
+			RaycastHit rh;
+			if(Physics.Raycast(ray,out rh,_proximityFuse) && rh.collider==m_target.collider)
+			{
+				Blow ();
+			}
+			else if (m_rails == m_target.Rails && m_railsProgress >= m_target.RailsProgress)
             {
                 Blow();
             }
