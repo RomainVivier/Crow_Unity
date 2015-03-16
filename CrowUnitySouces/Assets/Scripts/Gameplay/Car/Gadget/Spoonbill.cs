@@ -80,8 +80,8 @@ public class Spoonbill : Gadget
             m_attackTimer.Reset(1.5f);
             m_state = State.Attacking;
             addScore(Score.ScoreType.MINOR_OBSTACLE,other.transform.position);
-            DialogsManager._instance.triggerEvent(DialogsManager.DialogInfos.EventType.OBSTACLE_DESTRUCTION, other.gameObject.name);
-            DialogsManager._instance.triggerEvent(DialogsManager.DialogInfos.EventType.DESTRUCTION_WITH_GADGET, "SpoonBill");
+//            DialogsManager._instance.triggerEvent(DialogsManager.DialogInfos.EventType.OBSTACLE_DESTRUCTION, other.gameObject.name);
+//            DialogsManager._instance.triggerEvent(DialogsManager.DialogInfos.EventType.DESTRUCTION_WITH_GADGET, "SpoonBill");
         }
         if(!other.isTrigger) FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Gadgets/Spatula/gadgetSpatulaImpact", transform.position);
     }
