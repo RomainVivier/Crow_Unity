@@ -41,9 +41,9 @@ public class Radio : MonoBehaviour {
 	void Start()
     {
         m_timer = new Timer();
-        m_startFrequency = 6;
-        m_targetFrequency = 6;
-        m_currentFrequency = 6f;
+        m_startFrequency = 2;
+        m_targetFrequency = 2;
+        m_currentFrequency = 2f;
 		m_radioPickup=0;
 		
         m_radio = FMOD_StudioSystem.instance.GetEvent("event:/Music/Radio/radioStream");

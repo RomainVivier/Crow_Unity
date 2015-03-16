@@ -37,6 +37,8 @@ public class Score : MonoBehaviour
     private RailsControl m_rc;
     private GameObject[] m_digits;
 
+	private float m_comboSizeFeedback=1;
+	
     private GameObject m_body;
 
     private GameObject m_comboObject;
@@ -178,6 +180,9 @@ public class Score : MonoBehaviour
         }
         if (m_addBonus < 0) m_addBonus = 0;
 
+		m_comboSizeFeedback+=Time.deltaTime*2;
+		if(m_comboSizeFeedback>1) m_comboSizeFeedback=1;
+		
         if (!HideScore)
         {
             //float[] digitPos=new float[NB_DIGITS];
@@ -193,6 +198,9 @@ public class Score : MonoBehaviour
                 m_digits[i].GetComponent<MeshRenderer>().material.mainTextureOffset = new Vector2(0, 1-digitPos*0.1f);
             }
             m_comboObject.SetActive(m_combo>1);
+            float xScale=Mathf.PingPong(m_comboSizeFeedback*2,1);
+            xScale=1+xScale*0.2f;
+            m_comboObject.transform.localScale=new Vector3(0.65f*xScale,0.65f,0.65f);
             int combo=m_combo;
             for(int i=0;i<NB_COMBO_DIGITS;i++)
             {
@@ -212,6 +220,7 @@ public class Score : MonoBehaviour
         float diff = m_score - m_displayScore;
         m_augmentSpeed = diff / SCORE_DISPLAY_LAG;
         GameInfos gi=GameInfos.Instance;
+        if(combo!=0 && m_comboSizeFeedback>=1) m_comboSizeFeedback=0;
         switch(type)
         {
         	case ScoreType.EVENT:
