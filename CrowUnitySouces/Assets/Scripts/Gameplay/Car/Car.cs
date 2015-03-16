@@ -236,15 +236,20 @@ public class Car : MonoBehaviour
                 body.AddForceAtPosition(new Vector3(0, dist * dist * -1000, 0), wheels[i].transform.position);
             }*/
 
+			fakeRPM.update(inputs.throttle, inputs.brake);
+			// Update fake RPM sound
+			float diffSpeed=forwardVelocity-oldSpeed;
+			if (diffSpeed < -1)
+			{
+				Debug.Log (diffSpeed);
+				fakeRPM.loseSpeed((diffSpeed + 1f) * -0.1f);
+			}
+			oldSpeed = forwardVelocity;
         }
         
         oldInputs = inputs;
         
-        // Update fake RPM sound
-        float diffSpeed=forwardVelocity-oldSpeed;
-        if (diffSpeed < -1) fakeRPM.loseSpeed((diffSpeed + 1f) * -1f);
-        oldSpeed = forwardVelocity;
-        fakeRPM.update(inputs.throttle, inputs.brake);
+
 
         // Update sounds
         float frictionSound = Mathf.Abs(inputs.steering);
@@ -346,7 +351,11 @@ public class Car : MonoBehaviour
 
     public void InstantSetSpeed(float speed, bool evenInAir=false)
     {
-        if(isOnGround() || evenInAir) body.velocity = getForwardVector() * speed;
+        if(isOnGround() || evenInAir)
+        {
+        	body.velocity = getForwardVector() * speed;
+        	oldSpeed=speed;
+        }
     }
 
 	// Public getters
