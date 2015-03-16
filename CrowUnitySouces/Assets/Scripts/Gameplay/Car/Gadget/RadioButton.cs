@@ -39,7 +39,7 @@ public class RadioButton : Gadget {
         	else
         	{
         		_radio.SwitchFrequencyUp();
-        		if(_radio.Frequency==6) _radio.RadioState=0;
+        		if(_radio.Frequency==2) _radio.RadioState=0;
         	}
 			tgtPos+=1f/(1f+NB_RADIOS);
 		}
