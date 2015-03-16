@@ -259,12 +259,12 @@ public class Car : MonoBehaviour
         tiresSpeed.setValue(forwardVelocity / maxSpeed);
         engineSpeed.setValue(forwardVelocity*3.6f);
         rumbleSpeed.setValue(forwardVelocity * 3.6f);
-        engineLoad.setValue(inputs.throttle>0.5 ? 1 : 0);
+        //engineLoad.setValue(inputs.throttle>0.5 ? 1 : 0);
         
         //Debug print
 		if(nbUpdates%10==0)
 		{
-			//Debug.Log((int)forwardVelocity*3.6+" "+(int)rpm+" "+transmission.getCurrentGear());
+			Debug.Log((int)forwardVelocity*3.6+" "+transmission.getCurrentGear());
             //Debug.Log(getDeltaTarget());
 			//Debug.Log (forwardVelocity*3.6f);
         }
