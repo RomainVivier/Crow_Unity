@@ -8,7 +8,6 @@ public class Laser : Gadget
     #region constants
     const float VALVE_OPENING_TIME = 0.2f;
     const float VALVE_CLOSING_TIME = 0.2f;
-    const float RANGE = 500f;
     const float CONVERGING_INERTIA = 0.1f;
     const float TEXTURE_SCROLL_SPEED = 5;
     //const float DISPLAY_RANGE = RANGE;
@@ -20,6 +19,8 @@ public class Laser : Gadget
     public float _particlesSpeed = 100; // units/s
     public float _particlesRotationSpeed = 1; // rad/s
     public float _targetContactTime = 0.2f;
+ 	public float _range=500f;
+ 	
     private Timer m_stateTimer;
     private Car m_car;
     private float m_lightsYOffset;
@@ -133,7 +134,7 @@ public class Laser : Gadget
                     if (float.IsNaN(hAngle)) hAngle = 0;
 
                     // Update laser length
-                    m_laserLength += Time.deltaTime * RANGE / _firingTime;
+                    m_laserLength += Time.deltaTime * _range / _firingTime;
                     m_textureScroll += Time.deltaTime * TEXTURE_SCROLL_SPEED;
 
                     // Raycast to detect target
