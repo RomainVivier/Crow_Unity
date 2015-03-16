@@ -14,6 +14,7 @@ public class RailsControl : CarControl
 	public float steeringInertia=0.1f;
     public float steeringBaseSpeed = 10f;
 	public float targetDistMultiplier=0.5f; // Unit = seconds
+	public float baseDist=1;
 	public float steeringDeadZone=1;
 	public float steeringFullZone=2;
 
@@ -211,7 +212,7 @@ public class RailsControl : CarControl
 		Vector3 forward=car.getForwardVector();
         //target.y = 0;
 		Vector3 diff=target-carPos;
-		float wantedTargetDist=car.getForwardVelocity()*targetDistMultiplier;
+		float wantedTargetDist=baseDist+car.getForwardVelocity()*targetDistMultiplier;
 		float currentTargetDist=Vector3.Dot (diff,forward);;
 		if(currentTargetDist<wantedTargetDist)
 		{
