@@ -14,7 +14,8 @@ public class Score : MonoBehaviour
     private const float DIST_DISPLAY_LAG = 0.2f;
 
     private const int NB_DIGITS = 6;
-
+	private const int NB_COMBO_DIGITS = 2;
+	
     public float _timeToReset = 5f;
     public float _incrementDist = 1;
     public int _incrementValue = 1;
@@ -37,6 +38,9 @@ public class Score : MonoBehaviour
     private GameObject[] m_digits;
 
     private GameObject m_body;
+
+    private GameObject m_comboObject;
+    private GameObject[] m_comboDigits;
     #endregion
 
     #region Properties
@@ -131,6 +135,10 @@ public class Score : MonoBehaviour
             m_digits[i] = GameObject.Find("Score_"+ i);
             m_digits[i].GetComponent<MeshRenderer>().material.mainTextureScale = new Vector2(1, 1f);
         }
+        m_comboObject=GameObject.Find ("ComboBase");
+        m_comboDigits=new GameObject[NB_COMBO_DIGITS];
+        for(int i=0;i<NB_COMBO_DIGITS;i++)
+        	m_comboDigits[i]=m_comboObject.transform.Find("Digit"+i).gameObject;
     }
 
     private void Init()
@@ -183,6 +191,13 @@ public class Score : MonoBehaviour
                 if (m_displayScore % pow10 > pow10 - 1) digitPos += m_displayScore % 1;
                 //float digitPos = (m_displayScore / pow10) + 0.5f;
                 m_digits[i].GetComponent<MeshRenderer>().material.mainTextureOffset = new Vector2(0, 1-digitPos*0.1f);
+            }
+            m_comboObject.SetActive(m_combo>1);
+            int combo=m_combo;
+            for(int i=0;i<NB_COMBO_DIGITS;i++)
+            {
+				m_comboDigits[i].GetComponent<MeshRenderer>().material.mainTextureOffset = new Vector2(0, 0.9f-(combo%10)*0.1f);
+            	combo/=10;
             }
         }
         GameInfos.Instance.score=(int)m_score;
