@@ -245,6 +245,10 @@ public class Car : MonoBehaviour
 				fakeRPM.loseSpeed((diffSpeed + 1f) * -0.1f);
 			}
 			oldSpeed = forwardVelocity;
+
+			rumbleSpeed.setValue(forwardVelocity * 3.6f);			
+			tiresSpeed.setValue(forwardVelocity / maxSpeed);
+			engineSpeed.setValue(forwardVelocity*3.6f);
         }
         
         oldInputs = inputs;
@@ -256,9 +260,6 @@ public class Car : MonoBehaviour
         engineRPM.setValue(fakeRPM.getRPM());
         tiresGround.setValue(isOnGround() ? 1 : 0);
         tiresFriction.setValue(frictionSound);
-        tiresSpeed.setValue(forwardVelocity / maxSpeed);
-        engineSpeed.setValue(forwardVelocity*3.6f);
-        rumbleSpeed.setValue(forwardVelocity * 3.6f);
         engineLoad.setValue(inputs.throttle>0.5 ? 1 : 0);
         
         //Debug print
