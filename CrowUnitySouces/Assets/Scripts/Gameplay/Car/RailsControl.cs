@@ -213,7 +213,8 @@ public class RailsControl : CarControl
         //target.y = 0;
 		Vector3 diff=target-carPos;
 		float wantedTargetDist=baseDist+car.getForwardVelocity()*targetDistMultiplier;
-		float currentTargetDist=Vector3.Dot (diff,forward);;
+		float currentTargetDist=Vector3.Dot (diff,forward);
+		
 		if(currentTargetDist<wantedTargetDist)
 		{
 			float minProgress=chunkProgress;
