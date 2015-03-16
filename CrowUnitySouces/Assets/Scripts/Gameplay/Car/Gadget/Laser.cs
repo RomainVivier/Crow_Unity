@@ -9,7 +9,7 @@ public class Laser : Gadget
     const float VALVE_OPENING_TIME = 0.2f;
     const float VALVE_CLOSING_TIME = 0.2f;
     const float RANGE = 500f;
-    const float CONVERGING_INERTIA = 0.05f;
+    const float CONVERGING_INERTIA = 0.1f;
     const float TEXTURE_SCROLL_SPEED = 5;
     //const float DISPLAY_RANGE = RANGE;
     #endregion
