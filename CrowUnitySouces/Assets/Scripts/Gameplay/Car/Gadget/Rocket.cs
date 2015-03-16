@@ -110,6 +110,8 @@ public class Rocket : Gadget {
 
     void UpdateProgress()
     {
+    	if(m_state==State.Idle) return;
+    	
         //Update rails progression
         m_railsProgress += m_railsSpeed * Time.fixedDeltaTime;
         m_failProgress += _rocketSpeed * Time.deltaTime; 

@@ -13,6 +13,7 @@ public class CarCollisionsHandler : MonoBehaviour
     public float _ownMomentum = 10000;
     public static bool _dontCollide = false;
     public Spring _spring;
+    public Radio _radio;
     #endregion
 
     #region private members
@@ -63,7 +64,12 @@ public class CarCollisionsHandler : MonoBehaviour
             if (fPos<2 || fPos>5) return;
             if (cooldownTimer.IsElapsedLoop || oth!=m_lastObject)
             {
-                playSound(null, oth, m_impactVehicleSound, m_impactVehicleSpeed);
+                if(!m_projectObstacles)
+                {
+                	playSound(null, oth, m_impactVehicleSound, m_impactVehicleSpeed);
+                	if(m_car.getForwardVelocityKmh()>100) _radio.ResetPickup();
+                }
+				else FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Impacts/impactDash",transform.position);
                 cooldownTimer.Reset(2f);
                 m_lastObject = oth;
             }
@@ -78,7 +84,7 @@ public class CarCollisionsHandler : MonoBehaviour
             {
                 oth.rigidbody.AddForce(direc * momentum,ForceMode.Impulse);
                 oth.transform.parent.gameObject.AddComponent<ObstacleDestroyer>();
-                rigidbody.AddForce(-forward * _ownMomentum, ForceMode.Impulse);
+				if(!m_projectObstacles) rigidbody.AddForce(-forward * _ownMomentum, ForceMode.Impulse);
             }
             else GameObject.Destroy(oth.transform.parent.gameObject);
 			m_cameraShake.DoShake();
