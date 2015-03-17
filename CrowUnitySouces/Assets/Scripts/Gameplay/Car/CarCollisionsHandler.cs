@@ -68,6 +68,9 @@ public class CarCollisionsHandler : MonoBehaviour
                 {
                 	playSound(null, oth, m_impactVehicleSound, m_impactVehicleSpeed);
                 	if(m_car.getForwardVelocityKmh()>100) _radio.ResetPickup();
+					m_windshield.Hit();
+					DialogsManager._instance.triggerEvent(DialogsManager.DialogInfos.EventType.CAR_HP, (float) m_windshield._hp);
+					DialogsManager._instance.triggerEvent(DialogsManager.DialogInfos.EventType.CAR_DAMAGE, oth.name);
                 }
 				else FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Impacts/impactDash",transform.position);
                 cooldownTimer.Reset(2f);
@@ -91,10 +94,7 @@ public class CarCollisionsHandler : MonoBehaviour
 			
             if(!m_projectObstacles)
             {
-				m_windshield.Hit();
     	        Score.Instance.ResetCombo();
-        	    DialogsManager._instance.triggerEvent(DialogsManager.DialogInfos.EventType.CAR_HP, (float) m_windshield._hp);
-            	DialogsManager._instance.triggerEvent(DialogsManager.DialogInfos.EventType.CAR_DAMAGE, oth.name);
             	_spring.collide();
             }
             else
