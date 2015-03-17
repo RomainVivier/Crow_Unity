@@ -70,7 +70,7 @@ public class Radio : MonoBehaviour {
 
 		m_radioPickup-=_pickupSpeed*Time.deltaTime;
 		if(m_radioPickup<0) m_radioPickup=0;
-		
+				
         if(m_timer.IsElapsedOnce)
         {
             if(m_targetFrequency == 1)
