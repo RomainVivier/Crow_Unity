@@ -131,7 +131,7 @@ public class Spoonbill : Gadget
         m_state = State.Disengaging;
         m_engageTimer.Reset(1f);
         _spoonbillAnimator.SetTrigger("Disengage");
-        _buttonAnim.SetBool("Engage", false);
+        //_buttonAnim.SetBool("Engage", false);
         _invertGesture = false;
     }
 
@@ -141,7 +141,7 @@ public class Spoonbill : Gadget
 		m_spatulaMesh.SetActive(false);
 		collider.enabled=false;
 		//gameObject.SetActive(false);
-		_buttonAnim.SetBool("Engage", false);
+		//_buttonAnim.SetBool("Engage", false);
 		base.Stop();
     }
 
