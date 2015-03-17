@@ -38,6 +38,11 @@ public class Radio : MonoBehaviour {
 		get { return m_targetFrequency;}
 	}
 	
+	public bool IsFixed
+	{
+		get {return m_currentFrequency==m_targetFrequency;}
+	}
+	
 	void Start()
     {
         m_timer = new Timer();
