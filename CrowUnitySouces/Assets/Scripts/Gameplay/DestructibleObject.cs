@@ -26,6 +26,9 @@ public class DestructibleObject : MonoBehaviour
         Car car = oth.transform.root.GetComponent<Car>();
         if(car!=null)
         {
+        	Vector3 carPos=car.getPosition();
+        	Vector3 forward=car.getForwardVector();
+        	if(Vector3.Dot (carPos-transform.position,forward)>0) return;
             int nbChild=transform.childCount;
             for(int i=0;i<nbChild;i++)
             {
