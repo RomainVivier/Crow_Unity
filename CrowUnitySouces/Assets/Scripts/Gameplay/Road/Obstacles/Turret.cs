@@ -14,11 +14,14 @@ public class Turret : Obstacle
 
     private Timer m_timer;
 	private int m_numberSignals;
-
+	private bool m_engaged=false;
+	private BoxCollider m_collider;
+	
     public override void Start()
     {
         base.Start();
         m_timer = new Timer();
+        m_collider=transform.parent.collider as BoxCollider;
     }
 
     public override void Update()
@@ -54,6 +57,9 @@ public class Turret : Obstacle
 			}
 		}
 
+		Vector3 center=m_collider.center;
+		center.y=transform.localPosition.y+2.7f;
+		m_collider.center=center;
     }
 
     public override void Activate()
@@ -61,15 +67,18 @@ public class Turret : Obstacle
         base.Activate();
         _anim.SetTrigger("Engage");
         m_timer.Reset(_fireRate);
+        m_engaged=true;
     }
 
     public override void Disactivate()
     {
         _anim.SetTrigger("Disengage");
+        m_engaged=false;
     }
 
     void Fire()
     {
+    	if(!m_engaged) return;
         GameObject go = GameObject.Instantiate(_projectile, _canon.position, _canon.rotation) as GameObject;
         Destroy(go, 5f);
         m_timer.Reset(_fireRate);
