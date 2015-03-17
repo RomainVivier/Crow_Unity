@@ -35,6 +35,7 @@ public class RadioButton : Gadget {
 
         if (_switchUp)
         {
+        	if(!_radio.IsFixed) return;
         	if(_radio.RadioState==0)
         	{
         		pos=0;
