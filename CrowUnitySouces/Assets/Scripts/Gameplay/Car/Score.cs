@@ -13,7 +13,7 @@ public class Score : MonoBehaviour
     private const float SCORE_DISPLAY_LAG = 1;
     private const float DIST_DISPLAY_LAG = 0.2f;
 	private const float COMBO_SIZE_FEEDBACK_SPEED=2;
-	private const float COMBO_TEN_FEEDBACK_SPEED=2; 
+	private const float COMBO_TEN_FEEDBACK_SPEED=1; 
 	private const float COMBO_BASE_SCALE=0.65f;
 	private const float COMBO_FINAL_SCALE=1.3f;
 		
@@ -231,7 +231,7 @@ public class Score : MonoBehaviour
         m_augmentSpeed = diff / SCORE_DISPLAY_LAG;
         GameInfos gi=GameInfos.Instance;
         if(combo!=0 && m_comboSizeFeedback>=1) m_comboSizeFeedback=0;
-        if(oldCombo/10!=combo/10) startTenFeedback(combo/10);
+        if(oldCombo/10!=m_combo/10) startTenFeedback(m_combo/10);
         switch(type)
         {
         	case ScoreType.EVENT:
@@ -251,8 +251,6 @@ public class Score : MonoBehaviour
 
     public void AddScore(ScoreType type, int value, Vector3 pos, int combo=1)
     {
-        GameObject go = GameObject.Instantiate(Resources.Load("ScoreFeedback")) as GameObject;
-        go.GetComponent<ScoreFeedback>().init(pos+new Vector3(0,2,0), value, combo);
         AddScore(type, value, combo);
     }
 
@@ -266,6 +264,9 @@ public class Score : MonoBehaviour
 		// Duplicate combo object
 		if(m_comboTenFeedbackObject!=null) GameObject.Destroy(m_comboTenFeedbackObject);
 		m_comboTenFeedbackObject=GameObject.Instantiate(m_comboObject) as GameObject;
+		m_comboTenFeedbackObject.transform.SetParent(m_comboObject.transform.parent);
+		m_comboTenFeedbackObject.transform.localPosition=m_comboObject.transform.localPosition;
+		m_comboTenFeedbackObject.transform.localRotation=m_comboObject.transform.localRotation;
 
 		// Set texture offset to show ten value
 		m_comboTenFeedbackObject.transform.Find ("Digit1").GetComponent<MeshRenderer>()

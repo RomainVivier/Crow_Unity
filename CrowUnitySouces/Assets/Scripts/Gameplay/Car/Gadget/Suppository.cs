@@ -43,18 +43,19 @@ public class Suppository : Gadget
         m_timer.Reset(2f);
         //TODO Play sound here
 		Invoke ("Insert", 3.3f);
-        Invoke("End", 2.7f);
+        Invoke("End", 5f);
         FMOD_StudioSystem.instance.PlayOneShot("event:/Dialog/IA/AI Gadgets/AI_Suppo", transform.position);
     }
 
 	void Insert()
 	{
-		_anim.SetTrigger("Suppository");
+		_anim.SetBool("Suppository",true);
 	}
 
     void End()
     {
-		FinalScreenController.Instance.Show();
+		_anim.SetBool("Suppository",false);
+//		FinalScreenController.Instance.Show();
     }
 
     public override void Stop()

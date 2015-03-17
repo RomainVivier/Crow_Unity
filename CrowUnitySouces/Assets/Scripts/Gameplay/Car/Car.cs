@@ -241,7 +241,6 @@ public class Car : MonoBehaviour
 			float diffSpeed=forwardVelocity-oldSpeed;
 			if (diffSpeed < -1)
 			{
-				Debug.Log (diffSpeed);
 				fakeRPM.loseSpeed((diffSpeed + 1f) * -0.1f);
 			}
 			oldSpeed = forwardVelocity;
