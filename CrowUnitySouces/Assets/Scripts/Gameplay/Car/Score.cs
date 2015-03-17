@@ -12,7 +12,11 @@ public class Score : MonoBehaviour
     
     private const float SCORE_DISPLAY_LAG = 1;
     private const float DIST_DISPLAY_LAG = 0.2f;
-
+	private const float COMBO_SIZE_FEEDBACK_SPEED=2;
+	private const float COMBO_TEN_FEEDBACK_SPEED=2; 
+	private const float COMBO_BASE_SCALE=0.65f;
+	private const float COMBO_FINAL_SCALE=1.3f;
+		
     private const int NB_DIGITS = 6;
 	private const int NB_COMBO_DIGITS = 2;
 	
@@ -38,10 +42,13 @@ public class Score : MonoBehaviour
     private GameObject[] m_digits;
 
 	private float m_comboSizeFeedback=1;
+	private float m_comboTenFeedback=1;
 	
     private GameObject m_body;
 
     private GameObject m_comboObject;
+    private GameObject m_comboTenFeedbackObject=null;
+    
     private GameObject[] m_comboDigits;
     #endregion
 
@@ -180,8 +187,10 @@ public class Score : MonoBehaviour
         }
         if (m_addBonus < 0) m_addBonus = 0;
 
-		m_comboSizeFeedback+=Time.deltaTime*2;
+		m_comboSizeFeedback+=Time.deltaTime*COMBO_SIZE_FEEDBACK_SPEED;
 		if(m_comboSizeFeedback>1) m_comboSizeFeedback=1;
+		
+		if(m_comboTenFeedbackObject!=null) updateTenFeedback();
 		
         if (!HideScore)
         {
@@ -200,7 +209,7 @@ public class Score : MonoBehaviour
             m_comboObject.SetActive(m_combo>1);
             float xScale=Mathf.PingPong(m_comboSizeFeedback*2,1);
             xScale=1+xScale*0.2f;
-            m_comboObject.transform.localScale=new Vector3(0.65f*xScale,0.65f,0.65f);
+            m_comboObject.transform.localScale=new Vector3(COMBO_BASE_SCALE*xScale,COMBO_BASE_SCALE,COMBO_BASE_SCALE);
             int combo=m_combo;
             for(int i=0;i<NB_COMBO_DIGITS;i++)
             {
@@ -216,11 +225,13 @@ public class Score : MonoBehaviour
     public void AddScore(ScoreType type, int value,int combo=1)
     {
         m_score += m_combo * value;
+        int oldCombo=m_combo;
         m_combo+=combo;
         float diff = m_score - m_displayScore;
         m_augmentSpeed = diff / SCORE_DISPLAY_LAG;
         GameInfos gi=GameInfos.Instance;
         if(combo!=0 && m_comboSizeFeedback>=1) m_comboSizeFeedback=0;
+        if(oldCombo/10!=combo/10) startTenFeedback(combo/10);
         switch(type)
         {
         	case ScoreType.EVENT:
@@ -250,4 +261,47 @@ public class Score : MonoBehaviour
         m_combo = 1;
     }
 
+	private void startTenFeedback(int tens)
+	{
+		// Duplicate combo object
+		if(m_comboTenFeedbackObject!=null) GameObject.Destroy(m_comboTenFeedbackObject);
+		m_comboTenFeedbackObject=GameObject.Instantiate(m_comboObject) as GameObject;
+
+		// Set texture offset to show ten value
+		m_comboTenFeedbackObject.transform.Find ("Digit1").GetComponent<MeshRenderer>()
+			.material.mainTextureOffset=new Vector2(0, 0.9f-tens*0.1f);	
+		m_comboTenFeedbackObject.transform.Find ("Digit0").GetComponent<MeshRenderer>()
+			.material.mainTextureOffset=new Vector2(0, 0.9f);
+			
+		// Init feedback pos
+		m_comboTenFeedback=0;	
+		
+	}
+	
+	private void updateTenFeedback()
+	{		
+		// Update feedback value
+		m_comboTenFeedback+=Time.deltaTime*COMBO_TEN_FEEDBACK_SPEED;
+		
+		// Destroy object
+		if(m_comboTenFeedback>1)
+		{
+			m_comboTenFeedback=1;
+			GameObject.Destroy(m_comboTenFeedbackObject);
+			m_comboTenFeedbackObject=null;
+		}
+		else // Update alphas
+		{
+			int nbChildren=m_comboTenFeedbackObject.transform.childCount;
+			float scale=Mathf.Lerp (COMBO_BASE_SCALE,COMBO_FINAL_SCALE,m_comboTenFeedback);
+			m_comboTenFeedbackObject.transform.localScale=new Vector3(scale,scale,scale);
+			for(int i=0;i<nbChildren;i++)
+			{
+				MeshRenderer mr=m_comboTenFeedbackObject.transform.GetChild(i).GetComponent<MeshRenderer>();
+				Color c=mr.material.color;
+				c.a=1-m_comboTenFeedback;
+				mr.material.color=c;
+			}
+		}
+	}
 }
