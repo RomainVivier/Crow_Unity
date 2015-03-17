@@ -251,8 +251,6 @@ public class Score : MonoBehaviour
 
     public void AddScore(ScoreType type, int value, Vector3 pos, int combo=1)
     {
-        GameObject go = GameObject.Instantiate(Resources.Load("ScoreFeedback")) as GameObject;
-        go.GetComponent<ScoreFeedback>().init(pos+new Vector3(0,2,0), value, combo);
         AddScore(type, value, combo);
     }
 
