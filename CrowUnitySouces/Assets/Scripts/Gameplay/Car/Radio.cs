@@ -70,7 +70,8 @@ public class Radio : MonoBehaviour {
 
 		m_radioPickup-=_pickupSpeed*Time.deltaTime;
 		if(m_radioPickup<0) m_radioPickup=0;
-				
+		m_fmodRadioPickup.setValue(m_radioPickup);
+		
         if(m_timer.IsElapsedOnce)
         {
             if(m_targetFrequency == 1)
@@ -104,7 +105,6 @@ public class Radio : MonoBehaviour {
         //Debug.Log("start = " + m_startFrequency + " :: target = " + m_targetFrequency + " :: current value = " + m_currentFrequency);
         m_fmodRadioFreq.setValue(m_currentFrequency);
         //m_fmodRadioBoost.setValue(m_currentBoost);
-        m_fmodRadioPickup.setValue(m_radioPickup);
 	}
 
     public void SwitchFrequencyUp()
