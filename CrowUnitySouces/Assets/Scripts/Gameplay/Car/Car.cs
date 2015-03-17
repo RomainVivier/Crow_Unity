@@ -260,7 +260,7 @@ public class Car : MonoBehaviour
         engineRPM.setValue(fakeRPM.getRPM());
         tiresGround.setValue(isOnGround() ? 1 : 0);
         tiresFriction.setValue(frictionSound);
-        engineLoad.setValue(inputs.throttle>0.5 ? 1 : 0);
+        //engineLoad.setValue(inputs.throttle>0.5 ? 1 : 0);
         
         //Debug print
 		if(nbUpdates%10==0)
