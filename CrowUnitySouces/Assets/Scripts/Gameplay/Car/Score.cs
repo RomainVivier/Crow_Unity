@@ -24,7 +24,8 @@ public class Score : MonoBehaviour
     public float _incrementDist = 1;
     public int _incrementValue = 1;
     public int _incrementDistMult = 1;
-
+	public Color[] _comboColors;
+	
     private float m_distanceTraveled = 0f;
     private float m_speed;
     private float m_score;
@@ -214,6 +215,7 @@ public class Score : MonoBehaviour
             for(int i=0;i<NB_COMBO_DIGITS;i++)
             {
 				m_comboDigits[i].GetComponent<MeshRenderer>().material.mainTextureOffset = new Vector2(0, 0.9f-(combo%10)*0.1f);
+				m_comboDigits[i].GetComponent<MeshRenderer>().material.color=_comboColors[(m_combo/10)%_comboColors.Length];
             	combo/=10;
             }
         }
@@ -263,6 +265,9 @@ public class Score : MonoBehaviour
 	{
 		// Duplicate combo object
 		if(m_comboTenFeedbackObject!=null) GameObject.Destroy(m_comboTenFeedbackObject);
+		for(int i=0;i<NB_COMBO_DIGITS;i++)
+			m_comboDigits[i].GetComponent<MeshRenderer>().material.color=_comboColors[(m_combo/10)%_comboColors.Length];
+		
 		m_comboTenFeedbackObject=GameObject.Instantiate(m_comboObject) as GameObject;
 		m_comboTenFeedbackObject.transform.SetParent(m_comboObject.transform.parent);
 		m_comboTenFeedbackObject.transform.localPosition=m_comboObject.transform.localPosition;
@@ -273,7 +278,7 @@ public class Score : MonoBehaviour
 			.material.mainTextureOffset=new Vector2(0, 0.9f-tens*0.1f);	
 		m_comboTenFeedbackObject.transform.Find ("Digit0").GetComponent<MeshRenderer>()
 			.material.mainTextureOffset=new Vector2(0, 0.9f);
-			
+		
 		// Init feedback pos
 		m_comboTenFeedback=0;	
 		
