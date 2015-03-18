@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using FMOD.Studio;
 
 public class SwattingBuilding : MonoBehaviour
 {
@@ -27,6 +28,7 @@ public class SwattingBuilding : MonoBehaviour
     private Timer m_timer;
     private BuildingGenerator m_usedBuildingGenerator;
     private GameObject m_buildingGameObject;
+	private FMOD.Studio.EventInstance m_fallSound;
     #endregion
 
     #region methods
@@ -75,6 +77,15 @@ public class SwattingBuilding : MonoBehaviour
         m_usedBuildingGenerator.transform.SetParent(m_buildingGameObject.transform);
         m_buildingGameObject.transform.SetParent(transform);
 
+		// Get fall sound
+		m_fallSound=FMOD_StudioSystem.instance.GetEvent("event:/SFX/Obstacles/collBuilding/obsCollBuildingFall");
+		/*_3D_ATTRIBUTES threeDeeAttr = new _3D_ATTRIBUTES();
+		threeDeeAttr.position = UnityUtil.toFMODVector(transform.position);
+		threeDeeAttr.up = UnityUtil.toFMODVector(transform.up);
+		threeDeeAttr.forward = UnityUtil.toFMODVector(transform.forward);
+		threeDeeAttr.velocity = UnityUtil.toFMODVector(Vector3.zero);
+		m_fallSound.set3DAttributes(threeDeeAttr);*/
+		
         // Init state
         m_state = State.UP;
         m_timer = new Timer();
@@ -92,6 +103,7 @@ public class SwattingBuilding : MonoBehaviour
                     // Start next state
                     m_state = State.FALLING;
                     m_timer.Reset(_fallTime);
+                    m_fallSound.start();
                 }
                 break;
             case State.FALLING:
@@ -105,6 +117,8 @@ public class SwattingBuilding : MonoBehaviour
                     // Start next state
                     m_state = State.DOWN;
                     m_timer.Reset(_downTime);
+					m_fallSound.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+					FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Obstacles/collBuilding/obsCollBuildingHit",transform.position);
                 }
                 else
                 {
@@ -120,6 +134,7 @@ public class SwattingBuilding : MonoBehaviour
                     // Start next state
                     m_state = State.RISING;
                     m_timer.Reset(_riseTime);
+					FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Obstacles/collBuilding/obsCollBuildingUp",transform.position);
                 }
                 break;
             case State.RISING:
