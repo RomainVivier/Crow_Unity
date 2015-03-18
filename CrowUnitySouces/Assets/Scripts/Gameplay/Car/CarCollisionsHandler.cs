@@ -62,6 +62,15 @@ public class CarCollisionsHandler : MonoBehaviour
             Vector3 diff = oth.transform.position - m_car.transform.Find("Body").position;
             float fPos = Vector3.Dot(diff, forward); 
             if (fPos<2 || fPos>5) return;
+			
+			float hAngle = Random.Range(-_maxAngleHDeg, _maxAngleHDeg) * Mathf.Deg2Rad;
+			Vector3 right = m_car.getRightVector();
+			Vector3 hVector = forward * Mathf.Cos(hAngle) + right * Mathf.Sin(hAngle);
+			float vAngle = Random.Range(_minAngleVDeg, _maxAngleVDeg) * Mathf.Deg2Rad;
+			Vector3 up = m_car.getUpVector();
+			Vector3 direc = hVector * Mathf.Cos(vAngle) + up * Mathf.Sin(vAngle);
+			float momentum=Mathf.Lerp(_minMomentum,_maxMomentum,m_car.getForwardVelocityKmh()/m_car.maxSpeedKmh);
+			
             if (cooldownTimer.IsElapsedLoop || oth!=m_lastObject)
             {
                 if(!m_projectObstacles)
@@ -73,23 +82,17 @@ public class CarCollisionsHandler : MonoBehaviour
 					DialogsManager._instance.triggerEvent(DialogsManager.DialogInfos.EventType.CAR_DAMAGE, oth.name);
                 }
 				else FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Impacts/impactDash",transform.position);
+				if(oth.rigidbody != null)
+				{
+					oth.rigidbody.AddForce(direc * momentum,ForceMode.Impulse);
+					oth.transform.parent.gameObject.AddComponent<ObstacleDestroyer>();
+					if(!m_projectObstacles) rigidbody.AddForce(-forward * _ownMomentum, ForceMode.Impulse);
+				}
+				else GameObject.Destroy(oth.transform.parent.gameObject);
                 cooldownTimer.Reset(2f);
                 m_lastObject = oth;
             }
-            float hAngle = Random.Range(-_maxAngleHDeg, _maxAngleHDeg) * Mathf.Deg2Rad;
-            Vector3 right = m_car.getRightVector();
-            Vector3 hVector = forward * Mathf.Cos(hAngle) + right * Mathf.Sin(hAngle);
-			float vAngle = Random.Range(_minAngleVDeg, _maxAngleVDeg) * Mathf.Deg2Rad;
-            Vector3 up = m_car.getUpVector();
-            Vector3 direc = hVector * Mathf.Cos(vAngle) + up * Mathf.Sin(vAngle);
-            float momentum=Mathf.Lerp(_minMomentum,_maxMomentum,m_car.getForwardVelocityKmh()/m_car.maxSpeedKmh);
-            if(oth.rigidbody != null)
-            {
-                oth.rigidbody.AddForce(direc * momentum,ForceMode.Impulse);
-                oth.transform.parent.gameObject.AddComponent<ObstacleDestroyer>();
-				if(!m_projectObstacles) rigidbody.AddForce(-forward * _ownMomentum, ForceMode.Impulse);
-            }
-            else GameObject.Destroy(oth.transform.parent.gameObject);
+
 			m_cameraShake.DoShake();
 			
             if(!m_projectObstacles)
