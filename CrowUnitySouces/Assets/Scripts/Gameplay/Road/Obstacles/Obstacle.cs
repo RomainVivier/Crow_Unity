@@ -12,6 +12,7 @@ public abstract class Obstacle : MonoBehaviour
     public float _activateDistance;
     public float _disactivateDistance;
     public SpriteRenderer _vignette;
+	public string _destructionSound;
 
     protected Color m_vignetteColor;
 
@@ -19,7 +20,7 @@ public abstract class Obstacle : MonoBehaviour
     protected Rails m_rails;
     protected float m_railsIndex;
     protected float m_railsProgress;
-
+	
     protected enum State
     {
         Waiting,
@@ -98,5 +99,11 @@ public abstract class Obstacle : MonoBehaviour
         {
             Destroy(this);
         }
+    }
+    
+    public virtual void PlayDestructionSound()
+    {
+    	Debug.Log ("aaa");
+    	if(_destructionSound!="") FMOD_StudioSystem.instance.PlayOneShot(_destructionSound,transform.position);
     }
 }

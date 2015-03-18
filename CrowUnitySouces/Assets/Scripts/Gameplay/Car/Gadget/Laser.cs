@@ -222,6 +222,8 @@ public class Laser : Gadget
                                         threeDeeAttr.velocity = FMOD.Studio.UnityUtil.toFMODVector(Vector3.zero);
                                         blowInstance.set3DAttributes(threeDeeAttr);
                                         
+										if(go.GetComponent<Obstacle>()!=null) go.GetComponent<Obstacle>().PlayDestructionSound();
+									
                                         // Trigger events
                                         DialogsManager._instance.triggerEvent(DialogsManager.DialogInfos.EventType.OBSTACLE_DESTRUCTION, go.gameObject.name);
                                         DialogsManager._instance.triggerEvent(DialogsManager.DialogInfos.EventType.DESTRUCTION_WITH_GADGET, "Laser");
