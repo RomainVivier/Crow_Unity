@@ -26,7 +26,10 @@ public class Burger : MonoBehaviour
 			Destroy(GetComponent<Animator>());
 			Destroy(this);
 		}
-
+		else if(other.collider.gameObject.transform.parent.GetComponent<Car>()!=null)
+		{
+			Destroy (this);
+		}
 	}
 }
 	
