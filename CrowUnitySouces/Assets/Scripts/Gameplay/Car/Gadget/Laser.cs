@@ -207,7 +207,7 @@ public class Laser : Gadget
 
                                         // Play sound
                                         FMOD.Studio.EventInstance blowInstance
-                                            = FMOD_StudioSystem.instance.GetEvent("event:/SFX/Gadgets/Rocket/gadgetRocketSuccess");
+												= FMOD_StudioSystem.instance.GetEvent("event:/SFX/Gadgets/Laser/gadgetLaserSuccess");
                                         blowInstance.start();
                                         FMOD.Studio.ParameterInstance param;
                                         blowInstance.getParameter("Position", out param);
