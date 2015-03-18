@@ -353,6 +353,7 @@ public class Car : MonoBehaviour
     {
         if(isOnGround() || evenInAir)
         {
+        	if(speed>maxSpeed) speed=maxSpeed;
         	body.velocity = getForwardVector() * speed;
         	oldSpeed=speed;
         }

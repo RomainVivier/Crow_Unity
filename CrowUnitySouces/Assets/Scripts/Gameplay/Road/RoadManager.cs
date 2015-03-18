@@ -118,7 +118,8 @@ public class RoadManager : MonoBehaviour
             }
 
 
-            Light light = chunk.transform.FindChild("Point light").GetComponent<Light>();
+			Transform lightObject=chunk.transform.FindChild("Point light");
+            Light light = lightObject==null ? null : lightObject.GetComponent<Light>();
             if(light!=null)
             {
                 light.range = _lightRange;

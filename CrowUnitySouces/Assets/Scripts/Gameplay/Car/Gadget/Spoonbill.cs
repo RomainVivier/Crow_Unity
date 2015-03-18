@@ -13,6 +13,7 @@ public class Spoonbill : Gadget
     private Timer m_attackTimer;
     private Timer m_engageTimer;
 	private GameObject m_spatulaMesh;
+	private float m_disengageTime=1;
 	
     enum State
     {
@@ -45,7 +46,7 @@ public class Spoonbill : Gadget
 
     public override void Update()
     {
-        if(m_target != null && m_state == State.Attacking && m_attackTimer.CurrentNormalized < 0.5)
+        if(m_target != null && m_state == State.Attacking && m_attackTimer.CurrentNormalized < 0.01)
         {
             m_target.rigidbody.isKinematic = false;
             m_target.transform.parent = null;
@@ -79,7 +80,8 @@ public class Spoonbill : Gadget
             other.rigidbody.isKinematic = true;
             FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Gadgets/Spatula/gadgetSpatulaExecute", transform.position);
             _spoonbillAnimator.SetTrigger("Attack");
-            m_attackTimer.Reset(1.5f);
+            m_attackTimer.Reset(0.76f);
+            m_disengageTime=0;
             m_state = State.Attacking;
             addScore(Score.ScoreType.MINOR_OBSTACLE,other.transform.position);
 //            DialogsManager._instance.triggerEvent(DialogsManager.DialogInfos.EventType.OBSTACLE_DESTRUCTION, other.gameObject.name);
@@ -110,7 +112,9 @@ public class Spoonbill : Gadget
                 //transform.FindChild("Vignette").GetComponent<Vignette>().pop(1f);
 
                 _spoonbillAnimator.SetTrigger("Engage");
+                _spoonbillAnimator.ResetTrigger("Disengage");
                 _buttonAnim.SetBool("Engage", true);
+                m_disengageTime=1;
                 break;
 
             case State.Engaged :
@@ -129,7 +133,7 @@ public class Spoonbill : Gadget
         }*/
         FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Gadgets/Spatula/gadgetSpatulaDisengage", transform.position);
         m_state = State.Disengaging;
-        m_engageTimer.Reset(1f);
+        m_engageTimer.Reset(m_disengageTime);
         _spoonbillAnimator.SetTrigger("Disengage");
         //_buttonAnim.SetBool("Engage", false);
         _invertGesture = false;
