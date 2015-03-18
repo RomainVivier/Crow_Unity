@@ -79,12 +79,12 @@ public class SwattingBuilding : MonoBehaviour
 
 		// Get fall sound
 		m_fallSound=FMOD_StudioSystem.instance.GetEvent("event:/SFX/Obstacles/collBuilding/obsCollBuildingFall");
-		/*_3D_ATTRIBUTES threeDeeAttr = new _3D_ATTRIBUTES();
+		_3D_ATTRIBUTES threeDeeAttr = new _3D_ATTRIBUTES();
 		threeDeeAttr.position = UnityUtil.toFMODVector(transform.position);
 		threeDeeAttr.up = UnityUtil.toFMODVector(transform.up);
 		threeDeeAttr.forward = UnityUtil.toFMODVector(transform.forward);
 		threeDeeAttr.velocity = UnityUtil.toFMODVector(Vector3.zero);
-		m_fallSound.set3DAttributes(threeDeeAttr);*/
+		m_fallSound.set3DAttributes(threeDeeAttr);
 		
         // Init state
         m_state = State.UP;
