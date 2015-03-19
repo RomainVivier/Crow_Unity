@@ -100,7 +100,7 @@ public class GadgetManager : MonoBehaviour {
 
 		if(m_gadgets.ContainsKey(name) && m_gadgets[name].IsReady)
 		{
-            if(m_gadgets[name]._cardMaterial!=null && !m_gadgets[name]._invertGesture) m_cardPopup.popup(m_gadgets[name]._cardMaterial);
+            //if(m_gadgets[name]._cardMaterial!=null && !m_gadgets[name]._invertGesture) m_cardPopup.popup(m_gadgets[name]._cardMaterial);
 			m_gadgets[name].Play();
             m_lastGadget = name;
             m_timer.Reset(0.5f);
