@@ -67,6 +67,7 @@ public class Car : MonoBehaviour
     private bool dontMove = false;
     private float lastForwardVelocity;
 	private float addFriction=0;
+	private float notOnGroundTime=0;
 	
     private static Car m_instance;
     public static Car Instance
@@ -239,6 +240,7 @@ public class Car : MonoBehaviour
             }*/
 
 			fakeRPM.update(inputs.throttle, inputs.brake);
+			
 			// Update fake RPM sound
 			float diffSpeed=forwardVelocity-oldSpeed;
 			if (diffSpeed < -1)
@@ -251,7 +253,6 @@ public class Car : MonoBehaviour
 			tiresSpeed.setValue(forwardVelocity / maxSpeed);
 			engineSpeed.setValue(forwardVelocity*3.6f);
         }
-        
         oldInputs = inputs;
         
 
@@ -260,10 +261,17 @@ public class Car : MonoBehaviour
    		addFriction-=Time.fixedDeltaTime*frictionLerpSpeed;
    		if(addFriction<0) addFriction=0;
         float frictionSound = Mathf.Min (1,Mathf.Abs(inputs.steering)+addFriction);
-        engineRPM.setValue(fakeRPM.getRPM());
         tiresGround.setValue(isOnGround() ? 1 : 0);
         tiresFriction.setValue(frictionSound);
-        //engineLoad.setValue(inputs.throttle>0.5 ? 1 : 0);
+		engineRPM.setValue(isOnGround() ? fakeRPM.getRPM() : 7000);
+		if(isOnGround() && notOnGroundTime>0.05)
+		{
+			addFriction=1;
+			FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Impacts/impactConcrete",transform.position);
+		}
+		
+		if(isOnGround()) notOnGroundTime=0; else notOnGroundTime+=Time.fixedDeltaTime;
+		//engineLoad.setValue(inputs.throttle>0.5 ? 1 : 0);
         
         //Debug print
 		if(nbUpdates%10==0)
@@ -435,6 +443,13 @@ public class Car : MonoBehaviour
     public void setFriction(float friction)
     {
     	addFriction=friction;
+    }
+    
+    public void respawn(Vector3 position, Quaternion rotation)
+    {
+    	body.transform.position=position;
+    	body.transform.rotation=rotation;
+    	InstantSetSpeed(0);
     }
 }
 
