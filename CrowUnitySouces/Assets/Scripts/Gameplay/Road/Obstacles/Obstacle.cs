@@ -103,7 +103,10 @@ public abstract class Obstacle : MonoBehaviour
     
     public virtual void PlayDestructionSound()
     {
-    	Debug.Log ("aaa");
-    	if(_destructionSound!="") FMOD_StudioSystem.instance.PlayOneShot(_destructionSound,transform.position);
+    	if(_destructionSound!="")
+    	{
+    		FMOD_StudioSystem.instance.PlayOneShot(_destructionSound,transform.position);
+    		Debug.Log (_destructionSound);
+    	}
     }
 }
