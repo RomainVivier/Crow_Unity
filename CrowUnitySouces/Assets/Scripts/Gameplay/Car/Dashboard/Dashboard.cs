@@ -53,7 +53,7 @@ public class Dashboard : MonoBehaviour
             {
                 FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Buttons/Panels/panelOpen",transform.position);
                 m_panels[i].IsVisible = true;
-                m_panels[i].InitButtons();
+				m_panels[i].Invoke("InitButtons", 1f);
             }
         }
         
