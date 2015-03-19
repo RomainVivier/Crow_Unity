@@ -79,7 +79,7 @@ public class Turret : Obstacle
     void Fire()
     {
     	if(!m_engaged) return;
-        GameObject go = GameObject.Instantiate(_projectile, _canon.position, _canon.rotation) as GameObject;
+		GameObject go = GameObject.Instantiate(_projectile, _canon.position, _canon.rotation) as GameObject;
         Destroy(go, 5f);
         m_timer.Reset(_fireRate);
         _particle.Play();
