@@ -66,7 +66,7 @@ public class Panel : MonoBehaviour
             IsVisible = true;
         }
 
-        InitButtons();
+        Invoke("InitButtons", 1f);
     }
 
     public void InitButtons()
