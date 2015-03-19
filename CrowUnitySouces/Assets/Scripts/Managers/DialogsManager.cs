@@ -11,6 +11,7 @@ public class DialogsManager : MonoBehaviour
     [System.Serializable]
     public class DialogInfos
     {
+		public string name;
         public string[] sounds;
         public enum EventType { GADGET_USE, OBSTACLE_DESTRUCTION, DESTRUCTION_WITH_GADGET, CAR_DAMAGE, CAR_HP, TRIGGER, OBJECT_PROXIMITY };
         public EventType eventType;
