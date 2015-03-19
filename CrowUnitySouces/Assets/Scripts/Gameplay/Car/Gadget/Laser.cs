@@ -203,7 +203,7 @@ public class Laser : Gadget
                                         _laserEffect.transform.position = go.transform.position;//rh.point;
                                         rh.collider.gameObject.transform.parent.gameObject.SetActive(false);
                                         Score.ScoreType type=rh.collider.gameObject.name.Contains("Obstacle") ? Score.ScoreType.MINOR_OBSTACLE : Score.ScoreType.EVENT;
-                                        addScore(type,rh.collider.transform.position);
+                                        addScore(type);
 
                                         // Play sound
                                         FMOD.Studio.EventInstance blowInstance
@@ -222,6 +222,8 @@ public class Laser : Gadget
                                         threeDeeAttr.velocity = FMOD.Studio.UnityUtil.toFMODVector(Vector3.zero);
                                         blowInstance.set3DAttributes(threeDeeAttr);
                                         
+										if(go.GetComponent<Obstacle>()!=null) go.GetComponent<Obstacle>().PlayDestructionSound();
+									
                                         // Trigger events
                                         DialogsManager._instance.triggerEvent(DialogsManager.DialogInfos.EventType.OBSTACLE_DESTRUCTION, go.gameObject.name);
                                         DialogsManager._instance.triggerEvent(DialogsManager.DialogInfos.EventType.DESTRUCTION_WITH_GADGET, "Laser");

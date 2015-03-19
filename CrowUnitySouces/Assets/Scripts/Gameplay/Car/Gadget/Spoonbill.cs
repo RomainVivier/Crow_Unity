@@ -74,7 +74,11 @@ public class Spoonbill : Gadget
         if (other.collider.CompareTag("Obstacle") && (m_state == State.Engaged || m_state == State.Engaging) && other.rigidbody!=null)
         {
             //(GameObject.FindObjectOfType<CarCollisionsInhibiter>() as CarCollisionsInhibiter)._nbCol++;
-            inhibitedCollisions = true;
+			Transform parent=other.transform.parent;
+			Obstacle obstacle= parent==null ? null : parent.GetComponent<Obstacle>();
+			if(obstacle!=null) obstacle.PlayDestructionSound();
+		
+		    inhibitedCollisions = true;
             other.transform.parent = _spoonbill.transform;
             m_target = other.gameObject;
             other.rigidbody.isKinematic = true;
@@ -83,7 +87,7 @@ public class Spoonbill : Gadget
             m_attackTimer.Reset(0.76f);
             m_disengageTime=0;
             m_state = State.Attacking;
-            addScore(Score.ScoreType.MINOR_OBSTACLE,other.transform.position);
+            addScore(Score.ScoreType.MINOR_OBSTACLE);
 //            DialogsManager._instance.triggerEvent(DialogsManager.DialogInfos.EventType.OBSTACLE_DESTRUCTION, other.gameObject.name);
 //            DialogsManager._instance.triggerEvent(DialogsManager.DialogInfos.EventType.DESTRUCTION_WITH_GADGET, "SpoonBill");
         }

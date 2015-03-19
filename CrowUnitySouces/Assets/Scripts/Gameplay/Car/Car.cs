@@ -23,6 +23,7 @@ public class Car : MonoBehaviour
 
     [Header("Misc")]
     public float limitRotation = 15;
+	public float frictionLerpSpeed=1;
 
 	// Components
 	private Engine engine;
@@ -65,7 +66,8 @@ public class Car : MonoBehaviour
     private float oldSpeed=0;
     private bool dontMove = false;
     private float lastForwardVelocity;
-
+	private float addFriction=0;
+	
     private static Car m_instance;
     public static Car Instance
     {
@@ -255,7 +257,9 @@ public class Car : MonoBehaviour
 
 
         // Update sounds
-        float frictionSound = Mathf.Abs(inputs.steering);
+   		addFriction-=Time.fixedDeltaTime*frictionLerpSpeed;
+   		if(addFriction<0) addFriction=0;
+        float frictionSound = Mathf.Min (1,Mathf.Abs(inputs.steering)+addFriction);
         engineRPM.setValue(fakeRPM.getRPM());
         tiresGround.setValue(isOnGround() ? 1 : 0);
         tiresFriction.setValue(frictionSound);
@@ -426,6 +430,11 @@ public class Car : MonoBehaviour
     public WindshieldController getWindshieldController()
     {
         return windshieldController;
+    }
+    
+    public void setFriction(float friction)
+    {
+    	addFriction=friction;
     }
 }
 

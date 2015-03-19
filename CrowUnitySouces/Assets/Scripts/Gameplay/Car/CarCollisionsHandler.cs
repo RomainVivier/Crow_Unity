@@ -91,6 +91,7 @@ public class CarCollisionsHandler : MonoBehaviour
 				else GameObject.Destroy(oth.transform.parent.gameObject);
                 cooldownTimer.Reset(2f);
                 m_lastObject = oth;
+                m_car.setFriction(1);
             }
 
 			m_cameraShake.DoShake();
@@ -102,7 +103,7 @@ public class CarCollisionsHandler : MonoBehaviour
             }
             else
             {
-            	Score.Instance.AddScore(Score.ScoreType.MINOR_OBSTACLE,0,transform.position,1);
+            	Score.Instance.AddScore(Score.ScoreType.MINOR_OBSTACLE,0,1);
             }
         }
         else if (oth.tag == "Barrier")

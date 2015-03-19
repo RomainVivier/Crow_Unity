@@ -39,7 +39,7 @@ public class DestructibleObject : MonoBehaviour
             _particles.gameObject.SetActive(true);
             _particles.Play();
             m_hasExploded=true;
-            Score.Instance.AddScore(Score.ScoreType.STUFF,_bonus, transform.position, _comboBonus);
+            Score.Instance.AddScore(Score.ScoreType.STUFF,_bonus, _comboBonus);
         }
     }
     #endregion
