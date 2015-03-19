@@ -449,7 +449,8 @@ public class Car : MonoBehaviour
     {
     	body.transform.position=position;
     	body.transform.rotation=rotation;
-    	InstantSetSpeed(0);
+    	body.angularVelocity=Vector3.zero;
+    	body.velocity=Vector3.zero;
     }
 }
 
