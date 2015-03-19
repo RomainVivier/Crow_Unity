@@ -253,8 +253,21 @@ public class RailsControl : CarControl
 			chunk=chunk.NextChunk;
 			rails=chunk._rails;
 			int newNbRails=rails.nbRails;
-			currentRail=(currentRail-(oldNbRails-1)/2f)*(newNbRails-1)/(oldNbRails-1)+(newNbRails-1)/2f;
-			targetRail=Mathf.RoundToInt((targetRail-(oldNbRails-1)/2)*(newNbRails-1)/(oldNbRails-1)+(newNbRails-1)/2f);
+			if(newNbRails==1)
+			{
+				currentRail=0;
+				targetRail=0;
+			}
+			else if(oldNbRails==1)
+			{
+				currentRail=(newNbRails-1)/2;
+				targetRail=Mathf.RoundToInt(currentRail);
+			}
+			else
+			{
+				currentRail=(currentRail-(oldNbRails-1)/2f)*(newNbRails-1)/(oldNbRails-1)+(newNbRails-1)/2f;
+				targetRail=Mathf.RoundToInt((targetRail-(oldNbRails-1)/2)*(newNbRails-1)/(oldNbRails-1)+(newNbRails-1)/2f);
+			}
 			chunkProgress=0;
 			updateProgress();
 		}
