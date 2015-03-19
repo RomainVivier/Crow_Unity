@@ -10,9 +10,11 @@ public class GameOverTrigger : MonoBehaviour {
 	
 	void OnTriggerEnter(Collider other)
 	{
+		Debug.Log ("aaa");
 		GameObject oth = other.transform.root.gameObject;
-		if (oth.name == "Car(Clone)")
+		if (oth.name == "CarV2")
 		{
+			Debug.Log ("bbb");
 			Application.LoadLevel("GameOver");
 		}
 		else Debug.Log(oth.name);
