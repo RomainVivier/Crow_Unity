@@ -43,7 +43,8 @@ public class SlapMachine : Gadget {
         FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Gadgets/Punch/gadgetPunchExecute", transform.position);
         int value = Random.Range(4,5);
         _cameraAnimator.SetTrigger("Slap_"+value);
-
+		addScore(Score.ScoreType.USELESS_GADGET);
+		
 		//Juste pour la démo, tue-moi
 		transform.GetChild (0).GetComponent<Animator>().SetTrigger("Slap");
     }

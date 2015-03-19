@@ -203,7 +203,7 @@ public class Laser : Gadget
                                         _laserEffect.transform.position = go.transform.position;//rh.point;
                                         rh.collider.gameObject.transform.parent.gameObject.SetActive(false);
                                         Score.ScoreType type=rh.collider.gameObject.name.Contains("Obstacle") ? Score.ScoreType.MINOR_OBSTACLE : Score.ScoreType.EVENT;
-                                        addScore(type,rh.collider.transform.position);
+                                        addScore(type);
 
                                         // Play sound
                                         FMOD.Studio.EventInstance blowInstance

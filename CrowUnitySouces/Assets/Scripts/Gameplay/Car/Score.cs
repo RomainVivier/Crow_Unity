@@ -7,7 +7,7 @@ public class Score : MonoBehaviour
     #region members
 	public enum ScoreType
 	{
-		EVENT,MINOR_OBSTACLE,STUFF
+		EVENT,MINOR_OBSTACLE,STUFF,USELESS_GADGET
 	}
     
     private const float SCORE_DISPLAY_LAG = 1;
@@ -249,11 +249,6 @@ public class Score : MonoBehaviour
 				gi.stuffPoints+=value;
 			break;
         }
-    }
-
-    public void AddScore(ScoreType type, int value, Vector3 pos, int combo=1)
-    {
-        AddScore(type, value, combo);
     }
 
     public void ResetCombo()

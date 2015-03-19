@@ -87,7 +87,7 @@ public class Spoonbill : Gadget
             m_attackTimer.Reset(0.76f);
             m_disengageTime=0;
             m_state = State.Attacking;
-            addScore(Score.ScoreType.MINOR_OBSTACLE,other.transform.position);
+            addScore(Score.ScoreType.MINOR_OBSTACLE);
 //            DialogsManager._instance.triggerEvent(DialogsManager.DialogInfos.EventType.OBSTACLE_DESTRUCTION, other.gameObject.name);
 //            DialogsManager._instance.triggerEvent(DialogsManager.DialogInfos.EventType.DESTRUCTION_WITH_GADGET, "SpoonBill");
         }

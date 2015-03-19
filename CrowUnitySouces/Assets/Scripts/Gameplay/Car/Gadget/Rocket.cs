@@ -275,7 +275,7 @@ public class Rocket : Gadget {
             {
 				if(collider.gameObject.GetComponent<Obstacle>()!=null) collider.gameObject.GetComponent<Obstacle>().PlayDestructionSound();
                 collider.gameObject.transform.parent.gameObject.SetActive(false);
-                addScore(collider.gameObject.rigidbody==null ? Score.ScoreType.EVENT : Score.ScoreType.MINOR_OBSTACLE, collider.transform.position);
+                addScore(collider.gameObject.rigidbody==null ? Score.ScoreType.EVENT : Score.ScoreType.MINOR_OBSTACLE);
                 DialogsManager._instance.triggerEvent(DialogsManager.DialogInfos.EventType.OBSTACLE_DESTRUCTION, collider.gameObject.name);
                 DialogsManager._instance.triggerEvent(DialogsManager.DialogInfos.EventType.DESTRUCTION_WITH_GADGET, "Rocket");
             }
