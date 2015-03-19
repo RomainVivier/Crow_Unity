@@ -84,7 +84,7 @@ public class Spoonbill : Gadget
             other.rigidbody.isKinematic = true;
             FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Gadgets/Spatula/gadgetSpatulaExecute", transform.position);
             _spoonbillAnimator.SetTrigger("Attack");
-            m_attackTimer.Reset(0.76f);
+            m_attackTimer.Reset(0.56f);//0.76f);
             m_disengageTime=0;
             m_state = State.Attacking;
             addScore(Score.ScoreType.MINOR_OBSTACLE);

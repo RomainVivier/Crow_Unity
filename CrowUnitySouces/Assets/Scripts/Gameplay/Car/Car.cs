@@ -266,7 +266,6 @@ public class Car : MonoBehaviour
 		engineRPM.setValue(isOnGround() ? fakeRPM.getRPM() : 7000);
 		if(isOnGround() && notOnGroundTime>0.05)
 		{
-			Debug.Log ("aaa");
 			addFriction=1;
 			FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Impacts/impactConcrete",transform.position);
 		}
