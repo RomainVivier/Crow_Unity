@@ -229,6 +229,7 @@ public class Score : MonoBehaviour
         m_score += m_combo * value;
         int oldCombo=m_combo;
         m_combo+=combo;
+        if(m_combo>99) m_combo=99;
         float diff = m_score - m_displayScore;
         m_augmentSpeed = diff / SCORE_DISPLAY_LAG;
         GameInfos gi=GameInfos.Instance;
