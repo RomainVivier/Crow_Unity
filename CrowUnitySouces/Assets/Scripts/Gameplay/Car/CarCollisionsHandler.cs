@@ -13,6 +13,7 @@ public class CarCollisionsHandler : MonoBehaviour
     public float _ownMomentum = 10000;
     public static bool _dontCollide = false;
     public Spring _spring;
+    public Radio _radio;
     #endregion
 
     #region private members
@@ -27,7 +28,8 @@ public class CarCollisionsHandler : MonoBehaviour
 	private CameraShake m_cameraShake;
     private GameObject m_lastObject;
     private Collider m_collider;
-
+	private bool m_projectObstacles=false;
+	
     #endregion
 
     #region MonoBehaviour
@@ -60,37 +62,53 @@ public class CarCollisionsHandler : MonoBehaviour
             Vector3 diff = oth.transform.position - m_car.transform.Find("Body").position;
             float fPos = Vector3.Dot(diff, forward); 
             if (fPos<2 || fPos>5) return;
+			
+			float hAngle = Random.Range(-_maxAngleHDeg, _maxAngleHDeg) * Mathf.Deg2Rad;
+			Vector3 right = m_car.getRightVector();
+			Vector3 hVector = forward * Mathf.Cos(hAngle) + right * Mathf.Sin(hAngle);
+			float vAngle = Random.Range(_minAngleVDeg, _maxAngleVDeg) * Mathf.Deg2Rad;
+			Vector3 up = m_car.getUpVector();
+			Vector3 direc = hVector * Mathf.Cos(vAngle) + up * Mathf.Sin(vAngle);
+			float momentum=Mathf.Lerp(_minMomentum,_maxMomentum,m_car.getForwardVelocityKmh()/m_car.maxSpeedKmh);
+			
             if (cooldownTimer.IsElapsedLoop || oth!=m_lastObject)
             {
-                playSound(null, oth, m_impactVehicleSound, m_impactVehicleSpeed);
+                if(!m_projectObstacles)
+                {
+                	playSound(null, oth, m_impactVehicleSound, m_impactVehicleSpeed);
+                	if(m_car.getForwardVelocityKmh()>100) _radio.ResetPickup();
+					m_windshield.Hit();
+					DialogsManager._instance.triggerEvent(DialogsManager.DialogInfos.EventType.CAR_HP, (float) m_windshield._hp);
+					DialogsManager._instance.triggerEvent(DialogsManager.DialogInfos.EventType.CAR_DAMAGE, oth.name);
+                }
+				else FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Impacts/impactDash",transform.position);
+				if(oth.rigidbody != null)
+				{
+					oth.rigidbody.AddForce(direc * momentum,ForceMode.Impulse);
+					if(oth.transform.parent != null)
+						oth.transform.parent.gameObject.AddComponent<ObstacleDestroyer>();
+					if(!m_projectObstacles) rigidbody.AddForce(-forward * _ownMomentum, ForceMode.Impulse);
+				}
+				else GameObject.Destroy(oth.transform.parent.gameObject);
                 cooldownTimer.Reset(2f);
                 m_lastObject = oth;
+                m_car.setFriction(1);
             }
-            float hAngle = Random.Range(-_maxAngleHDeg, _maxAngleHDeg) * Mathf.Deg2Rad;
-            Vector3 right = m_car.getRightVector();
-            Vector3 hVector = forward * Mathf.Cos(hAngle) + right * Mathf.Sin(hAngle);
-			float vAngle = Random.Range(_minAngleVDeg, _maxAngleVDeg) * Mathf.Deg2Rad;
-            Vector3 up = m_car.getUpVector();
-            Vector3 direc = hVector * Mathf.Cos(vAngle) + up * Mathf.Sin(vAngle);
-            float momentum=Mathf.Lerp(_minMomentum,_maxMomentum,m_car.getForwardVelocityKmh()/m_car.maxSpeedKmh);
-            if(oth.rigidbody != null)
+
+			m_cameraShake.DoShake();
+			
+            if(!m_projectObstacles)
             {
-                oth.rigidbody.AddForce(direc * momentum,ForceMode.Impulse);
-                oth.AddComponent<ObstacleDestroyer>();
-                rigidbody.AddForce(-forward * _ownMomentum, ForceMode.Impulse);
+    	        Score.Instance.ResetCombo();
+            	_spring.collide();
             }
-			m_windshield.Hit();
-            //Score.Instance.DistanceTravaled += 10000;
-            m_cameraShake.DoShake();
-            Score.Instance.ResetCombo();
-            DialogsManager._instance.triggerEvent(DialogsManager.DialogInfos.EventType.CAR_HP, (float) m_windshield._hp);
-            DialogsManager._instance.triggerEvent(DialogsManager.DialogInfos.EventType.CAR_DAMAGE, oth.name);
-            _spring.collide();
+            else
+            {
+            	Score.Instance.AddScore(Score.ScoreType.MINOR_OBSTACLE,0,1);
+            }
         }
         else if (oth.tag == "Barrier")
         {
-            //Vector3 diff = oth.transform.position - m_car.transform.Find("Body").position;
-            //float rPos = Vector3.Dot(diff, m_car.getRightVector());
             m_railsControl.ShiftToPreviousRail();
         } 
     }
@@ -110,7 +128,14 @@ public class CarCollisionsHandler : MonoBehaviour
 
     }
     #endregion
-
+	
+	#region public methods
+	public void setProjectObstacles(bool projectObstacles)
+	{
+		m_projectObstacles=projectObstacles;
+	}
+	#endregion
+	
     #region private methods
     void playSound(Collision collision, GameObject oth, FMOD.Studio.EventInstance sound, FMOD.Studio.ParameterInstance param)
     {

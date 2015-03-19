@@ -16,16 +16,26 @@ public class FragmentDestroyer : MonoBehaviour
     #endregion
 
     #region methods
-    void Start ()
+    public FragmentDestroyer()
     {
-        m_speed = new Vector3(Random.Range(-1, 1), Random.Range(-1, 1), Random.Range(-1, 1));
-        m_speed *= SPEED / m_speed.magnitude;
-        if (m_speed.y < 0) m_speed.y = -m_speed.y;
-        Quaternion rotSpeed = Quaternion.Euler(Random.Range(0, 360), Random.Range(0, 360), Random.Range(0, 360));
-        rotSpeed.ToAngleAxis(out m_rotAngle, out m_rotAxis);
-        m_rotAngle = ROT_SPEED;
-        m_timer=new Timer();
-        m_timer.Reset(DISAPPEAR_TIME);
+		m_speed = new Vector3(Random.Range(-1, 1), Random.Range(-1, 1), Random.Range(-1, 1));
+		if (m_speed == Vector3.zero) m_speed = Vector3.one;
+		m_speed *= SPEED / m_speed.magnitude;
+		if (m_speed.y < 0) m_speed.y = -m_speed.y;
+		Quaternion rotSpeed = Quaternion.Euler(Random.Range(0, 360), Random.Range(0, 360), Random.Range(0, 360));
+		rotSpeed.ToAngleAxis(out m_rotAngle, out m_rotAxis);
+		m_rotAngle = ROT_SPEED;
+		m_timer=new Timer();
+    }
+    
+    void Start()
+    {
+		m_timer.Reset(DISAPPEAR_TIME);	
+    }	
+    
+	public void AddSpeed(Vector3 speed)
+	{
+		m_speed+=speed;
 	}
 	
 	void FixedUpdate ()

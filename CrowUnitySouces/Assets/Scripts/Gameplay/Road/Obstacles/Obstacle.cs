@@ -10,7 +10,9 @@ public abstract class Obstacle : MonoBehaviour
     public float _fadeDistVignette;
     public float _minDistVignette;
     public float _activateDistance;
+    public float _disactivateDistance;
     public SpriteRenderer _vignette;
+	public string _destructionSound;
 
     protected Color m_vignetteColor;
 
@@ -18,7 +20,16 @@ public abstract class Obstacle : MonoBehaviour
     protected Rails m_rails;
     protected float m_railsIndex;
     protected float m_railsProgress;
-    protected bool m_activated = false;
+	
+    protected enum State
+    {
+        Waiting,
+        Activated,
+        Disactivated
+    }
+
+    protected State m_state;
+
     #endregion
 
     public Rails Rails
@@ -61,16 +72,25 @@ public abstract class Obstacle : MonoBehaviour
             _vignette.gameObject.transform.rotation = Quaternion.LookRotation(Vector3.Scale(Score.Instance.Body.transform.position - transform.position, Vector3.right));
         }
 
-        if (dist <= _activateDistance && !m_activated && Score.Instance.Body.transform.position.x < transform.position.x)
+        if (dist <= _activateDistance && m_state == State.Waiting && Score.Instance.Body.transform.position.x < transform.position.x)
         {
             Activate();
         }
 
-
+        if (dist <= _disactivateDistance && m_state == State.Activated)
+        {
+            Disactivate();
+        }
     }
 
     public virtual void Activate()
     {
+        m_state = State.Activated;
+    }
+
+    public virtual void Disactivate()
+    {
+        m_state = State.Disactivated;
     }
 
     public virtual void OnTriggerExit(Collider other)
@@ -79,5 +99,14 @@ public abstract class Obstacle : MonoBehaviour
         {
             Destroy(this);
         }
+    }
+    
+    public virtual void PlayDestructionSound()
+    {
+    	if(_destructionSound!="")
+    	{
+    		FMOD_StudioSystem.instance.PlayOneShot(_destructionSound,transform.position);
+    		Debug.Log (_destructionSound);
+    	}
     }
 }

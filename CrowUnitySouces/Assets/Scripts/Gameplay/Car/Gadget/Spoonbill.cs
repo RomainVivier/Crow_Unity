@@ -12,7 +12,9 @@ public class Spoonbill : Gadget
 
     private Timer m_attackTimer;
     private Timer m_engageTimer;
-
+	private GameObject m_spatulaMesh;
+	private float m_disengageTime=1;
+	
     enum State
     {
         Engaged,
@@ -38,12 +40,13 @@ public class Spoonbill : Gadget
         gameObject.SetActive(false);
         IsReady = true;
         m_state = State.Disengaged;
+        m_spatulaMesh=transform.Find("spatula_interior").gameObject;
         base.Awake();
     }
 
     public override void Update()
     {
-        if(m_target != null && m_state == State.Attacking && m_attackTimer.CurrentNormalized < 0.5)
+        if(m_target != null && m_state == State.Attacking && m_attackTimer.CurrentNormalized < 0.01)
         {
             m_target.rigidbody.isKinematic = false;
             m_target.transform.parent = null;
@@ -58,12 +61,12 @@ public class Spoonbill : Gadget
         if(m_engageTimer.IsElapsedOnce && m_state != State.Attacking)
         {
             m_state = m_state == State.Engaging ? State.Engaged : State.Disengaged;
-        }
-
-        if (m_state == State.Disengaged)
-        {
-            Stop();
-        }
+			if (m_state == State.Disengaged)
+			{
+				Stop();
+			}
+		}
+		base.Update();
     }
 
     void OnTriggerEnter(Collider other)
@@ -71,17 +74,22 @@ public class Spoonbill : Gadget
         if (other.collider.CompareTag("Obstacle") && (m_state == State.Engaged || m_state == State.Engaging) && other.rigidbody!=null)
         {
             //(GameObject.FindObjectOfType<CarCollisionsInhibiter>() as CarCollisionsInhibiter)._nbCol++;
-            inhibitedCollisions = true;
+			Transform parent=other.transform.parent;
+			Obstacle obstacle= parent==null ? null : parent.GetComponent<Obstacle>();
+			if(obstacle!=null) obstacle.PlayDestructionSound();
+		
+		    inhibitedCollisions = true;
             other.transform.parent = _spoonbill.transform;
             m_target = other.gameObject;
             other.rigidbody.isKinematic = true;
             FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Gadgets/Spatula/gadgetSpatulaExecute", transform.position);
             _spoonbillAnimator.SetTrigger("Attack");
-            m_attackTimer.Reset(1.5f);
+            m_attackTimer.Reset(0.56f);//0.76f);
+            m_disengageTime=0;
             m_state = State.Attacking;
-            addScore(other.transform.position);
-            DialogsManager._instance.triggerEvent(DialogsManager.DialogInfos.EventType.OBSTACLE_DESTRUCTION, other.gameObject.name);
-            DialogsManager._instance.triggerEvent(DialogsManager.DialogInfos.EventType.DESTRUCTION_WITH_GADGET, "SpoonBill");
+            addScore(Score.ScoreType.MINOR_OBSTACLE);
+//            DialogsManager._instance.triggerEvent(DialogsManager.DialogInfos.EventType.OBSTACLE_DESTRUCTION, other.gameObject.name);
+//            DialogsManager._instance.triggerEvent(DialogsManager.DialogInfos.EventType.DESTRUCTION_WITH_GADGET, "SpoonBill");
         }
         if(!other.isTrigger) FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Gadgets/Spatula/gadgetSpatulaImpact", transform.position);
     }
@@ -99,13 +107,18 @@ public class Spoonbill : Gadget
         {
             case State.Disengaged :
                 FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Gadgets/Spatula/gadgetSpatulaEngage", transform.position);
-                gameObject.SetActive(true);
+				gameObject.SetActive(true);
+				m_spatulaMesh.SetActive(true);
+				collider.enabled=true;
+			
                 m_state = State.Engaging;
                 m_engageTimer.Reset(1f);
                 //transform.FindChild("Vignette").GetComponent<Vignette>().pop(1f);
 
                 _spoonbillAnimator.SetTrigger("Engage");
+                _spoonbillAnimator.ResetTrigger("Disengage");
                 _buttonAnim.SetBool("Engage", true);
+                m_disengageTime=1;
                 break;
 
             case State.Engaged :
@@ -124,17 +137,20 @@ public class Spoonbill : Gadget
         }*/
         FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Gadgets/Spatula/gadgetSpatulaDisengage", transform.position);
         m_state = State.Disengaging;
-        m_engageTimer.Reset(1f);
+        m_engageTimer.Reset(m_disengageTime);
         _spoonbillAnimator.SetTrigger("Disengage");
-        _buttonAnim.SetBool("Engage", false);
+        //_buttonAnim.SetBool("Engage", false);
         _invertGesture = false;
     }
 
     public override void Stop()
     {
-        base.Stop();
-        gameObject.SetActive(false);
-        _buttonAnim.SetBool("Engage", false);
+		IsReady=false;
+		m_spatulaMesh.SetActive(false);
+		collider.enabled=false;
+		//gameObject.SetActive(false);
+		//_buttonAnim.SetBool("Engage", false);
+		base.Stop();
     }
 
     #endregion

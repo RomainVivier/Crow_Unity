@@ -20,6 +20,11 @@ public class Car : MonoBehaviour
     public float airSteering = 0;
     public float rotationDampingNoThrottle = 0.1f;
 
+
+    [Header("Misc")]
+    public float limitRotation = 15;
+	public float frictionLerpSpeed=1;
+
 	// Components
 	private Engine engine;
 	private CarControl control;
@@ -60,7 +65,10 @@ public class Car : MonoBehaviour
 
     private float oldSpeed=0;
     private bool dontMove = false;
-
+    private float lastForwardVelocity;
+	private float addFriction=0;
+	private float notOnGroundTime=0;
+	
     private static Car m_instance;
     public static Car Instance
     {
@@ -186,6 +194,16 @@ public class Car : MonoBehaviour
                 body.angularVelocity = angularVelocity;
             }
 
+            // Limit rotation
+            float zRot = body.transform.rotation.eulerAngles.z;
+            if((zRot>limitRotation && zRot<180) || (zRot>180 && zRot<360-limitRotation))
+            {
+                zRot = zRot < 180 ? limitRotation : 360 - limitRotation;
+                Vector3 rot = body.transform.rotation.eulerAngles;
+                rot.z = zRot;
+                body.transform.rotation = Quaternion.Euler(rot);
+            }
+
             // Aerodynamic drag & downforce
             float force = forwardVelocity * forwardVelocity * dragCoef;
             body.AddForce(body.transform.forward * -force);
@@ -221,25 +239,39 @@ public class Car : MonoBehaviour
                 body.AddForceAtPosition(new Vector3(0, dist * dist * -1000, 0), wheels[i].transform.position);
             }*/
 
+			fakeRPM.update(inputs.throttle, inputs.brake);
+			
+			// Update fake RPM sound
+			float diffSpeed=forwardVelocity-oldSpeed;
+			if (diffSpeed < -1)
+			{
+				fakeRPM.loseSpeed((diffSpeed + 1f) * -0.1f);
+			}
+			oldSpeed = forwardVelocity;
+
+			rumbleSpeed.setValue(forwardVelocity * 3.6f);			
+			tiresSpeed.setValue(forwardVelocity / maxSpeed);
+			engineSpeed.setValue(forwardVelocity*3.6f);
         }
-        
         oldInputs = inputs;
         
-        // Update fake RPM sound
-        float diffSpeed=forwardVelocity-oldSpeed;
-        if (diffSpeed < -1) fakeRPM.loseSpeed((diffSpeed + 1f) * -1f);
-        oldSpeed = forwardVelocity;
-        fakeRPM.update(inputs.throttle, inputs.brake);
+
 
         // Update sounds
-        float frictionSound = Mathf.Abs(inputs.steering);
-        engineRPM.setValue(fakeRPM.getRPM());
+   		addFriction-=Time.fixedDeltaTime*frictionLerpSpeed;
+   		if(addFriction<0) addFriction=0;
+        float frictionSound = Mathf.Min (1,Mathf.Abs(inputs.steering)+addFriction);
         tiresGround.setValue(isOnGround() ? 1 : 0);
         tiresFriction.setValue(frictionSound);
-        tiresSpeed.setValue(forwardVelocity / maxSpeed);
-        engineSpeed.setValue(forwardVelocity*3.6f);
-        rumbleSpeed.setValue(forwardVelocity * 3.6f);
-        engineLoad.setValue(inputs.throttle>0.5 ? 1 : 0);
+		engineRPM.setValue(isOnGround() ? fakeRPM.getRPM() : 7000);
+		if(isOnGround() && notOnGroundTime>0.05)
+		{
+			addFriction=1;
+			FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Impacts/impactConcrete",transform.position);
+		}
+		
+		if(isOnGround()) notOnGroundTime=0; else notOnGroundTime+=Time.fixedDeltaTime;
+		//engineLoad.setValue(inputs.throttle>0.5 ? 1 : 0);
         
         //Debug print
 		if(nbUpdates%10==0)
@@ -320,6 +352,7 @@ public class Car : MonoBehaviour
     public void setDontMove(bool b)
     {
         dontMove = b;
+        lastForwardVelocity = getForwardVelocity();
     }
 
     // Private methods
@@ -330,7 +363,12 @@ public class Car : MonoBehaviour
 
     public void InstantSetSpeed(float speed, bool evenInAir=false)
     {
-        if(isOnGround() || evenInAir) body.velocity = getForwardVector() * speed;
+        if(isOnGround() || evenInAir)
+        {
+        	if(speed>maxSpeed) speed=maxSpeed;
+        	body.velocity = getForwardVector() * speed;
+        	oldSpeed=speed;
+        }
     }
 
 	// Public getters
@@ -342,6 +380,7 @@ public class Car : MonoBehaviour
 
 	public float getForwardVelocity()
 	{
+        if (dontMove) return 25;
 		Vector3 velocity=body.GetRelativePointVelocity(new Vector3(0,0,0));
 		return Vector3.Dot(velocity,body.transform.forward);
 	}
@@ -399,6 +438,19 @@ public class Car : MonoBehaviour
     public WindshieldController getWindshieldController()
     {
         return windshieldController;
+    }
+    
+    public void setFriction(float friction)
+    {
+    	addFriction=friction;
+    }
+    
+    public void respawn(Vector3 position, Quaternion rotation)
+    {
+    	body.transform.position=position;
+    	body.transform.rotation=rotation;
+    	body.angularVelocity=Vector3.zero;
+    	body.velocity=Vector3.zero;
     }
 }
 

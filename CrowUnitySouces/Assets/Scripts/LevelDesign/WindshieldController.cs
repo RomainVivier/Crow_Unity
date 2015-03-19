@@ -24,6 +24,7 @@ public class WindshieldController : MonoBehaviour {
 
 		if(_hp < 0)
 		{
+			Application.LoadLevel("GameOver");
 			//GameOverController.Instance.Show();
 			return;
 		}
@@ -45,7 +46,9 @@ public class WindshieldController : MonoBehaviour {
 	    //GameOverController.Instance.Show();
         for (int i = 0; i < m_impacts.Length; i++) m_impacts[i].enabled = true;
 
-        if (_hp == 0)
-            m_lightAnimator.SetTrigger("Blink");
+        m_lightAnimator.SetTrigger("Blink");
+	
+		Application.LoadLevel("GameOver");
+		
     }
 }

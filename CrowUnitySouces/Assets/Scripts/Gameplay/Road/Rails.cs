@@ -14,6 +14,7 @@ public class Rails : MonoBehaviour
 	public int nbPoints=0;
 	public bool drawShafts=false;
     public bool sortRails = false;
+	public bool sortRailsInverted=false;
 
 	public Vector3[] positions;
 	public Vector3[] deltas;
@@ -65,8 +66,9 @@ public class Rails : MonoBehaviour
 			oldNbPoints=nbPoints;
 			oldNbRails=nbRails;
 		}
-        if(sortRails)
+        if(sortRails || sortRailsInverted)
         {
+        	int way= sortRails ? 1 : -1;
             int[] railsIndex=new int[nbRails];
             float[] railsPos=new float[nbRails];
             for(int i=0;i<nbRails;i++)
@@ -74,11 +76,12 @@ public class Rails : MonoBehaviour
                 railsIndex[i] = i;
                 Vector3 forward=deltas[i].normalized;
                 Vector3 right = Vector3.Cross(forward, Vector3.up);
-                railsPos[i] = -Vector3.Dot(right, positions[i] - positions[0]);
+                railsPos[i] = way * -Vector3.Dot(right, positions[i] - positions[0]);
             }
             mergeSortRails(0, nbRails - 1, ref railsIndex, ref railsPos);
             swapArrays(railsIndex);
             sortRails = false;
+            sortRailsInverted=false;
         }
         computePositions();
         //updateDist();

@@ -80,7 +80,8 @@ public class Spring : Gadget
                 else
                 {
                     Vector3 forwardTarget = m_car.getDeltaTarget();
-                    forwardTarget.y = 0;
+                    //forwardTarget.y = 0;
+                    forwardTarget.y += _jumpHeight;
                     forwardTarget.Normalize();
                     m_addPos += forwardTarget * Time.fixedDeltaTime * _glidingDist / _glidingTime;
                     m_carBodyTransform.position = m_basePos + m_addPos;
@@ -97,7 +98,7 @@ public class Spring : Gadget
                     forwardTarget.y = 0;
                     forwardTarget.Normalize();
                     m_addPos += forwardTarget * Time.fixedDeltaTime * _fallParameters[m_nbBounces].dist / _fallParameters[m_nbBounces].time;
-                    if (m_addPos.y <= 0 || m_car.isOnGround())
+                    if (/*m_addPos.y <= 0 ||*/ m_car.isOnGround())
                     {
                         if (!m_car.isOnGround()) m_addPos.y = 0;
                         else
@@ -221,6 +222,7 @@ public class Spring : Gadget
             //m_carBodyTransform.gameObject.rigidbody.isKinematic = true;
             m_carBodyTransform.gameObject.rigidbody.constraints = RigidbodyConstraints.FreezeAll;
             IsReady = false;
+			FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Gadgets/Jump/gadgetJumpExecute",transform.position);
         }
         else base.Stop();
     }

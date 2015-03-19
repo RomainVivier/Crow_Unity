@@ -76,6 +76,7 @@ public class Gadget : MonoBehaviour
         {
             _buttonAnim.speed = 10;
             _buttonAnim.SetBool("Engage", true);
+
             //_buttonAnim.SetTrigger("Engage");
         }
         if(_button != null && _cooldownStartOnPlay)
@@ -106,9 +107,9 @@ public class Gadget : MonoBehaviour
             _button.Cooldown = _cooldown;
         }
     }
-    protected void addScore(Vector3 pos)
+    protected void addScore(Score.ScoreType type)
     {
-        Score.Instance.AddScore(_score,pos, _combo);
+        Score.Instance.AddScore(type, _score, _combo);
     }
     #endregion
 

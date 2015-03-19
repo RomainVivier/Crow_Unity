@@ -1,0 +1,323 @@
+fileFormatVersion: 2
+guid: 76acedd8d2ec4f547a29a4f31d51965c
+ModelImporter:
+  serializedVersion: 16
+  fileIDToRecycleName:
+    100000: arm_base
+    100002: arm_base 1
+    100004: arm_mid
+    100006: arm_mid 1
+    100008: Hemi
+    100010: spatula_exterior
+    100012: spatula_interior
+    100014: //RootNode
+    100016: spatule
+    100018: spatule 1
+    100020: spatule_armature_exterior
+    100022: spatule_armature_interior
+    100024: spatule_end
+    100026: spatule_end 1
+    400000: arm_base
+    400002: arm_base 1
+    400004: arm_mid
+    400006: arm_mid 1
+    400008: Hemi
+    400010: spatula_exterior
+    400012: spatula_interior
+    400014: //RootNode
+    400016: spatule
+    400018: spatule 1
+    400020: spatule_armature_exterior
+    400022: spatule_armature_interior
+    400024: spatule_end
+    400026: spatule_end 1
+    4300000: spatula_exterior
+    4300002: spatula_interior
+    7400000: Hemi|HemiAction
+    7400002: spatule_armature_exterior|HemiAction
+    7400004: spatule_AttackIdle
+    7400006: spatule_armature_exterior|spatule_load
+    7400008: spatula_exterior|HemiAction
+    7400010: spatule_armature_interior|HemiAction
+    7400012: spatule_Attack
+    7400014: spatule_Load
+    7400016: spatula_interior|HemiAction
+    7400018: spatula_interior|spatule_load
+    7400020: spatule_LoadIdle
+    9500000: //RootNode
+    13700000: spatula_exterior
+    13700002: spatula_interior
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: spatule_Attack
+      takeName: spatule_armature_interior|spatule_attack
+      firstFrame: 0
+      lastFrame: 34
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Hemi
+        weight: 1
+      - path: spatula_exterior
+        weight: 1
+      - path: spatula_interior
+        weight: 1
+      - path: spatule_armature_exterior
+        weight: 1
+      - path: spatule_armature_exterior/arm_base
+        weight: 1
+      - path: spatule_armature_exterior/arm_base/arm_mid
+        weight: 1
+      - path: spatule_armature_exterior/arm_base/arm_mid/spatule
+        weight: 1
+      - path: spatule_armature_exterior/arm_base/arm_mid/spatule/spatule_end
+        weight: 1
+      - path: spatule_armature_interior
+        weight: 1
+      - path: spatule_armature_interior/arm_base 1
+        weight: 1
+      - path: spatule_armature_interior/arm_base 1/arm_mid 1
+        weight: 1
+      - path: spatule_armature_interior/arm_base 1/arm_mid 1/spatule 1
+        weight: 1
+      - path: spatule_armature_interior/arm_base 1/arm_mid 1/spatule 1/spatule_end
+          1
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: spatule_Load
+      takeName: spatule_armature_interior|spatule_load
+      firstFrame: 0
+      lastFrame: 24
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Hemi
+        weight: 1
+      - path: spatula_exterior
+        weight: 1
+      - path: spatula_interior
+        weight: 1
+      - path: spatule_armature_exterior
+        weight: 1
+      - path: spatule_armature_exterior/arm_base
+        weight: 1
+      - path: spatule_armature_exterior/arm_base/arm_mid
+        weight: 1
+      - path: spatule_armature_exterior/arm_base/arm_mid/spatule
+        weight: 1
+      - path: spatule_armature_exterior/arm_base/arm_mid/spatule/spatule_end
+        weight: 1
+      - path: spatule_armature_interior
+        weight: 1
+      - path: spatule_armature_interior/arm_base 1
+        weight: 1
+      - path: spatule_armature_interior/arm_base 1/arm_mid 1
+        weight: 1
+      - path: spatule_armature_interior/arm_base 1/arm_mid 1/spatule 1
+        weight: 1
+      - path: spatule_armature_interior/arm_base 1/arm_mid 1/spatule 1/spatule_end
+          1
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: spatule_LoadIdle
+      takeName: spatule_armature_interior|spatule_load
+      firstFrame: 0
+      lastFrame: .100000009
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Hemi
+        weight: 1
+      - path: spatula_exterior
+        weight: 1
+      - path: spatula_interior
+        weight: 1
+      - path: spatule_armature_exterior
+        weight: 1
+      - path: spatule_armature_exterior/arm_base
+        weight: 1
+      - path: spatule_armature_exterior/arm_base/arm_mid
+        weight: 1
+      - path: spatule_armature_exterior/arm_base/arm_mid/spatule
+        weight: 1
+      - path: spatule_armature_exterior/arm_base/arm_mid/spatule/spatule_end
+        weight: 1
+      - path: spatule_armature_interior
+        weight: 1
+      - path: spatule_armature_interior/arm_base 1
+        weight: 1
+      - path: spatule_armature_interior/arm_base 1/arm_mid 1
+        weight: 1
+      - path: spatule_armature_interior/arm_base 1/arm_mid 1/spatule 1
+        weight: 1
+      - path: spatule_armature_interior/arm_base 1/arm_mid 1/spatule 1/spatule_end
+          1
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: spatule_AttackIdle
+      takeName: spatule_armature_interior|spatule_attack
+      firstFrame: 0
+      lastFrame: .100000009
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Hemi
+        weight: 1
+      - path: spatula_exterior
+        weight: 1
+      - path: spatula_interior
+        weight: 1
+      - path: spatule_armature_exterior
+        weight: 1
+      - path: spatule_armature_exterior/arm_base
+        weight: 1
+      - path: spatule_armature_exterior/arm_base/arm_mid
+        weight: 1
+      - path: spatule_armature_exterior/arm_base/arm_mid/spatule
+        weight: 1
+      - path: spatule_armature_exterior/arm_base/arm_mid/spatule/spatule_end
+        weight: 1
+      - path: spatule_armature_interior
+        weight: 1
+      - path: spatule_armature_interior/arm_base 1
+        weight: 1
+      - path: spatule_armature_interior/arm_base 1/arm_mid 1
+        weight: 1
+      - path: spatule_armature_interior/arm_base 1/arm_mid 1/spatule 1
+        weight: 1
+      - path: spatule_armature_interior/arm_base 1/arm_mid 1/spatule 1/spatule_end
+          1
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: .00999999978
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  additionalBone: 0
+  userData: 

@@ -8,6 +8,7 @@ public class Rocket : Gadget {
 
     public float _blastRadius;
     public float _rocketSpeed;
+    public float _proximityFuse;
     public float _rocketUIMax;
 
     enum State
@@ -34,6 +35,8 @@ public class Rocket : Gadget {
 
 
     private GameObject m_rocketObject;
+	private GameObject m_pointLight;
+	
     private FMOD.Studio.EventInstance m_rocketUI;
     private FMOD.Studio.ParameterInstance m_rocketDist;
     private FMOD.Studio.EventInstance m_rocketExecute3D;
@@ -61,16 +64,23 @@ public class Rocket : Gadget {
         m_rocketLaunchtimer = new Timer();
         m_rocketObject = transform.Find("Object").gameObject;
         m_rocketObject.gameObject.SetActive(false);
-        m_explosionParticles = GameObject.Find("RocketExplosion");
-
+		
         m_carTransform = transform.parent.parent;
         m_railsControl = FindObjectOfType<RailsControl>();
 
         base.Awake();
     }
 
+	public void Start()
+	{
+		m_explosionParticles = GameObject.Find("RocketExplosion");
+		m_explosionParticles.GetComponent<ParticleEmitter>().emit=false;
+		m_pointLight=m_explosionParticles.transform.FindChild("PointLight").gameObject;
+	}
+	
     public override void Update()
     {
+    	m_explosionParticles.GetComponent<ParticleEmitter>().emit=false;
         switch(m_state)
         {
             case State.Launching :
@@ -100,6 +110,8 @@ public class Rocket : Gadget {
 
     void UpdateProgress()
     {
+    	if(m_state==State.Idle) return;
+    	
         //Update rails progression
         m_railsProgress += m_railsSpeed * Time.fixedDeltaTime;
         m_failProgress += _rocketSpeed * Time.deltaTime; 
@@ -126,7 +138,15 @@ public class Rocket : Gadget {
         else
         {
             //Debug.Log(m_railsProgress + " " + m_target.RailsProgress);
-            if (m_rails == m_target.Rails && m_railsProgress >= m_target.RailsProgress)
+			Ray ray=new Ray();
+			ray.origin=m_rocketObject.transform.position;
+			ray.direction=m_rocketObject.transform.forward;
+			RaycastHit rh;
+			if(Physics.Raycast(ray,out rh,_proximityFuse) && rh.collider==m_target.collider)
+			{
+				Blow ();
+			}
+			else if (m_rails == m_target.Rails && m_railsProgress >= m_target.RailsProgress)
             {
                 Blow();
             }
@@ -135,7 +155,6 @@ public class Rocket : Gadget {
                 m_rocketObject.transform.position = m_rails.getPoint(m_railsIndex, m_rails.correct2Incorrect(m_railsProgress)) + Vector3.Scale(Vector3.up, m_offsetWithParent);
             }
         }
-
     }
 
     void UpdateSound()
@@ -242,15 +261,21 @@ public class Rocket : Gadget {
         m_blowInstance.set3DAttributes(threeDeeAttr);
 
         m_explosionParticles.transform.position = m_target == null ? m_rocketObject.transform.position : m_target.transform.position;
-        m_explosionParticles.GetComponent<ParticleSystem>().Play();
+        //m_explosionParticles.GetComponent<ParticleSystem>().Play();
+		m_explosionParticles.GetComponent<ParticleEmitter>().emit=true;
+		
+		m_pointLight.transform.position=m_target == null ? m_rocketObject.transform.position : m_target.transform.position;
+		m_pointLight.GetComponent<RainbowPointLight>().Reset();
+		
         var colliders = Physics.OverlapSphere(m_rocketObject.transform.position, _blastRadius);
         m_target = null;
         foreach(Collider collider in colliders)
         {
             if (collider.CompareTag("Obstacle"))
             {
-                collider.gameObject.SetActive(false);
-                addScore(collider.transform.position);
+				if(collider.gameObject.GetComponent<Obstacle>()!=null) collider.gameObject.GetComponent<Obstacle>().PlayDestructionSound();
+                collider.gameObject.transform.parent.gameObject.SetActive(false);
+                addScore(collider.gameObject.rigidbody==null ? Score.ScoreType.EVENT : Score.ScoreType.MINOR_OBSTACLE);
                 DialogsManager._instance.triggerEvent(DialogsManager.DialogInfos.EventType.OBSTACLE_DESTRUCTION, collider.gameObject.name);
                 DialogsManager._instance.triggerEvent(DialogsManager.DialogInfos.EventType.DESTRUCTION_WITH_GADGET, "Rocket");
             }

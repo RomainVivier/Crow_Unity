@@ -8,8 +8,7 @@ public class Laser : Gadget
     #region constants
     const float VALVE_OPENING_TIME = 0.2f;
     const float VALVE_CLOSING_TIME = 0.2f;
-    const float RANGE = 500f;
-    const float CONVERGING_INERTIA = 0.05f;
+    const float CONVERGING_INERTIA = 0.1f;
     const float TEXTURE_SCROLL_SPEED = 5;
     //const float DISPLAY_RANGE = RANGE;
     #endregion
@@ -20,6 +19,8 @@ public class Laser : Gadget
     public float _particlesSpeed = 100; // units/s
     public float _particlesRotationSpeed = 1; // rad/s
     public float _targetContactTime = 0.2f;
+ 	public float _range=500f;
+ 	
     private Timer m_stateTimer;
     private Car m_car;
     private float m_lightsYOffset;
@@ -133,7 +134,7 @@ public class Laser : Gadget
                     if (float.IsNaN(hAngle)) hAngle = 0;
 
                     // Update laser length
-                    m_laserLength += Time.deltaTime * RANGE / _firingTime;
+                    m_laserLength += Time.deltaTime * _range / _firingTime;
                     m_textureScroll += Time.deltaTime * TEXTURE_SCROLL_SPEED;
 
                     // Raycast to detect target
@@ -200,12 +201,13 @@ public class Laser : Gadget
                                     {
                                         _laserEffect.GetComponent<ParticleSystem>().Play();
                                         _laserEffect.transform.position = go.transform.position;//rh.point;
-                                        rh.collider.gameObject.SetActive(false);
-                                        addScore(rh.collider.transform.position);
+                                        rh.collider.gameObject.transform.parent.gameObject.SetActive(false);
+                                        Score.ScoreType type=rh.collider.gameObject.name.Contains("Obstacle") ? Score.ScoreType.MINOR_OBSTACLE : Score.ScoreType.EVENT;
+                                        addScore(type);
 
                                         // Play sound
                                         FMOD.Studio.EventInstance blowInstance
-                                            = FMOD_StudioSystem.instance.GetEvent("event:/SFX/Gadgets/Rocket/gadgetRocketSuccess");
+												= FMOD_StudioSystem.instance.GetEvent("event:/SFX/Gadgets/Laser/gadgetLaserSuccess");
                                         blowInstance.start();
                                         FMOD.Studio.ParameterInstance param;
                                         blowInstance.getParameter("Position", out param);
@@ -220,6 +222,8 @@ public class Laser : Gadget
                                         threeDeeAttr.velocity = FMOD.Studio.UnityUtil.toFMODVector(Vector3.zero);
                                         blowInstance.set3DAttributes(threeDeeAttr);
                                         
+										if(go.GetComponent<Obstacle>()!=null) go.GetComponent<Obstacle>().PlayDestructionSound();
+									
                                         // Trigger events
                                         DialogsManager._instance.triggerEvent(DialogsManager.DialogInfos.EventType.OBSTACLE_DESTRUCTION, go.gameObject.name);
                                         DialogsManager._instance.triggerEvent(DialogsManager.DialogInfos.EventType.DESTRUCTION_WITH_GADGET, "Laser");

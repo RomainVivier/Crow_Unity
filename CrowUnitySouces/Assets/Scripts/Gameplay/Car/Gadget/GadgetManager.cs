@@ -19,6 +19,9 @@ public class GadgetManager : MonoBehaviour {
     private Timer m_timer;
 
     private CardPopup m_cardPopup;
+
+	public List<string> _gadgets;
+	
 	#endregion
 
     #region Properties
@@ -97,12 +100,12 @@ public class GadgetManager : MonoBehaviour {
 
 		if(m_gadgets.ContainsKey(name) && m_gadgets[name].IsReady)
 		{
-            if(m_gadgets[name]._cardMaterial!=null && !m_gadgets[name]._invertGesture) m_cardPopup.popup(m_gadgets[name]._cardMaterial);
+            //if(m_gadgets[name]._cardMaterial!=null && !m_gadgets[name]._invertGesture) m_cardPopup.popup(m_gadgets[name]._cardMaterial);
 			m_gadgets[name].Play();
             m_lastGadget = name;
             m_timer.Reset(0.5f);
             if(m_gadgets[name].PlaySound!="") FMOD_StudioSystem.instance.PlayOneShot(m_gadgets[name].PlaySound,transform.position);
-            DialogsManager._instance.triggerEvent(DialogsManager.DialogInfos.EventType.GADGET_USE, name);
+//            DialogsManager._instance.triggerEvent(DialogsManager.DialogInfos.EventType.GADGET_USE, name);
         }else{
             if(m_gadgets[name].CantPlaySound!="") FMOD_StudioSystem.instance.PlayOneShot(m_gadgets[name].CantPlaySound,transform.position);
 			Debug.Log("no gadget has been registered to this name or gadget is not ready !");
@@ -121,9 +124,19 @@ public class GadgetManager : MonoBehaviour {
     public string RandomUnassignGadget()
     {
         string gadgetID;
-
-        var gadgets = m_gadgets.Where(g => g.Value._isAssign == false).Select(g => g.Key).ToList();
-
+		
+        List<string> gadgets;
+		if(_gadgets.Count>0)
+		{
+			gadgets=new List<string>();
+			gadgets.Add (_gadgets[0]);
+			_gadgets.RemoveAt(0);
+		}
+		else
+		{
+			gadgets = m_gadgets.Where(g => g.Value._isAssign == false).Select(g => g.Key).ToList();
+		}
+		
         if (gadgets.Count == 0)
         {
             return null;

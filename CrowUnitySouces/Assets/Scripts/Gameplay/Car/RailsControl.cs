@@ -14,6 +14,7 @@ public class RailsControl : CarControl
 	public float steeringInertia=0.1f;
     public float steeringBaseSpeed = 10f;
 	public float targetDistMultiplier=0.5f; // Unit = seconds
+	public float baseDist=1;
 	public float steeringDeadZone=1;
 	public float steeringFullZone=2;
 
@@ -95,6 +96,11 @@ public class RailsControl : CarControl
 	
 	void FixedUpdate ()
 	{
+		if(Input.GetKeyDown(KeyCode.R))
+		{
+			car.respawn(target+new Vector3(0,0.2f,0),Quaternion.LookRotation(getForwardTarget(),new Vector3(0,1,0)));
+		}
+		
 		nbUpdates++;
 		
 		// Manage speed
@@ -207,10 +213,13 @@ public class RailsControl : CarControl
 	private void updateProgress()
 	{
 		Vector3 carPos=car.getPosition();
+        //carPos.y = 0;
 		Vector3 forward=car.getForwardVector();
+        //target.y = 0;
 		Vector3 diff=target-carPos;
-		float wantedTargetDist=car.getForwardVelocity()*targetDistMultiplier;
-		float currentTargetDist=Vector3.Dot (diff,forward);;
+		float wantedTargetDist=baseDist+car.getForwardVelocity()*targetDistMultiplier;
+		float currentTargetDist=Vector3.Dot (diff,forward);
+		
 		if(currentTargetDist<wantedTargetDist)
 		{
 			float minProgress=chunkProgress;
@@ -249,8 +258,21 @@ public class RailsControl : CarControl
 			chunk=chunk.NextChunk;
 			rails=chunk._rails;
 			int newNbRails=rails.nbRails;
-			currentRail=(currentRail-(oldNbRails-1)/2f)*(newNbRails-1)/(oldNbRails-1)+(newNbRails-1)/2f;
-			targetRail=Mathf.RoundToInt((targetRail-(oldNbRails-1)/2)*(newNbRails-1)/(oldNbRails-1)+(newNbRails-1)/2f);
+			if(newNbRails==1)
+			{
+				currentRail=0;
+				targetRail=0;
+			}
+			else if(oldNbRails==1)
+			{
+				currentRail=(newNbRails-1)/2;
+				targetRail=Mathf.RoundToInt(currentRail);
+			}
+			else
+			{
+				currentRail=(currentRail-(oldNbRails-1)/2f)*(newNbRails-1)/(oldNbRails-1)+(newNbRails-1)/2f;
+				targetRail=Mathf.RoundToInt((targetRail-(oldNbRails-1)/2)*(newNbRails-1)/(oldNbRails-1)+(newNbRails-1)/2f);
+			}
 			chunkProgress=0;
 			updateProgress();
 		}

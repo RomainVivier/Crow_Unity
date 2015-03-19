@@ -28,8 +28,8 @@ public class Duck : Gadget
         {
             duckSound.start();
             IsReady = false;
-            nbUses++;
-            if(nbUses==2) (GameObject.FindObjectOfType<AI>() as AI).playDialog("AI Gadgets/AI_Duck");
+			addScore(Score.ScoreType.USELESS_GADGET);
+
             base.Stop();
         }
     }
