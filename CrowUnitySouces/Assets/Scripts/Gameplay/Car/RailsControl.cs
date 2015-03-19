@@ -96,6 +96,11 @@ public class RailsControl : CarControl
 	
 	void FixedUpdate ()
 	{
+		if(Input.GetKeyDown(KeyCode.R))
+		{
+			car.respawn(target+new Vector3(0,0.2f,0),Quaternion.LookRotation(getForwardTarget(),new Vector3(0,1,0)));
+		}
+		
 		nbUpdates++;
 		
 		// Manage speed

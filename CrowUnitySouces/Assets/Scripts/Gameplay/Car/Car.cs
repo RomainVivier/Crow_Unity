@@ -436,5 +436,12 @@ public class Car : MonoBehaviour
     {
     	addFriction=friction;
     }
+    
+    public void respawn(Vector3 position, Quaternion rotation)
+    {
+    	body.transform.position=position;
+    	body.transform.rotation=rotation;
+    	InstantSetSpeed(0);
+    }
 }
 
