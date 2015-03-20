@@ -132,7 +132,7 @@ public class RoadManager : MonoBehaviour
 				m_chunks[m_chunks.Count-1].NextChunk=rc;
             }else{
                 rc.transform.position = _startPoint.position;
-                m_car = GameObject.Instantiate(Resources.Load("CarV2"), (rc._startPoint.position + Vector3.up + Vector3.right*2 ), Quaternion.Euler(new Vector3(0,90,0))) as GameObject;
+                m_car = GameObject.Instantiate(Resources.Load("CarV2"), (rc._startPoint.position + Vector3.up*0.0f + Vector3.right*2 ), Quaternion.Euler(new Vector3(0,90,0))) as GameObject;
                 m_car.name = "CarV2";
                 m_car.GetComponent<RailsControl>().chunk = rc;
             }

@@ -35,12 +35,11 @@ public class GameOverScript : MonoBehaviour
 	{
 		KeyBinder.Instance.enabled=true;
 		Application.LoadLevel(0);
-		//FMOD_StudioSystem.Destroy();
 	}
 	
 	void Update()
 	{
-		m_scrollPos=_scrollSpeed*Time.deltaTime;
+		m_scrollPos+=_scrollSpeed*Time.deltaTime;
 		if(_gameOverScreen.gameObject.activeSelf) _gameOverScreen.setScrollPos(m_scrollPos);
 		if(_highScoresScreen.gameObject.activeSelf) _highScoresScreen.setScrollPos(m_scrollPos);	
 	}

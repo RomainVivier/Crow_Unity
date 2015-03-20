@@ -51,6 +51,11 @@ public class Score : MonoBehaviour
     private GameObject m_comboTenFeedbackObject=null;
     
     private GameObject[] m_comboDigits;
+    
+    private FMOD.Studio.EventInstance m_comboEvent;
+    private FMOD.Studio.ParameterInstance m_comboCountCycle10Parameter;
+    private FMOD.Studio.ParameterInstance m_comboCountParameter;
+    
     #endregion
 
     #region Properties
@@ -149,6 +154,10 @@ public class Score : MonoBehaviour
         m_comboDigits=new GameObject[NB_COMBO_DIGITS];
         for(int i=0;i<NB_COMBO_DIGITS;i++)
         	m_comboDigits[i]=m_comboObject.transform.Find("Digit"+i).gameObject;
+        	
+		m_comboEvent=FMOD_StudioSystem.instance.GetEvent("event:/SFX/UI/Combo/comboUp");
+		m_comboEvent.getParameter("comboCountCycle10",out m_comboCountCycle10Parameter);
+		m_comboEvent.getParameter("comboCount",out m_comboCountParameter);
     }
 
     private void Init()
@@ -234,6 +243,12 @@ public class Score : MonoBehaviour
         m_augmentSpeed = diff / SCORE_DISPLAY_LAG;
         GameInfos gi=GameInfos.Instance;
         if(combo!=0 && m_comboSizeFeedback>=1) m_comboSizeFeedback=0;
+        if(combo!=0)
+        {
+        	m_comboEvent.start();
+        	m_comboCountCycle10Parameter.setValue(m_combo%10);
+        	m_comboCountParameter.setValue(m_combo);
+        }
         if(oldCombo/10!=m_combo/10) startTenFeedback(m_combo/10);
         switch(type)
         {
