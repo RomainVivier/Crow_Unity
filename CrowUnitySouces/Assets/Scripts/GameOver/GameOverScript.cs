@@ -9,9 +9,18 @@ public class GameOverScript : MonoBehaviour
 	
 	private float m_scrollPos=0;
 	
+	private bool m_firstTime=true;
+	
 	public void startGameOver()
 	{
 		if(_gameOverScreen.gameObject.activeSelf || _highScoresScreen.gameObject.activeSelf) return;
+		if(m_firstTime)
+		{
+			FMOD_StudioSystem.instance.PlayOneShot("event:/gameOver",transform.position);
+			m_firstTime=false;
+		}
+		else FMOD_StudioSystem.instance.PlayOneShot("event:/gameOver2",transform.position);
+		
 		KeyBinder.Instance.enabled=false;
 		_gameOverScreen.gameObject.SetActive(true);
 		_gameOverScreen.init();
@@ -41,6 +50,7 @@ public class GameOverScript : MonoBehaviour
 	{
 		m_scrollPos+=_scrollSpeed*Time.deltaTime;
 		if(_gameOverScreen.gameObject.activeSelf) _gameOverScreen.setScrollPos(m_scrollPos);
-		if(_highScoresScreen.gameObject.activeSelf) _highScoresScreen.setScrollPos(m_scrollPos);	
+		if(_highScoresScreen.gameObject.activeSelf) _highScoresScreen.setScrollPos(m_scrollPos);
+		if(Input.GetKeyDown(KeyCode.G)) startGameOver();
 	}
 }
