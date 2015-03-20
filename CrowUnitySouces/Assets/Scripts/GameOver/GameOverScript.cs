@@ -34,7 +34,7 @@ public class GameOverScript : MonoBehaviour
 	public void restartGame()
 	{
 		KeyBinder.Instance.enabled=true;
-		Application.LoadLevel(0);
+		Application.LoadLevel(1);
 	}
 	
 	void Update()
