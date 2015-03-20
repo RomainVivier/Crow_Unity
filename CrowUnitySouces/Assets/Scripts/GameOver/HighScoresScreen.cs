@@ -4,9 +4,12 @@ using UnityEngine.UI;
 
 public class HighScoresScreen : MonoBehaviour {
 
-	private int m_currentHighScore=-1;
+	public GameOverScript _gameOverScript;
 	
-	void Start ()
+	private int m_currentHighScore=-1;
+	private Image m_background;
+	
+	public void init ()
 	{
 		GameInfos gi=GameInfos.Instance;
 		if(gi.score>gi.scores[9])
@@ -24,6 +27,8 @@ public class HighScoresScreen : MonoBehaviour {
 			m_currentHighScore=place;
 		}
 		printRanking ();
+		
+		m_background=GetComponent<RectTransform>().Find("Background").GetComponent<Image>();
 	}
 	
 	void Update ()
@@ -51,8 +56,7 @@ public class HighScoresScreen : MonoBehaviour {
 		}
 		else if(Input.GetMouseButtonDown(0))
 		{
-			KeyBinder.Instance.enabled=true;
-			Application.LoadLevel(0);
+			_gameOverScript.restartGame();
 		}
 	}
 	
@@ -71,5 +75,10 @@ public class HighScoresScreen : MonoBehaviour {
 			namesText.text+=gi.names[i]+"\n";
 			scoresText.text+=gi.scores[i]+"\n";
 		}
+	}
+	
+	public void setScrollPos(float scrollPos)
+	{
+		m_background.material.SetTextureOffset("_MainTex",new Vector2(scrollPos,0));
 	}
 }
