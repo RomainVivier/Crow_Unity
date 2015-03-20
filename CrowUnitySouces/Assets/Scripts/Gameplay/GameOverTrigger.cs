@@ -5,7 +5,7 @@ public class GameOverTrigger : MonoBehaviour {
 
 	void Update()
 	{
-		if(Input.GetKeyDown(KeyCode.G)) Application.LoadLevel("GameOver");
+		if(Input.GetKeyDown(KeyCode.G)) GameObject.Find ("GameOver").GetComponent<GameOverScript>().startGameOver();
 	}
 	
 	void OnTriggerEnter(Collider other)
@@ -13,7 +13,7 @@ public class GameOverTrigger : MonoBehaviour {
 		GameObject oth = other.transform.root.gameObject;
 		if (oth.name == "Car(Clone)")
 		{
-			Application.LoadLevel("GameOver");
+			GameObject.Find ("GameOver").GetComponent<GameOverScript>().startGameOver();
 		}
 		else Debug.Log(oth.name);
 	}

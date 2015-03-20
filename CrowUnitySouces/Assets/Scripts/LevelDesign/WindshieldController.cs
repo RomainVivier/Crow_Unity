@@ -6,6 +6,7 @@ public class WindshieldController : MonoBehaviour {
 
 	public int _hp = 3;
 	public bool _isInvincible;
+	
 	SpriteRenderer[] m_impacts;
 	Animator m_lightAnimator;
 
@@ -24,8 +25,7 @@ public class WindshieldController : MonoBehaviour {
 
 		if(_hp < 0)
 		{
-			Application.LoadLevel("GameOver");
-			//GameOverController.Instance.Show();
+			GameObject.Find ("GameOver").GetComponent<GameOverScript>().startGameOver();
 			return;
 		}
 
@@ -48,7 +48,7 @@ public class WindshieldController : MonoBehaviour {
 
         m_lightAnimator.SetTrigger("Blink");
 	
-		Application.LoadLevel("GameOver");
+		GameObject.Find ("GameOver").GetComponent<GameOverScript>().startGameOver();
 		
     }
 }
