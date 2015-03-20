@@ -248,6 +248,7 @@ public class DialogsManager : MonoBehaviour
                     if(isRandomPlayMode(_dialogInfos[dialog].playMode)) playedDialog=m_dialogInfos[dialog].playList[playedDialog];
                     
                     // Get event
+					Debug.Log ("play "+_dialogInfos[dialog].sounds[playedDialog]);
                     m_currentEvent=FMOD_StudioSystem.instance.GetEvent("event:/"+_dialogInfos[dialog].sounds[playedDialog]);
 					
 					// Update playlist pos
@@ -265,6 +266,7 @@ public class DialogsManager : MonoBehaviour
                 }
             }
         }
+        else Debug.Log ("null");
     }
     
     private void startEvent()
