@@ -69,7 +69,7 @@ public abstract class Obstacle : MonoBehaviour
         {
             m_vignetteColor.a = Mathf.Lerp(0f, 1f, (dist - _minDistVignette) / (_fadeDistVignette - _minDistVignette) );
             _vignette.color = m_vignetteColor;
-            _vignette.gameObject.transform.rotation = Quaternion.LookRotation(Vector3.Scale(Score.Instance.Body.transform.position - transform.position, Vector3.right));
+            _vignette.gameObject.transform.rotation = Quaternion.LookRotation(Vector3.Scale(Score.Instance.Body.transform.position - transform.position, new Vector3(1f, 0f, 1f)));
         }
 
         if (dist <= _activateDistance && m_state == State.Waiting && Score.Instance.Body.transform.position.x < transform.position.x)
