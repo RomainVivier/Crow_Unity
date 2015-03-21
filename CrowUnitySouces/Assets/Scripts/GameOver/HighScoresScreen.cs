@@ -72,7 +72,8 @@ public class HighScoresScreen : MonoBehaviour {
 		
 		for(int i=0;i<10;i++)
 		{
-			namesText.text+=gi.names[i]+"\n";
+			if(i==m_currentHighScore) namesText.text+=gi.names[i]+"_\n";
+			else namesText.text+=gi.names[i]+"\n";
 			scoresText.text+=gi.scores[i]+"\n";
 		}
 	}
