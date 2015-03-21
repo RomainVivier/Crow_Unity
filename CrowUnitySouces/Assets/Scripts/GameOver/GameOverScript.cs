@@ -46,7 +46,8 @@ public class GameOverScript : MonoBehaviour
 	public void restartGame()
 	{
 		KeyBinder.Instance.enabled=true;
-		m_gameOverParam.setValue(0);			
+		m_gameOverParam.setValue(0);
+		FMOD_StudioSystem.Destroy(FMOD_StudioSystem.instance);
 		Application.LoadLevel(1);
 	}
 	
