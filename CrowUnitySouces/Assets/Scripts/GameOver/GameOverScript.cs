@@ -14,10 +14,10 @@ public class GameOverScript : MonoBehaviour
 	
 	void Start()
 	{
-		m_gameOverEvent=FMOD_StudioSystem.instance.GetEvent("event:/Meta/gameOver");
-		m_gameOverEvent.getParameter("gameOver", out m_gameOverParam);
-		m_gameOverEvent.start();
-		m_gameOverParam.setValue(0);
+		//m_gameOverEvent=FMOD_StudioSystem.instance.GetEvent("event:/Meta/gameOver");
+		//m_gameOverEvent.getParameter("gameOver", out m_gameOverParam);
+		//m_gameOverParam.setValue(0);
+		//m_gameOverEvent.start();
 	}
 	
 	public void startGameOver()
@@ -33,7 +33,10 @@ public class GameOverScript : MonoBehaviour
 		GameObject.Find ("CarV2").GetComponent<PolynomialEngine>().maxPowerKw=0;	
 		GameObject.Find ("CarV2").GetComponent<PolynomialEngine>().powerMinRpmKw=0;
 		GameObject.Find ("CarV2").GetComponent<Car>().updateValues();
-		m_gameOverParam.setValue(1);	
+		
+		//m_gameOverParam.setValue(1);	
+		//m_gameOverEvent.start();
+		FMOD_StudioSystem.instance.PlayOneShot("event:/Meta/gameOver",transform.position);
 	}
 	
 	public void startHighScores()
@@ -46,7 +49,7 @@ public class GameOverScript : MonoBehaviour
 	public void restartGame()
 	{
 		KeyBinder.Instance.enabled=true;
-		m_gameOverParam.setValue(0);
+		//m_gameOverParam.setValue(0);
 		FMOD_StudioSystem.Destroy(FMOD_StudioSystem.instance);
 		Application.LoadLevel(1);
 	}
