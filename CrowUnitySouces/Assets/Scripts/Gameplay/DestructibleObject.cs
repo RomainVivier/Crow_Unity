@@ -36,8 +36,8 @@ public class DestructibleObject : MonoBehaviour
                 FragmentDestroyer fd=go.AddComponent<FragmentDestroyer>();
                 fd.AddSpeed(car.getForwardVector()*car.getForwardVelocity()*1f);
             }
-            _particles.gameObject.SetActive(true);
-            _particles.Play();
+            //_particles.gameObject.SetActive(true);
+            //_particles.Play();
             m_hasExploded=true;
             Score.Instance.AddScore(Score.ScoreType.STUFF,_bonus, _comboBonus);
         }
