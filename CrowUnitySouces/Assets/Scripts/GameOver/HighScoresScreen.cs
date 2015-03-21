@@ -82,4 +82,9 @@ public class HighScoresScreen : MonoBehaviour {
 	{
 		m_background.material.SetTextureOffset("_MainTex",new Vector2(scrollPos,0));
 	}
+	
+	public void restartClicked()
+	{
+		_gameOverScript.restartGame();
+	}
 }
