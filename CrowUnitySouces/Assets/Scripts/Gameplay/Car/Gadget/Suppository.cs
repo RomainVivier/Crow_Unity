@@ -44,7 +44,7 @@ public class Suppository : Gadget
         //TODO Play sound here
 		Invoke ("Insert", 3.3f);
         Invoke("End", 5f);
-        //FMOD_StudioSystem.instance.PlayOneShot("event:/Dialog/IA/AI Gadgets/AI_Suppo", transform.position);
+		FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Gadgets/Suppo/gadgetSuppoExecute", transform.position);
     }
 
 	void Insert()
