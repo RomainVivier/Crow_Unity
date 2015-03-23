@@ -84,7 +84,11 @@ public class Rails : MonoBehaviour
             sortRails = false;
             sortRailsInverted=false;
         }
-        if(invertStartEnd) invertRails();
+        if(invertStartEnd)
+        {
+        	invertStartEnd = false;
+        	invertRails();
+        }
         computePositions();
         //updateDist();
 	}
