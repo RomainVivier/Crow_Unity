@@ -6,7 +6,7 @@ public class DestructibleObject : MonoBehaviour
     public int _bonus=100;
     public int _comboBonus=1;
 	public ParticleSystem _particles;
-
+	public string _sound;
 	private bool m_hasExploded=false;
     #region methods
     void Start ()
@@ -40,6 +40,7 @@ public class DestructibleObject : MonoBehaviour
             //_particles.Play();
             m_hasExploded=true;
             Score.Instance.AddScore(Score.ScoreType.STUFF,_bonus, _comboBonus);
+            if(_sound!="") FMOD_StudioSystem.instance.PlayOneShot("event:/"+_sound,transform.position);
         }
     }
     #endregion
