@@ -79,13 +79,14 @@ public class DialogsManager : MonoBehaviour
             if (m_currentEvent != null) startEvent();
             else m_timer = null;
         }
-        if(m_currentEvent!=null)
+        else if(m_currentEvent!=null && m_timer.IsElapsedLoop)
         {	
 			// Delete event and start post-offset if it's finished
             FMOD.Studio.PLAYBACK_STATE state;
             m_currentEvent.getPlaybackState(out state);
             if (state == FMOD.Studio.PLAYBACK_STATE.STOPPED)
            	{
+           		//Debug.Log ("release");
            		m_currentEvent.release();
            		m_currentEvent=null;
             	if (m_afterTimer != 0) m_timer = null;
@@ -94,31 +95,6 @@ public class DialogsManager : MonoBehaviour
             else if(m_timer!=null)
             {
 				volume=Mathf.PerlinNoise(Time.timeSinceLevelLoad*4,Time.timeSinceLevelLoad*2);
-				// Update bow tie
-				/*if(m_dsp==null)
-				{
-					FMOD.ChannelGroup cg=null;				
-					FMOD.Studio.System sys=FMOD_StudioSystem.instance.System;
-					FMOD.Studio.Bus bus;
-					
-					sys.getBus("bus:/PreMaster/Voice",out bus);
-					if(bus!=null) bus.getChannelGroup(out cg);
-					if(cg!=null)
-					{
-						System.Text.StringBuilder name=new System.Text.StringBuilder();
-						cg.getName(name,100);
-						Debug.Log (name);
-						cg.getDSP(0,out m_dsp);
-						m_dsp.setMeteringEnabled(false,true);
-					}
-				}
-				
-				if(m_dsp!=null)
-				{
-					FMOD.DSP_METERING_INFO infos;
-					m_dsp.getMeteringInfo(out infos);
-            		Debug.Log (infos.numchannels);
-            	}*/
             	
             }
             
@@ -234,7 +210,11 @@ public class DialogsManager : MonoBehaviour
     {
         if(m_timer==null && m_currentEvent==null)
         {
-            if(m_dialogInfos[dialog].currentCooldown>0) m_dialogInfos[dialog].currentCooldown--;
+            if(m_dialogInfos[dialog].currentCooldown>0)
+            {
+            	m_dialogInfos[dialog].currentCooldown--;
+				//Debug.Log (_dialogInfos[dialog].sounds[dialog]+" cooldown="+m_dialogInfos[dialog].currentCooldown);
+            }
             else if(Random.Range(0f,1f)<=_dialogInfos[dialog].probability)
             {
                 if(!isOnce(_dialogInfos[dialog].playMode) || m_dialogInfos[dialog].pos<_dialogInfos[dialog].sounds.Length)
@@ -248,6 +228,7 @@ public class DialogsManager : MonoBehaviour
                     if(isRandomPlayMode(_dialogInfos[dialog].playMode)) playedDialog=m_dialogInfos[dialog].playList[playedDialog];
                     
                     // Get event
+					//Debug.Log ("play "+_dialogInfos[dialog].sounds[playedDialog]);
                     m_currentEvent=FMOD_StudioSystem.instance.GetEvent("event:/"+_dialogInfos[dialog].sounds[playedDialog]);
 					
 					// Update playlist pos
@@ -257,14 +238,11 @@ public class DialogsManager : MonoBehaviour
 					// Start pre-offset timer
 					m_afterTimer=_dialogInfos[dialog].postOffset;
 					m_timer=new Timer();
-					if(_dialogInfos[dialog].preOffset==0) startEvent();
-                    else
-                    {
-                        m_timer.Reset(_dialogInfos[dialog].preOffset);
-                    }
+                    m_timer.Reset(_dialogInfos[dialog].preOffset);
                 }
             }
         }
+        else Debug.Log ("null");
     }
     
     private void startEvent()

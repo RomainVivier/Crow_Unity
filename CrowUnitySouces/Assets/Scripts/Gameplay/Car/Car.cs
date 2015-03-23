@@ -448,6 +448,7 @@ public class Car : MonoBehaviour
     public void respawn(Vector3 position, Quaternion rotation)
     {
     	body.transform.position=position;
+    	if(isOnGround()) body.transform.position=position+new Vector3(0,0.5f,0);
     	body.transform.rotation=rotation;
     	body.angularVelocity=Vector3.zero;
     	body.velocity=Vector3.zero;
