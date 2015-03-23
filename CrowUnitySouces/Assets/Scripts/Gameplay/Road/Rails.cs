@@ -15,7 +15,8 @@ public class Rails : MonoBehaviour
 	public bool drawShafts=false;
     public bool sortRails = false;
 	public bool sortRailsInverted=false;
-
+	public bool invertStartEnd=false;
+	
 	public Vector3[] positions;
 	public Vector3[] deltas;
     public float[] speedOverrides;
@@ -83,6 +84,11 @@ public class Rails : MonoBehaviour
             sortRails = false;
             sortRailsInverted=false;
         }
+        if(invertStartEnd)
+        {
+        	invertStartEnd = false;
+        	invertRails();
+        }
         computePositions();
         //updateDist();
 	}
@@ -99,6 +105,21 @@ public class Rails : MonoBehaviour
         }
     }*/
 
+	void invertRails()
+	{
+		for(int r=0;r<nbRails;r++) for(int i=0;i<nbPoints/2;i++)
+		{
+			int inv=nbPoints-1-i;
+			Vector3 tmp=positions[i*nbRails+r];
+			positions[i*nbRails+r]=positions[inv*nbRails+r];
+			positions[inv*nbRails+r]=tmp;
+			tmp=deltas[i*nbRails+r];
+			deltas[i*nbRails+r]=deltas[inv*nbRails+r];
+			deltas[inv*nbRails+r]=tmp;
+		}
+		computePositions();
+	}
+	
     void mergeSortRails(int first, int last,ref int[] railsIndex, ref float[] railsPos)
     {
         if (first == last) return;
