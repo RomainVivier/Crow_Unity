@@ -28,6 +28,7 @@ public class Dashboard : MonoBehaviour
         for (int i = 0; i < m_panels.Length; i++)
         {
             m_panels[i].Init();
+			if(m_panels[i].IsVisible) FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Buttons/Panels/panelOpen",transform.position);
             //m_abilities.AddRange(m_panels[i].AddAbilities());
         }
 	}
