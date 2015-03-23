@@ -17,12 +17,14 @@ public class Radio : MonoBehaviour {
 	
     private FMOD.Studio.EventInstance m_radio;
     private FMOD.Studio.ParameterInstance m_fmodRadioFreq;
+	private FMOD.Studio.ParameterInstance m_fmodRadioGame;	
     private FMOD.Studio.ParameterInstance m_fmodRadioState;
     //private FMOD.Studio.ParameterInstance m_fmodRadioBoost;
     private FMOD.Studio.ParameterInstance m_fmodRadioPickup;
 
     public FMOD_StudioEventEmitter _emitter;
-
+	static int m_parameter=1;
+	
     public int RadioState
     {
         get { return m_radioState; }
@@ -52,12 +54,15 @@ public class Radio : MonoBehaviour {
 		m_radioPickup=0;
 		
         m_radio = FMOD_StudioSystem.instance.GetEvent("event:/Music/Radio/radioStream");
+		m_radio.getParameter("game", out m_fmodRadioGame);
+		m_parameter=(m_parameter+1)%2;
+		m_fmodRadioGame.setValue(m_parameter);
         m_radio.start();
 
         m_radio.getParameter("radioFrequency", out m_fmodRadioFreq);
         m_radio.getParameter("radioPickup", out m_fmodRadioPickup);
         m_radio.getParameter("radioState", out m_fmodRadioState);
-        //m_radio.getParameter("Boost", out m_fmodRadioBoost);
+		//m_radio.getParameter("Boost", out m_fmodRadioBoost);
 
         RadioState = 0;
 	}

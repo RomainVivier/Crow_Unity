@@ -5,6 +5,8 @@ public class GameOverScript : MonoBehaviour
 {
 	public GameOverScreen _gameOverScreen;
 	public HighScoresScreen _highScoresScreen;
+	public CreditsScreen _creditsScreen;
+	
 	public float _scrollSpeed=0;
 	
 	private float m_scrollPos=0;
@@ -44,6 +46,12 @@ public class GameOverScript : MonoBehaviour
 		_gameOverScreen.gameObject.SetActive(false);
 		_highScoresScreen.gameObject.SetActive(true);
 		_highScoresScreen.init();
+	}
+	
+	public void showCredits()
+	{
+		_highScoresScreen.gameObject.SetActive(false);
+		_creditsScreen.gameObject.SetActive(true);
 	}
 	
 	public void restartGame()
