@@ -86,7 +86,7 @@ public class Rails : MonoBehaviour
         }
         if(invertStartEnd)
         {
-        	invertStartEnd = false;
+        	invertStartEnd=false;
         	invertRails();
         }
         computePositions();
