@@ -54,10 +54,10 @@ public class HighScoresScreen : MonoBehaviour {
 				printRanking ();
 			}
 		}
-		else if(Input.GetMouseButtonDown(0))
+		/*else if(Input.GetMouseButtonDown(0))
 		{
 			_gameOverScript.restartGame();
-		}
+		}*/
 	}
 	
 	void printRanking()
@@ -86,5 +86,10 @@ public class HighScoresScreen : MonoBehaviour {
 	public void restartClicked()
 	{
 		_gameOverScript.restartGame();
+	}
+
+	public void creditsClicked()
+	{
+		_gameOverScript.showCredits();
 	}
 }
