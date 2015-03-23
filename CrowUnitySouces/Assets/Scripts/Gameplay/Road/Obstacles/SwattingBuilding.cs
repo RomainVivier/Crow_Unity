@@ -29,6 +29,7 @@ public class SwattingBuilding : MonoBehaviour
     private BuildingGenerator m_usedBuildingGenerator;
     private GameObject m_buildingGameObject;
 	private FMOD.Studio.EventInstance m_fallSound;
+	private GameObject m_smoke;
     #endregion
 
     #region methods
@@ -86,6 +87,12 @@ public class SwattingBuilding : MonoBehaviour
 		threeDeeAttr.velocity = UnityUtil.toFMODVector(Vector3.zero);
 		m_fallSound.set3DAttributes(threeDeeAttr);
 		
+		// Get smoke effect
+		Object smoke=Resources.Load ("smokeBuilding");
+		m_smoke=GameObject.Instantiate(smoke) as GameObject;
+		m_smoke.transform.position=m_buildingGameObject.transform.position+m_usedBuildingGenerator.transform.right * 10f;
+		m_smoke.SetActive(false);		
+ 
         // Init state
         m_state = State.UP;
         m_timer = new Timer();
@@ -118,7 +125,11 @@ public class SwattingBuilding : MonoBehaviour
                     m_state = State.DOWN;
                     m_timer.Reset(_downTime);
 					m_fallSound.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+
+					// Play effects
 					FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Obstacles/collBuilding/obsCollBuildingHit",transform.position);
+					m_smoke.SetActive(true);
+					m_smoke.GetComponent<ParticleSystem>().Play();
                 }
                 else
                 {
@@ -134,7 +145,11 @@ public class SwattingBuilding : MonoBehaviour
                     // Start next state
                     m_state = State.RISING;
                     m_timer.Reset(_riseTime);
+
+					// Play effects
 					FMOD_StudioSystem.instance.PlayOneShot("event:/SFX/Obstacles/collBuilding/obsCollBuildingUp",transform.position);
+					m_smoke.GetComponent<ParticleSystem>().Stop();
+					m_smoke.SetActive(false);
                 }
                 break;
             case State.RISING:
@@ -170,6 +185,7 @@ public class SwattingBuilding : MonoBehaviour
                 Car.Instance.getWindshieldController().Kill();
             }
             else Car.Instance.getWindshieldController().Hit();
+            
             // Rise the building
             m_state = State.RISING;
             m_timer.Reset(_riseTime);

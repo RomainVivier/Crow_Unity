@@ -88,7 +88,7 @@ public class CarCollisionsHandler : MonoBehaviour
 					oth.transform.parent.gameObject.AddComponent<ObstacleDestroyer>();
 					if(!m_projectObstacles) rigidbody.AddForce(-forward * _ownMomentum, ForceMode.Impulse);
 				}
-				else GameObject.Destroy(oth.transform.parent.gameObject);
+				else if(oth.transform.parent!=null) GameObject.Destroy(oth.transform.parent.gameObject);
                 cooldownTimer.Reset(2f);
                 m_lastObject = oth;
                 m_car.setFriction(1);

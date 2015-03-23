@@ -219,6 +219,7 @@ public class Rails : MonoBehaviour
         for(int i=1;i<nbComputedPositions;i++)
             computedDists[i] = computedDists[i - 1] + (computedPositions[(i - 1) * nbRails] - computedPositions[i * nbRails]).magnitude;
         dist = computedDists[nbComputedPositions - 1];
+        dist*=transform.localScale.x;
     }
 	
 	Vector3 bezier(Vector3[] points, float pos)
