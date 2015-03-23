@@ -183,12 +183,15 @@ public class SwattingBuilding : MonoBehaviour
             if (m_state == State.FALLING)
             {
                 Car.Instance.getWindshieldController().Kill();
+				m_state = State.UP;
+				m_timer.Reset(_upTime);
             }
-            else Car.Instance.getWindshieldController().Hit();
-            
-            // Rise the building
-            m_state = State.RISING;
-            m_timer.Reset(_riseTime);
+            else
+            {
+            	Car.Instance.getWindshieldController().Hit();
+                m_state = State.RISING;
+            	m_timer.Reset(_riseTime);
+            }
             
         }
     }
