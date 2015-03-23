@@ -332,7 +332,7 @@ public class Rails : MonoBehaviour
 	
     public Vector3 getForward(float rail, float progress)
     {
-        return (getPoint(rail, progress + 0.001f) - getPoint(rail, progress - 0.001f)).normalized;
+        return (getPoint(rail, progress + 0.002f) - getPoint(rail, progress - 0.002f)).normalized;
     }
 
     // Return the set speed according to the car's own set speed and the rails speed override
