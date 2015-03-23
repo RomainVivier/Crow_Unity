@@ -54,10 +54,10 @@ public class HighScoresScreen : MonoBehaviour {
 				printRanking ();
 			}
 		}
-		else if(Input.GetMouseButtonDown(0))
+		/*else if(Input.GetMouseButtonDown(0))
 		{
 			_gameOverScript.restartGame();
-		}
+		}*/
 	}
 	
 	void printRanking()
@@ -72,7 +72,8 @@ public class HighScoresScreen : MonoBehaviour {
 		
 		for(int i=0;i<10;i++)
 		{
-			namesText.text+=gi.names[i]+"\n";
+			if(i==m_currentHighScore) namesText.text+=gi.names[i]+"_\n";
+			else namesText.text+=gi.names[i]+"\n";
 			scoresText.text+=gi.scores[i]+"\n";
 		}
 	}
@@ -80,5 +81,15 @@ public class HighScoresScreen : MonoBehaviour {
 	public void setScrollPos(float scrollPos)
 	{
 		m_background.material.SetTextureOffset("_MainTex",new Vector2(scrollPos,0));
+	}
+	
+	public void restartClicked()
+	{
+		_gameOverScript.restartGame();
+	}
+
+	public void creditsClicked()
+	{
+		_gameOverScript.showCredits();
 	}
 }

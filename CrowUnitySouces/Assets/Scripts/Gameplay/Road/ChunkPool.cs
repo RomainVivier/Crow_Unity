@@ -15,7 +15,7 @@ public class ChunkPool : MonoBehaviour {
     public int _historySize = 6;
     public int _nbRetries = 6;
 
-    private const int POOL_SIZE = 10;
+    private const int POOL_SIZE = 50;
 
     #endregion
 
@@ -103,7 +103,7 @@ public class ChunkPool : MonoBehaviour {
 
     public GameObject GetUnusedChunk()
     {
-        RoadChunk tempChunk = m_chunks.Where(po => po.IsUnused == true).FirstOrDefault();
+        RoadChunk tempChunk = m_chunks.Where(po => po.IsUnused == true)/*.OrderBy(a => Random.Range(0f,1f))*/.FirstOrDefault();
 
         if (tempChunk)
         {

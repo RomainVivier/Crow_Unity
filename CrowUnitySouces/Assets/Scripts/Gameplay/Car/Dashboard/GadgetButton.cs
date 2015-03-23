@@ -16,6 +16,8 @@ public class GadgetButton : MonoBehaviour
     public MeshRenderer _buttonRenderer;
     public Color _darkColor;
     public Color _brightColor;
+	public Material _locked;
+	public Material _unlocked;
 
     private Color m_tempColor;
     private Timer m_cooldownTimer;
@@ -35,6 +37,7 @@ public class GadgetButton : MonoBehaviour
         set
         {
             m_cooldownTimer.Reset(value);
+			_buttonRenderer.renderer.material = _locked;
             m_isInCooldown = true;
         }
     }
@@ -81,6 +84,8 @@ public class GadgetButton : MonoBehaviour
         }
         else
         {
+			_buttonRenderer.renderer.material = _unlocked;
+			_buttonRenderer.renderer.material.SetColor("_Color", _brightColor);
             m_isInCooldown = false;
         }
     }
