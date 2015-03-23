@@ -25,7 +25,7 @@ public class WindshieldController : MonoBehaviour {
 
 		if(_hp < 0)
 		{
-			GameObject.Find ("GameOver").GetComponent<GameOverScript>().startGameOver();
+			//GameObject.Find ("GameOver").GetComponent<GameOverScript>().startGameOver();
 			return;
 		}
 
