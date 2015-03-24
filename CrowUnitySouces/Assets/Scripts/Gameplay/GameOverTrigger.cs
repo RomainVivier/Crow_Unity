@@ -6,7 +6,7 @@ public class GameOverTrigger : MonoBehaviour {
 	void OnTriggerEnter(Collider other)
 	{
 		GameObject oth = other.transform.root.gameObject;
-		if (oth.name == "Car(Clone)")
+		if (oth.name == "CarV2")
 		{
 			GameObject.Find ("GameOver").GetComponent<GameOverScript>().startGameOver();
 		}

@@ -71,6 +71,11 @@ public class Spoonbill : Gadget
 
     void OnTriggerEnter(Collider other)
     {
+		if(_spoonbill == null)
+		{
+			return;
+		}
+
         if (other.collider.CompareTag("Obstacle") && (m_state == State.Engaged || m_state == State.Engaging) && other.rigidbody!=null)
         {
             //(GameObject.FindObjectOfType<CarCollisionsInhibiter>() as CarCollisionsInhibiter)._nbCol++;

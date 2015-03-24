@@ -106,7 +106,7 @@ public class PoolManager : MonoBehaviour {
 
         if (poolType.Key == null)
         {
-            Debug.LogError(poolType.Key.Id + "not found.");
+            Debug.LogError(id + "not found.");
             return null;
         }
 

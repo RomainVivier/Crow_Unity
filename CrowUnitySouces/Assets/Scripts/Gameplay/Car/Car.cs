@@ -82,6 +82,9 @@ public class Car : MonoBehaviour
 	void Start ()
 	{
 		updateValues ();
+		wheelObject = transform.FindChild("Body/CarModel/RootWheel/Wheel").gameObject;
+		wheelQuaternion = wheelObject.transform.localRotation;
+		m_instance = this;
         engineSound = FMOD_StudioSystem.instance.GetEvent("event:/SFX/Car Mechanics/carEngine");
         engineSound.start();
         engineSound.getParameter("RPM", out engineRPM);
@@ -95,9 +98,6 @@ public class Car : MonoBehaviour
         tiresSound.getParameter("Speed", out tiresSpeed);
         tiresSound.getParameter("Ground", out tiresGround);
         tiresSound.start();
-        wheelObject = transform.FindChild("Body/CarModel/RootWheel/Wheel").gameObject;
-        wheelQuaternion = wheelObject.transform.localRotation;
-        m_instance = this;
     }
 
     void FixedUpdate ()
