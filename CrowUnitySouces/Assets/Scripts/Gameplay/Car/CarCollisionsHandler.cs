@@ -116,7 +116,7 @@ public class CarCollisionsHandler : MonoBehaviour
     {
         if (_dontCollide) return;
         GameObject oth = collision.gameObject;
-        if (!collision.collider.isTrigger)
+        if (!collision.collider.isTrigger && collision.contacts.Length>0)
         {
             Vector3 contactPoint = collision.contacts[0].point;
             Vector3 center = transform.position;

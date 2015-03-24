@@ -40,9 +40,13 @@ public class FragmentDestroyer : MonoBehaviour
 	
 	void FixedUpdate ()
     {
-        m_speed.y-=9.81f*Time.fixedDeltaTime;
-        transform.position += Time.fixedDeltaTime*m_speed;
-        transform.Rotate(m_rotAxis, m_rotAngle * Time.fixedDeltaTime);
+    	for(int i=0;i<2;i++)
+    	{
+			m_speed.y-=9.81f*Time.fixedDeltaTime;
+			transform.position += Time.fixedDeltaTime*m_speed;
+			transform.Rotate(m_rotAxis, m_rotAngle * Time.fixedDeltaTime);
+			
+    	}
         if (m_timer.IsElapsedOnce) GameObject.Destroy(gameObject);
     }
     #endregion
