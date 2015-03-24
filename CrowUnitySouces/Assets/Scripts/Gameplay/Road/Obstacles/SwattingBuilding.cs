@@ -102,6 +102,11 @@ public class SwattingBuilding : MonoBehaviour
 	
 	void Update ()
     {
+		if(m_buildingGameObject == null)
+		{
+			return;
+		}
+
         switch(m_state)
         {
             case State.UP:

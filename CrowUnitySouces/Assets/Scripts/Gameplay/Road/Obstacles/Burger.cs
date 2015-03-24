@@ -41,13 +41,14 @@ public class Burger : MonoBehaviour
 
 	void OnTriggerEnter(Collider other)
 	{
+		Car car = other.collider.gameObject.transform.parent.GetComponent<Car> ();
+
 		if (other.collider.name == "SpoonBill")
 		{
-			Debug.Log("prout");
 			Destroy(GetComponent<Animator>());
 			Destroy(this);
 		}
-		else if(other.collider.gameObject.transform.parent.GetComponent<Car>()!=null)
+		else if( car != null)
 		{
 			Destroy (this);
 		}

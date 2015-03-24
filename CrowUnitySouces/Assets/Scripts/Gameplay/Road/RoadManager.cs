@@ -162,7 +162,7 @@ public class RoadManager : MonoBehaviour
         GameObject chunk = PullChunk();
         if (chunk == null)
         {
-            Debug.LogError("Fail during the road generation the chunk generated is null.");
+            Debug.LogWarning("Fail during the road generation the chunk generated is null.");
             return;
         }
 

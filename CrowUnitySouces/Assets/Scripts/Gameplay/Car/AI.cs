@@ -63,8 +63,11 @@ public class AI : MonoBehaviour
             currentSound.release();
         }
         currentSound=FMOD_StudioSystem.instance.GetEvent("event:/Dialog/IA/"+name);
-        currentSound.start();
-        playingSound = true;
+		if(currentSound != null)
+		{
+			currentSound.start();
+			playingSound = true;
+		}
     }
 
    

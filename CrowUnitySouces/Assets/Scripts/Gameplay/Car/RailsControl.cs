@@ -54,10 +54,6 @@ public class RailsControl : CarControl
 	void Start ()
 	{
         // FMOD
-        playerPosEvent = FMOD_StudioSystem.instance.GetEvent("event:/Meta/playerPos");
-        playerPosEvent.start();
-        playerPosEvent.getParameter("playerPos", out playerPosParameter);
-
         car = gameObject.GetComponent<Car> ();
 		if (car == null)
 		{
@@ -92,6 +88,9 @@ public class RailsControl : CarControl
         TouchManager.Instance._swipeLeft += () => { ShiftRail(1f); };
         TouchManager.Instance._swipeRight += () => { ShiftRail(-1f); };
 
+		playerPosEvent = FMOD_StudioSystem.instance.GetEvent("event:/Meta/playerPos");
+		playerPosEvent.start();
+		playerPosEvent.getParameter("playerPos", out playerPosParameter);
 	}
 	
 	void FixedUpdate ()
