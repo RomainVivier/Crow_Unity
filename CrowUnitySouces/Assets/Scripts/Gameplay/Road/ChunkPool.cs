@@ -105,7 +105,7 @@ public class ChunkPool : MonoBehaviour {
     {
         RoadChunk tempChunk;
         if(Application.loadedLevelName=="Endless") tempChunk = m_chunks.Where(po => po.IsUnused == true).OrderBy(a => Random.Range(0f,1f)).FirstOrDefault();
-		else  m_chunks.Where(po => po.IsUnused == true).FirstOrDefault();
+		else tempChunk = m_chunks.Where(po => po.IsUnused == true).FirstOrDefault();
 
         if (tempChunk)
         {
