@@ -219,9 +219,16 @@ public class RoadManager : MonoBehaviour
             }
             else
             {
-                var tempgo = _pool.GetUnusedChunk();
-                tempgo.SetActive(true);
-                return tempgo;
+				if (m_gameChunks.Count > 0)
+				{
+					path = m_gameChunks.Dequeue();
+				}
+				else
+				{
+					var tempgo = _pool.GetUnusedChunk();
+					tempgo.SetActive(true);
+					return tempgo;				
+				}
             }
         }
 
